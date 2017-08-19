@@ -4,13 +4,15 @@
 #include "dormouse-engine/enums/enum.hpp"
 
 namespace /* anonymous */ {
-
+
+
 DE_ENUM(TestEnum,
 	(VALUE0)
 	(VALUE1)
 	(VALUE2)
 	);
-
+
+
 DE_ENUM_VALUES(TestEnumValues,
 	(TRIANGLE)(3)
 	(SQUARE)(4)

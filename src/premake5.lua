@@ -45,6 +45,8 @@ workspace "dormouse-engine"
 	warnings "Extra"
 	flags { "FatalWarnings" }
 	
+	flags { "MultiProcessorCompile" }
+	
 	filter "action:vs*"
 		defines { "_SCL_SECURE_NO_WARNINGS" }
 		buildoptions { "/std:c++latest" }
