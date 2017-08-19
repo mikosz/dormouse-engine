@@ -1,11 +1,14 @@
 function add_gmock_files()
-	includedirs(GMOCK_DIR)
-	includedirs(GMOCK_DIR.."/include/")
-	includedirs(GTEST_DIR)
-	includedirs(GTEST_DIR.."/include/")
+	local gmock_dir = path.join(ROOT_DIR, "external/googletest/googlemock")
+	local gtest_dir = path.join(ROOT_DIR, "external/googletest/googletest")
 
-	local gmock_all_file = GMOCK_DIR.."/src/gmock-all.cc"
-	local gtest_all_file = GTEST_DIR.."/src/gtest-all.cc"
+	includedirs(gmock_dir)
+	includedirs(gmock_dir.."/include/")
+	includedirs(gtest_dir)
+	includedirs(gtest_dir.."/include/")
+
+	local gmock_all_file = gmock_dir.."/src/gmock-all.cc"
+	local gtest_all_file = gtest_dir.."/src/gtest-all.cc"
 	files { gmock_all_file, gtest_all_file }
 	vpaths { [ ".external" ] = { gmock_all_file, gtest_all_file } }
 end

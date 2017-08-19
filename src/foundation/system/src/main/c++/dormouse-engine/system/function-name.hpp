@@ -1,0 +1,14 @@
+#ifndef DORMOUSEENGINE_SYSTEM_FUNCTIONNAME_HPP_
+#define DORMOUSEENGINE_SYSTEM_FUNCTIONNAME_HPP_
+
+#include "platform.hpp"
+
+#if defined(DE_COMPILER_GCC) || defined(DE_COMPILER_CLANG)
+#	define DE_FUNCTION_NAME __PRETTY_FUNCTION__
+#elif defined(DE_COMPILER_VISUAL_CXX)
+#	define DE_FUNCTION_NAME __FUNCSIG__
+#else
+#	error "Unsupported compiler"
+#endif /* DE_COMPILER_* */
+
+#endif /* DORMOUSEENGINE_SYSTEM_FUNCTIONNAME_HPP_ */

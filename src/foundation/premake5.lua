@@ -1,0 +1,7 @@
+structure.set_group "foundation"
+	include "essentials"
+	include "exceptions"
+	include "system"
+	include "configuration"
+	include "factory"
+	include "logger"

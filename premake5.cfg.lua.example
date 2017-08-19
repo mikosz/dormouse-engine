@@ -1,0 +1,8 @@
+BOOST_INCLUDE_DIR = "E:/tools/Boost/boost_1_65_0_beta1_rc2"
+BOOST_LIB_DIR = "E:/tools/Boost/boost_1_65_0_beta1_rc2/lib64-msvc-14.1"
+BOOST_USE_STATIC_LIBS = true
+BOOST_VERSION = "1_65"
+BOOST_TOOLSET = "vc141"
+BOOST_MULTITHREADED = true
+
+DIRECTX_TEX_ROOT = "E:/work/DirectXTex"
