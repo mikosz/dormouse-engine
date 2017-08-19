@@ -1,0 +1,14 @@
+# output dirs
+build/
+obj/
+
+# local configs
+premake5.cfg.lua
+
+# visual studio files
+.vs/
+*.pyproj
+*.sln
+
+# renderdoc .cap files
+*.cap
