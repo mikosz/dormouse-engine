@@ -26,6 +26,6 @@ public:
 };
 
 }  // namespace logger
-}  // namespace CoconutTools
+}  // namespace dormouse_engine
 
 #endif /* DORMOUSEENGINE_LOGGER_SYSTEMLOGGER_HPP_ */

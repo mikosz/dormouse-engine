@@ -66,7 +66,7 @@ void childEnd(ExpectedCalls* expectedPtr) {
 	expected.pop_front();
 }
 
-BOOST_AUTO_TEST_SUITE(CoconutToolsConfigurationTestSuite);
+BOOST_AUTO_TEST_SUITE(DormouseEngineConfigurationTestSuite);
 BOOST_AUTO_TEST_SUITE(ParsersTestSuite);
 BOOST_AUTO_TEST_SUITE(JSONParserTestSuite);
 
@@ -175,6 +175,6 @@ BOOST_AUTO_TEST_CASE(InterpretsArraysCorrectly) {
 
 BOOST_AUTO_TEST_SUITE_END(/* JSONParserTestSuite */);
 BOOST_AUTO_TEST_SUITE_END(/* ParsersTestSuite */);
-BOOST_AUTO_TEST_SUITE_END(/* CoconutToolsConfigurationTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* DormouseEngineConfigurationTestSuite */);
 
 } // anonymous namespace

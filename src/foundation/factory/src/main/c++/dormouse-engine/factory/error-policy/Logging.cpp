@@ -2,8 +2,7 @@
 
 #include "dormouse-engine/logger.hpp"
 
-
-DE_LOGGER_CATEGORY("COCONUT_TOOLS.FACTORY.ERROR_POLICY");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.FACTORY.ERROR_POLICY");
 
 namespace dormouse_engine {
 namespace factory {

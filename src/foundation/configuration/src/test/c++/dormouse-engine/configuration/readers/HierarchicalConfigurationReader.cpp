@@ -15,7 +15,7 @@ using dormouse_engine::configuration::hierarchical::HierarchicalConfigurationSha
 
 namespace {
 
-BOOST_AUTO_TEST_SUITE(CoconutToolsConfigurationTestSuite);
+BOOST_AUTO_TEST_SUITE(DormouseEngineConfigurationTestSuite);
 BOOST_AUTO_TEST_SUITE(ReadersTestSuite);
 BOOST_AUTO_TEST_SUITE(HierarchicalConfigurationReaderTestSuite);
 
@@ -86,6 +86,6 @@ BOOST_FIXTURE_TEST_CASE(AddsKeyValuePairsParsedFromFile, essentials::test_utils:
 
 BOOST_AUTO_TEST_SUITE_END(/* HierarchicalConfigurationReaderTestSuite */);
 BOOST_AUTO_TEST_SUITE_END(/* ReadersTestSuite */);
-BOOST_AUTO_TEST_SUITE_END(/* CoconutToolsConfigurationTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* DormouseEngineConfigurationTestSuite */);
 
 } // anonymous namespace

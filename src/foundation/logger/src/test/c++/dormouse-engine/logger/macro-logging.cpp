@@ -107,12 +107,12 @@ BOOST_FIXTURE_TEST_CASE(LoggerCategorySetsAppropriateLogger, essentials::test_ut
 namespace fully_fledged_logger_configuration_test {
 
 
-DE_LOGGER_CATEGORY("COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST");
 
 namespace some_verbose_module {
 
 
-DE_LOGGER_CATEGORY("COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE");
 
 void someFunction() {
 	DE_LOG_TRACE << "Trace message in verbose module";
@@ -130,7 +130,7 @@ BOOST_FIXTURE_TEST_CASE(FullyFledgedLoggerConfiguration, essentials::test_utils:
 		"</root-logger>\n"
 		"<loggers>\n"
 		"  <logger>\n"
-		"	<id>COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST</id>\n"
+		"	<id>DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST</id>\n"
 		"	<level>debug</level>\n"
 		"	<appenders>\n"
 		"	  <appender>console</appender>\n"
@@ -138,7 +138,7 @@ BOOST_FIXTURE_TEST_CASE(FullyFledgedLoggerConfiguration, essentials::test_utils:
 		"	</appenders>\n"
 		"  </logger>\n"
 		"  <logger>\n"
-		"	<id>COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE</id>\n"
+		"	<id>DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE</id>\n"
 		"	<level>trace</level>\n"
 		"  </logger>\n"
 		"</loggers>\n"
@@ -193,22 +193,22 @@ BOOST_FIXTURE_TEST_CASE(FullyFledgedLoggerConfiguration, essentials::test_utils:
 		);
 
 		DE_LOG_DEBUG << "Debug not logged on console, but logged in file";
-		DE_LOG_TRACE << "Trace not logged in COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST";
+		DE_LOG_TRACE << "Trace not logged in DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST";
 		DE_LOG_INFO << "Info logged everywhere";
 
 		some_verbose_module::someFunction();
 	}
 
 	const std::string CONSOLE_EXPECTED =
-		"COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST [INFO] - Info logged everywhere\n"
+		"DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST [INFO] - Info logged everywhere\n"
 		;
 
 	BOOST_CHECK_EQUAL(consoleOutput.str(), CONSOLE_EXPECTED);
 
 	const std::string FILE_EXPECTED =
-		"COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST [DEBUG] - Debug not logged on console, but logged in file\n"
-		"COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST [INFO] - Info logged everywhere\n"
-		"COCONUT_TOOLS.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE [TRACE] - Trace message in verbose module\n"
+		"DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST [DEBUG] - Debug not logged on console, but logged in file\n"
+		"DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST [INFO] - Info logged everywhere\n"
+		"DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE [TRACE] - Trace message in verbose module\n"
 		;
 
 	BOOST_CHECK_EQUAL(essentials::test_utils::readFile("test-output.log"), FILE_EXPECTED);

@@ -32,6 +32,6 @@ private:
 };
 
 }  // namespace essentials
-}  // namespace CoconutTools
+}  // namespace dormouse_engine
 
 #endif /* DORMOUSEENGINE_UTILS_RAII_HELPER_HPP_ */

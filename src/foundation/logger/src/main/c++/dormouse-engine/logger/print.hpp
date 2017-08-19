@@ -41,6 +41,6 @@ inline void print(std::ostream& os, const char* s) {
 }
 
 }  // namespace logger
-}  // namespace CoconutTools
+}  // namespace dormouse_engine
 
 #endif /* DORMOUSEENGINE_LOGGER_PRINT_HPP_ */

@@ -172,6 +172,6 @@ private:
 DE_SMART_POINTER_DEFINITONS(Logger);
 
 }  // namespace logger
-}  // namespace CoconutTools
+}  // namespace dormouse_engine
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGGER_HPP_ */

@@ -22,6 +22,6 @@ std::istream& operator>>(std::istream& is, Level& level);
 std::ostream& operator<<(std::ostream& os, Level level);
 
 }  // namespace logger
-}  // namespace CoconutTools
+}  // namespace dormouse_engine
 
 #endif /* DORMOUSEENGINE_LOGGER_LEVEL_HPP_ */
