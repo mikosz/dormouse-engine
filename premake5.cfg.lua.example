@@ -8,3 +8,4 @@ BOOST_MULTITHREADED = true
 DIRECTX_TEX_ROOT = "E:/work/DirectXTex"
 
 GRAPHICS_API = "dx11"
+WM_API = "winapi"
