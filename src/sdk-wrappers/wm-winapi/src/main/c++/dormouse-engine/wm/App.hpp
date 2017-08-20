@@ -11,7 +11,6 @@
 
 namespace dormouse_engine::wm {
 
-// TODO: extract to separate file
 struct MainArguments {
 
 	int argc;
@@ -24,8 +23,7 @@ struct MainArguments {
 
 	int showCommand;
 
-	MainArguments() { // TODO: Singleton won't compile otherwise
-	}
+	MainArguments() = default; // TODO: Singleton won't compile otherwise
 
 	MainArguments(int argc, const char** argv, HINSTANCE hinstance, LPSTR commandLine, int showCommand) :
 		argc(argc),
@@ -42,7 +40,7 @@ struct GlobalMainArguments :
 	public MainArguments,
 	public essentials::Singleton<
 		MainArguments,
-		essentials::creation::New<MainArguments> // TODO: replace with None
+		essentials::policy::creation::New<MainArguments> // TODO: replace with None
 		>
 {
 };
@@ -80,15 +78,13 @@ private:
 
 } // namespace dormouse_engine::wm
 
-#define CT_BEGIN_MAIN() \
+#define DE_APP_MAIN() \
 	int CALLBACK WinMain(HINSTANCE instance__, HINSTANCE, LPSTR cmdLine__, int cmdShow__) { \
 		{ \
-			coconut::milk::system::GlobalMainArguments::setInstance( \
-				std::make_unique<coconut::milk::system::MainArguments>( \
+			dormouse_engine::wm::GlobalMainArguments::setInstance( \
+				std::make_unique<dormouse_engine::wm::MainArguments>( \
 					__argc, const_cast<const char**>(__argv), instance__, cmdLine__, cmdShow__) \
 				); \
 		}
-
-#define CT_END_MAIN() }
 
 #endif /* _DORMOUSEENGINE_WM_APP_HPP_ */

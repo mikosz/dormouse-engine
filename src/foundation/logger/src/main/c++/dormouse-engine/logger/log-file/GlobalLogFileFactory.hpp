@@ -14,7 +14,7 @@ namespace dormouse_engine::logger::log_file {
 class GlobalLogFileFactory :
 	public essentials::Singleton<
 		GlobalLogFileFactory,
-		policy::creation::New<GlobalLogFileFactory>
+		essentials::policy::creation::New<GlobalLogFileFactory>
 		>,
 	public LogFileFactory
 {

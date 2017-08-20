@@ -14,7 +14,7 @@ namespace dormouse_engine::logger {
 class SystemLogger :
 	public essentials::Singleton<
 		Logger,
-		policy::creation::New<SystemLogger>
+		essentials::policy::creation::New<SystemLogger>
 		>,
 	public Logger
 {

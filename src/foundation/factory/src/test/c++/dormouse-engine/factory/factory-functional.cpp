@@ -67,20 +67,20 @@ BOOST_AUTO_TEST_SUITE(FactoryFunctionalTestSuite);
 BOOST_AUTO_TEST_CASE(RegisteredTypesCreatingFactory) {
 	using Factory = Factory<
 		std::string,
-		CreatorRegistry<std::string, policy::creation::New<AbstractClass>, error_policy::ExceptionThrowing>,
+		CreatorRegistry<std::string, essentials::policy::creation::New<AbstractClass>, error_policy::ExceptionThrowing>,
 		storage::None
 		>;
 
 	Factory f;
 
-	f.registerCreator(ConcreteClass1::ID, policy::creation::New<AbstractClass>::makeCreator<ConcreteClass1>());
-	f.registerCreator(ConcreteClass2::ID, policy::creation::New<AbstractClass>::makeCreator<ConcreteClass2>());
+	f.registerCreator(ConcreteClass1::ID, essentials::policy::creation::New<AbstractClass>::makeCreator<ConcreteClass1>());
+	f.registerCreator(ConcreteClass2::ID, essentials::policy::creation::New<AbstractClass>::makeCreator<ConcreteClass2>());
 
 	BOOST_CHECK_THROW(
-			f.registerCreator(ConcreteClass1::ID, policy::creation::New<AbstractClass>::makeCreator<ConcreteClass1>()),
+			f.registerCreator(ConcreteClass1::ID, essentials::policy::creation::New<AbstractClass>::makeCreator<ConcreteClass1>()),
 			error_policy::CreatorAlreadyRegistered<std::string>);
 	BOOST_CHECK_THROW(
-			f.registerCreator(ConcreteClass2::ID, policy::creation::New<AbstractClass>::makeCreator<ConcreteClass2>()),
+			f.registerCreator(ConcreteClass2::ID, essentials::policy::creation::New<AbstractClass>::makeCreator<ConcreteClass2>()),
 			error_policy::CreatorAlreadyRegistered<std::string>);
 
 	auto instance1 = f.create(ConcreteClass1::ID);
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(RegisteredFunctorsCreatingFactory) {
 	using FunctorType = std::function<int()>;
 	using Factory = Factory<
 		int,
-		CreatorRegistry<int, policy::creation::Functor<FunctorType>, error_policy::ExceptionThrowing>,
+		CreatorRegistry<int, essentials::policy::creation::Functor<FunctorType>, error_policy::ExceptionThrowing>,
 		storage::None
 		>;
 
@@ -132,14 +132,14 @@ BOOST_AUTO_TEST_CASE(CachingFactory) {
 	using FunctorType = std::function<std::unique_ptr<int>()>;
 	using Factory = Factory<
 		int,
-		CreatorRegistry<int, policy::creation::Functor<FunctorType>, error_policy::ExceptionThrowing>,
+		CreatorRegistry<int, essentials::policy::creation::Functor<FunctorType>, error_policy::ExceptionThrowing>,
 		storage::Permanent
 		>;
 
 	Factory f;
 
-	f.registerCreator(1, policy::creation::Functor<FunctorType>([]() { return std::unique_ptr<int>(new int(1)); }));
-	f.registerCreator(2, policy::creation::Functor<FunctorType>([]() { return std::unique_ptr<int>(new int(2)); }));
+	f.registerCreator(1, essentials::policy::creation::Functor<FunctorType>([]() { return std::unique_ptr<int>(new int(1)); }));
+	f.registerCreator(2, essentials::policy::creation::Functor<FunctorType>([]() { return std::unique_ptr<int>(new int(2)); }));
 
 	auto one = f.create(1);
 	auto two = f.create(2);

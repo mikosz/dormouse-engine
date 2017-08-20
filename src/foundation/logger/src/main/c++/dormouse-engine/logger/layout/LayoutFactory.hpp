@@ -20,7 +20,7 @@ namespace dormouse_engine::logger::layout {
 class LayoutFactory :
 	public Factory<
 		std::string,
-		factory::CreatorRegistry<std::string, policy::creation::New<Layout>, factory::error_policy::ExceptionThrowing>,
+		factory::CreatorRegistry<std::string, essentials::policy::creation::New<Layout>, factory::error_policy::ExceptionThrowing>,
 		factory::storage::Permanent
 		>
 {
@@ -34,7 +34,7 @@ public:
 	essentials::Null registerType(const LayoutTypeId& layoutTypeId) {
 		typeFactory_.registerCreator(
 			layoutTypeId,
-			policy::creation::Functor<FunctorType>(
+			essentials::policy::creation::Functor<FunctorType>(
 				[]() {
 					return std::unique_ptr<Layout::Initialiser>(
 						new Layout::Initialiser(Layout::Initialiser::createInitialisable<ConcreteLayoutType>())
@@ -58,7 +58,7 @@ private:
 		LayoutTypeId,
 		factory::CreatorRegistry<
 			LayoutTypeId,
-			policy::creation::Functor<FunctorType>,
+			essentials::policy::creation::Functor<FunctorType>,
 			factory::error_policy::ExceptionThrowing
 			>,
 		factory::storage::None

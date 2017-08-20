@@ -7,9 +7,7 @@
 
 namespace {
 
-using namespace dormouse_engine;
-using namespace dormouse_engine::policy;
-using namespace dormouse_engine::policy::creation;
+using namespace dormouse_engine::essentials::policy::creation;
 
 BOOST_AUTO_TEST_SUITE(PolicyTestSuite);
 BOOST_AUTO_TEST_SUITE(FunctorTestSuite);

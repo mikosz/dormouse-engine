@@ -12,7 +12,7 @@ namespace dormouse_engine::essentials {
 
 template <
 	class InstanceType,
-	class CreatorType = policy::creation::New<InstanceType>
+	class CreatorType = essentials::policy::creation::New<InstanceType>
 	>
 class Singleton : boost::noncopyable {
 public:

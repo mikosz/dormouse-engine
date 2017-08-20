@@ -63,7 +63,9 @@ private:
 
 };
 
-} // namespace essentials
+} // namespace dormouse_engine::essentials
+
+namespace dormouse_engine {
 
 using essentials::InfixOstreamIterator;
 

@@ -12,7 +12,7 @@ namespace dormouse_engine::logger {
 class GlobalLoggerFactory :
 	public essentials::Singleton<
 		GlobalLoggerFactory,
-		policy::creation::New<GlobalLoggerFactory>
+		essentials::policy::creation::New<GlobalLoggerFactory>
 		>,
 	public LoggerFactory
 {

@@ -1,8 +1,6 @@
 #include "App.hpp"
 
-using namespace coconut;
-using namespace coconut::milk;
-using namespace coconut::milk::system;
+using namespace dormouse_engine::wm;
 
 App::App(const MainArguments& mainArguments) :
 	instance_(mainArguments.hinstance),

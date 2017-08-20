@@ -1,6 +1,7 @@
 local m = {}
 
 local headers = {}
+local all_projects = {}
 local library_projects = {}
 local test_projects = {}
 
@@ -38,15 +39,17 @@ local sources = function(source_dir_name)
 	files(patterns)
 end
 
-local create_project = function(name, source_dir_name)
+local create_source_project = function(name, source_dir_name)
 	group(m.current_group)
 	project(name)
 		sources(source_dir_name)
+		
+		table.insert(all_projects, name)
 end
 
 local create_test_projects = function(name, is_library, common_settings)
 	if not table.isempty(os.matchfiles(source_dir("test").."**.cpp")) then
-		create_project(name.."-unit-test", "test")
+		create_source_project(name.."-unit-test", "test")
 			kind "ConsoleApp"
 			targetdir(target_dir_path("tests"))
 			includedirs { source_dir("main") }
@@ -62,7 +65,7 @@ local create_test_projects = function(name, is_library, common_settings)
 	end
 
 	if not table.isempty(os.matchfiles(source_dir("functional-test").."**.cpp")) then
-		create_project(name.."-functional-test", "functional-test")
+		create_source_project(name.."-functional-test", "functional-test")
 			kind "ConsoleApp"
 			targetdir(target_dir_path("tests"))
 			includedirs { source_dir("main") }
@@ -88,7 +91,7 @@ end
 
 local create_main_project = function(name)
 
-	create_project(name, "main")
+	create_source_project(name, "main")
 	project "*"
 	
 	includedirs(source_dir("main"))
@@ -233,6 +236,14 @@ function m.create_run_tests_project()
 				"%{wks.location}%{cfg.shortname}/tests/"..test..".exe" -- ".exe" could come from a token?
 			}
 		end
+	project "*"
+end
+
+function m.create_build_all_project()
+	group ""
+	project "BUILD_ALL"
+		kind "Utility"
+		dependson(all_projects)
 	project "*"
 end
 

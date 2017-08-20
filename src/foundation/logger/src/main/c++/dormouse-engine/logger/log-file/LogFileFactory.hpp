@@ -26,7 +26,7 @@ private:
 		std::string,
 		factory::CreatorRegistry<
 			std::string,
-			policy::creation::Functor<FunctorType>,
+			essentials::policy::creation::Functor<FunctorType>,
 			factory::error_policy::ExceptionThrowing
 			>,
 		factory::storage::Permanent
