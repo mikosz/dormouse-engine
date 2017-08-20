@@ -53,9 +53,11 @@ public:
 		UINT* bytes
 		) override
 	{
-		data_.emplace_back(handler_(fileName));
-		*data = data_.back()->data();
-		*bytes = static_cast<UINT>(data_.back()->size());
+		if (handler_) {
+			data_.emplace_back(handler_(fileName));
+			*data = data_.back()->data();
+			*bytes = static_cast<UINT>(data_.back()->size());
+		}
 		return S_OK;
 	}
 
@@ -74,7 +76,7 @@ private:
 } // anonymous namespace
 
 ShaderCompiler::ShaderData ShaderCompiler::compile(
-    const std::vector<std::uint8_t>& code,
+	essentials::ConstBufferView code,
     const std::string& name,
 	const std::string& entrypoint,
     ShaderType type,
