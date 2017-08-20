@@ -1,9 +1,10 @@
 #include "PixelFormat.hpp"
 
-#include <algorithm>
-
-using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
+
+
+
+#if 0
 
 // TODO: temp
 size_t graphics::formatSize(PixelFormat format) {
@@ -64,4 +65,4 @@ const char* const graphics::formatHLSLType(PixelFormat format) {
 		throw std::runtime_error("Unknown hlsl type");
 	}
 }
-
+#endif

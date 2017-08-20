@@ -11,9 +11,6 @@ namespace dormouse_engine::essentials {
 
 namespace detail {
 
-template <class SourceT, class DestT>
-using CopyConstness_t = std::conditional_t<std::is_const_v<SourceT>, std::add_const_t<DestT>, DestT>;
-
 template <class ByteT>
 class BufferView {
 public:
@@ -64,17 +61,29 @@ using ConstBufferView = detail::BufferView<const Byte>;
 
 template <class T>
 auto viewBuffer(T* data, size_t size) {
-	return detail::BufferView<detail::CopyConstness_t<T, Byte>>(data, size);
+	if constexpr (std::is_const_v<T>) {
+		return detail::BufferView<const Byte>(data, size);
+	} else {
+		return detail::BufferView<Byte>(data, size);
+	}
 }
 
 template <class T, size_t S>
 auto viewBuffer(T (&a)[S]) {
-	return detail::BufferView<detail::CopyConstness_t<T, Byte>>(a, S);
+	if constexpr (std::is_const_v<T>) {
+		return detail::BufferView<const Byte>(a, S);
+	} else {
+		return detail::BufferView<Byte>(a, S);
+	}
 }
 
 template <class T, size_t S>
 auto viewBuffer(std::array<T, S>& a) {
-	return detail::BufferView<detail::CopyConstness_t<T, Byte>>(a.data(), a.size());
+	if constexpr (std::is_const_v<T>) {
+		return detail::BufferView<const Byte>(a.data(), a.size());
+	} else {
+		return detail::BufferView<Byte>(a.data(), a.size());
+	}
 }
 
 template <class T, size_t S>
