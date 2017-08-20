@@ -10,8 +10,7 @@
 #include "layout/LayoutFactory.hpp"
 #include "Logger.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 class LoggerFactory {
 public:
@@ -38,7 +37,6 @@ private:
 
 };
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGGERFACTORY_HPP_ */

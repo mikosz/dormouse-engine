@@ -9,8 +9,7 @@ struct ID3D11HullShader;
 struct ID3D11DomainShader;
 struct ID3D11PixelShader;
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 
 DE_ENUM(ShaderType,
@@ -49,7 +48,6 @@ constexpr ShaderType shaderTypeFromShader<ID3D11PixelShader>() {
 	return ShaderType::PIXEL;
 }
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_SHADERTYPE_HPP_ */

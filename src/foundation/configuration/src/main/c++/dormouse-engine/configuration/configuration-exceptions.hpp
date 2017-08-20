@@ -7,8 +7,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 class ConfigurationException : public exceptions::RuntimeError {
 public:
@@ -147,7 +146,6 @@ private:
 
 };
 
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_CONFIGURATION_EXCEPTIONS_HPP_ */

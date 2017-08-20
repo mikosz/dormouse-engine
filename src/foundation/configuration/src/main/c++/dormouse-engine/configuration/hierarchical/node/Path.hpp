@@ -11,9 +11,7 @@
 
 #include "Selector.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace hierarchical {
+namespace dormouse_engine::configuration::hierarchical {
 
 class HierarchicalConfiguration;
 
@@ -117,9 +115,8 @@ std::ostream& operator<<(std::ostream& os, const Path::Element& pathElement);
 std::ostream& operator<<(std::ostream& os, const Path& path);
 
 } // namespace node
-} // namespace hierarchical
-} // namespace configuration
-} // namespace dormouse_engine
+
+} // namespace dormouse_engine::configuration::hierarchical
 
 namespace std {
 

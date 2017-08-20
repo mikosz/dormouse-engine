@@ -14,9 +14,7 @@
 #include "dormouse-engine/logger/log-file/LogFile.hpp"
 #include "dormouse-engine/logger/log-file/LogFileFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace configuration {
+namespace dormouse_engine::logger::configuration {
 
 class LoggerConfigurationError : public exceptions::RuntimeError {
 public:
@@ -122,8 +120,6 @@ private:
 
 DE_SMART_POINTER_DEFINITONS(LoggerConfiguration);
 
-}  // namespace configuration
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger::configuration
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGGERCONFIGURATION_HPP_ */

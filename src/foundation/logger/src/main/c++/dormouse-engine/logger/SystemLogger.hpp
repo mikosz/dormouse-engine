@@ -9,8 +9,7 @@
 
 #include "Logger.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 class SystemLogger :
 	public essentials::Singleton<
@@ -25,7 +24,6 @@ public:
 
 };
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_SYSTEMLOGGER_HPP_ */

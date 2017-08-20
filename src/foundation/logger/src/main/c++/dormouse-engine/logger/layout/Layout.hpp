@@ -11,9 +11,7 @@
 
 #include "../Context.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class Layout :
 	public essentials::Initialisable<
@@ -46,8 +44,6 @@ protected:
 
 DE_SMART_POINTER_DEFINITONS(Layout);
 
-} // namespace layout
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_LAYOUT_HPP_ */

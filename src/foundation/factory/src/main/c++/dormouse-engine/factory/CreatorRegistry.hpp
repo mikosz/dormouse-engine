@@ -5,8 +5,7 @@
 
 #include <boost/call_traits.hpp>
 
-namespace dormouse_engine {
-namespace factory {
+namespace dormouse_engine::factory {
 
 template <
 	class IdentifierType,
@@ -61,7 +60,6 @@ private:
 
 };
 
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory
 
 #endif /* DORMOUSEENGINE_FACTORY_CREATORREGISTRY_HPP_ */

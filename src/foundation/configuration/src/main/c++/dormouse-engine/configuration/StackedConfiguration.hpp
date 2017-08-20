@@ -10,8 +10,7 @@
 #include "dormouse-engine/essentials/pointee.hpp"
 #include "StringConfiguration.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 /**
  * StackedConfiguration stores the configuration in layers. Layers on top of others override values specified
@@ -191,7 +190,6 @@ private:
 
 };
 
-}  // namespace configuration
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_STACKEDCONFIGURATION_HPP_ */

@@ -9,9 +9,7 @@
 
 #include "dormouse-engine/system/tmp-file.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
-namespace test_utils {
+namespace dormouse_engine::essentials::test_utils {
 
 inline void writeToFile(const boost::filesystem::path& path, const std::string& s) {
 	std::ofstream ofs(path.string().c_str());
@@ -47,8 +45,6 @@ private:
 
 };
 
-} // namespace test_utils
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials::test_utils
 
 #endif /* DORMOUSEENGINE_ESSENTIALS_TEST_UTILS_HPP_ */

@@ -38,8 +38,7 @@
 
 #include "enum.hpp"
 
-namespace dormouse_engine {
-namespace enums {
+namespace dormouse_engine::enums {
 
 namespace detail {
 
@@ -74,8 +73,7 @@ public:
 template <class T>
 constexpr auto IsFlagV = IsFlag<T>::value;
 
-} // namespace enums
-} // namespace dormouse_engine
+} // namespace dormouse_engine::enums
 
 #define DE_FLAG_value_incrementing(r, data, i, value) \
 	(value)(1 << i)

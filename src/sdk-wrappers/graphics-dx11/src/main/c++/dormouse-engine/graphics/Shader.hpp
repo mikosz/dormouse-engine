@@ -9,8 +9,7 @@
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Device;
 
@@ -42,7 +41,6 @@ using HullShader = detail::Shader<ID3D11HullShader>;
 using DomainShader = detail::Shader<ID3D11DomainShader>;
 using PixelShader = detail::Shader<ID3D11PixelShader>;
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_SHADER_HPP_ */

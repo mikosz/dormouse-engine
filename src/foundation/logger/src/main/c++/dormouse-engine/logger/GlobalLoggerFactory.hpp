@@ -7,8 +7,7 @@
 
 #include "LoggerFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 class GlobalLoggerFactory :
 	public essentials::Singleton<
@@ -33,7 +32,6 @@ private:
 
 };
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_GLOBALLOGGERFACTORY_HPP_ */

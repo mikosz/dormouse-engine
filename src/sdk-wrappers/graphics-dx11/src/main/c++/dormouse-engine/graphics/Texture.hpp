@@ -11,8 +11,7 @@
 #include "PixelFormat.hpp"
 #include "Resource.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Device;
 
@@ -46,7 +45,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_TEXTURE_HPP_ */

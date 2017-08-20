@@ -7,9 +7,7 @@
 #include "detail/InstanceType.hpp"
 #include "detail/Mapping.hpp"
 
-namespace dormouse_engine {
-namespace factory {
-namespace storage {
+namespace dormouse_engine::factory::storage {
 
 template <class IdentifierType, class InstanceType>
 class Volatile :
@@ -51,8 +49,6 @@ public:
 
 };
 
-} // namespace storage
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory::storage
 
 #endif /* DORMOUSEENGINE_FACTORY_STORAGE_VOLATILE_HPP_ */

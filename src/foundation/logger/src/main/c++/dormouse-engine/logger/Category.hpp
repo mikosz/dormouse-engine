@@ -3,8 +3,7 @@
 
 #include <string>
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 typedef std::string Category;
 
@@ -28,7 +27,6 @@ inline const Category& loggerCategory(ConstructibleFromFakeParam = FakeParam()) 
 	return category;
 }
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_CATEGORY_HPP_ */

@@ -5,9 +5,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace dormouse_engine {
-namespace configuration {
-namespace parsers {
+namespace dormouse_engine::configuration::parsers {
 
 class PropertyTreeParser : public HierarchicalParser {
 public:
@@ -22,8 +20,6 @@ protected:
 
 };
 
-} // namespace parsers
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::parsers
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_PARSERS_PROPERTYTREEPARSER_HPP_ */

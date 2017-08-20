@@ -13,12 +13,10 @@ namespace dormouse_engine { namespace exceptions { using gcc::Backtrace; } }
 namespace dormouse_engine { namespace exceptions { using no_backtrace::Backtrace; } }
 #endif
 
-namespace dormouse_engine {
-namespace exceptions {
+namespace dormouse_engine::exceptions {
 
 std::ostream& operator<< (std::ostream& os, const Backtrace& backtrace);
 
-} // namespace exceptions
-} // namespace dormouse_engine
+} // namespace dormouse_engine::exceptions
 
 #endif /* DORMOUSEENGINE_EXCEPTIONS_BACKTRACE_HPP_ */

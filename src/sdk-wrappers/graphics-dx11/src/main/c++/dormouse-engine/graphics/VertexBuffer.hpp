@@ -3,8 +3,7 @@
 
 #include "Buffer.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class VertexBuffer : public Buffer {
 public:
@@ -27,7 +26,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_VERTEXBUFFER_HPP_ */

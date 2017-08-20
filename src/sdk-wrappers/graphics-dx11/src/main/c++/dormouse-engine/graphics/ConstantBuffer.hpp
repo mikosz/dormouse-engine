@@ -3,8 +3,7 @@
 
 #include "Buffer.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class ConstantBuffer : public Buffer { // TODO: this, Vertex and IndexBuffer classes are probably useless.
 public:
@@ -16,7 +15,6 @@ public:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_CONSTANTBUFFER_HPP_ */

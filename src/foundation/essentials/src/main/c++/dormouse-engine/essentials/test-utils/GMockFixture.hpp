@@ -8,9 +8,7 @@
 
 #include <gmock/gmock.h>
 
-namespace dormouse_engine {
-namespace essentials {
-namespace test_utils {
+namespace dormouse_engine::essentials::test_utils {
 
 class GMockFixture {
 
@@ -48,20 +46,16 @@ public:
 
 };
 
-} // namespace test_utils
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials::test_utils
 
 // Wokaround for GMocks error that caused a stack overflow when mocking functions that accepted
 // boost::filesystem::path parameters
-namespace boost {
-namespace filesystem {
+namespace boost::filesystem {
 
 inline void PrintTo(const boost::filesystem::path& path, std::ostream* os) {
 	*os << path;
 }
 
-} // namespace filesystem
-} // namespace boost
+} // namespace boost::filesystem
 
 #endif /* DORMOUSEENGINE_ESSENTIALS_TEST_UTILS_GMOCKFIXTURE_HPP_ */

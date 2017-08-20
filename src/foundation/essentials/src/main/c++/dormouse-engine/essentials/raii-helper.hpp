@@ -3,8 +3,7 @@
 
 #include <functional>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 class RaiiHelper {
 public:
@@ -31,7 +30,6 @@ private:
 
 };
 
-}  // namespace essentials
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_RAII_HELPER_HPP_ */

@@ -7,10 +7,7 @@
 
 #include <boost/call_traits.hpp>
 
-namespace dormouse_engine {
-namespace factory {
-namespace storage {
-namespace detail {
+namespace dormouse_engine::factory::storage::detail {
 
 template <class IdentifierType, class StoredType>
 class Mapping {
@@ -54,9 +51,6 @@ private:
 
 };
 
-} // namespace detail
-} // namespace storage
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory::storage::detail
 
 #endif /* DORMOUSEENGINE_FACTORY_STORAGE_DETAIL_MAPPING_HPP_ */

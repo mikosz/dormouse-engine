@@ -9,13 +9,13 @@
 
 #include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace hierarchical {
+namespace dormouse_engine::configuration::hierarchical {
 
 class HierarchicalConfiguration;
 
-namespace node {
+} // namespace dormouse_engine::configuration::hierarchical
+
+namespace dormouse_engine::configuration::hierarchical::node {
 
 class Selector :
 	boost::equality_comparable<Selector>,
@@ -52,12 +52,8 @@ protected:
 
 std::ostream& operator<<(std::ostream& os, const Selector& selector);
 
-
 DE_SMART_POINTER_DEFINITONS(Selector);
 
-} // namespace node
-} // namespace hierarchical
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::hierarchical::node
 
 #endif /* _DORMOUSEENGINE_CONFIGURATION_HIERARCHICAL_NODE_SELECTOR_HPP_ */

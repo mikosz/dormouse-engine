@@ -3,9 +3,7 @@
 
 #include <memory>
 
-namespace dormouse_engine {
-namespace policy {
-namespace creation {
+namespace dormouse_engine::policy::creation {
 
 template <class InstanceType, class... Arguments>
 class New {
@@ -57,8 +55,6 @@ private:
 
 };
 
-} // namespace creation
-} // namespace policy
-} // namespace dormouse_engine
+} // namespace dormouse_engine::policy::creation
 
 #endif /* DORMOUSEENGINE_POLICY_NEW_HPP_ */

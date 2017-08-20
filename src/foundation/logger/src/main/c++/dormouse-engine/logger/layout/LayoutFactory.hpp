@@ -15,9 +15,7 @@
 
 #include "dormouse-engine/logger/configuration/LoggerConfiguration.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class LayoutFactory :
 	public Factory<
@@ -74,8 +72,6 @@ private:
 
 };
 
-}  // namespace layout
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_LAYOUTFACTORY_HPP_ */

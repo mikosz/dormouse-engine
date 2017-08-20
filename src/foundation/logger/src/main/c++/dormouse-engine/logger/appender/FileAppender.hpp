@@ -12,9 +12,7 @@
 
 #include "dormouse-engine/logger/log-file/LogFile.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class FileAppender : public Appender {
 public:
@@ -66,8 +64,6 @@ private:
 
 };
 
-} // namespace appender
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DORMOUSEENGINE_LOGGER_APPENDER_FILEAPPENDER_HPP_ */

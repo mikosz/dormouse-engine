@@ -12,8 +12,7 @@
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class ShaderReflection {
 public:
@@ -169,7 +168,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_SHADERREFLECTION_HPP_ */

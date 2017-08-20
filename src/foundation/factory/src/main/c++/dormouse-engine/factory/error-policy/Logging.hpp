@@ -5,9 +5,7 @@
 
 #include <boost/call_traits.hpp>
 
-namespace dormouse_engine {
-namespace factory {
-namespace error_policy {
+namespace dormouse_engine::factory::error_policy {
 
 template <class IdentifierType>
 class Logging {
@@ -35,8 +33,6 @@ private:
 
 };
 
-}  // namespace error_policy
-}  // namespace factory
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::factory::error_policy
 
 #endif /* DORMOUSEENGINE_FACTORY_ERROR_POLICY_LOGGING_HPP_ */

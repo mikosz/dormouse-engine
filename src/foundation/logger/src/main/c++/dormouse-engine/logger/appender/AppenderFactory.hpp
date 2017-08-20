@@ -9,9 +9,7 @@
 #include "dormouse-engine/logger/configuration/LoggerConfiguration.hpp"
 #include "dormouse-engine/logger/layout/LayoutFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class AppenderFactory {
 public:
@@ -62,8 +60,6 @@ private:
 
 };
 
-}  // namespace appender
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DORMOUSEENGINE_APPENDER_APPENDERFACTORY_HPP_ */

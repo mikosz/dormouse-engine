@@ -5,8 +5,7 @@
 
 #include "ConfigurationUpdater.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 template <class ConfigurationType>
 class Configurable {
@@ -36,7 +35,6 @@ private:
 
 };
 
-}  // namespace configuration
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_CONFIGURABLE_HPP_ */

@@ -11,9 +11,7 @@
 
 #include "detail/InstanceType.hpp"
 
-namespace dormouse_engine {
-namespace factory {
-namespace storage {
+namespace dormouse_engine::factory::storage {
 
 // TODO: Freezer is now broken, i.e. doesn't fulfill the current requirements of
 // Factory on storage implementations. Thing is I don't use it at the moment.
@@ -135,8 +133,6 @@ private:
 
 };
 
-} // namespace storage
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory::storage
 
 #endif /* DORMOUSEENGINE_FACTORY_STORAGE_FREEZER_HPP_ */

@@ -7,8 +7,7 @@
 
 #include "Backtrace.hpp"
 
-namespace dormouse_engine {
-namespace exceptions {
+namespace dormouse_engine::exceptions {
 
 template <class ParentType>
 class GenericException : public ParentType {
@@ -87,7 +86,6 @@ private:
 		return NAME; \
 	}
 
-} // namespace exceptions
-} // namespace dormouse_engine
+} // namespace dormouse_engine::exceptions
 
 #endif /* DORMOUSEENGINE_EXCEPTIONS_GENERICEXCEPTION_HPP_ */

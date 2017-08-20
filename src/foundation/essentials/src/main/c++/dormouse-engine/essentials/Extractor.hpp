@@ -3,8 +3,7 @@
 
 #include <functional>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <class Owner, class Member>
 class Extractor : public std::unary_function<const Owner&, const Member&> {
@@ -29,7 +28,6 @@ Extractor<Owner, Member> makeExtractor(Member Owner::*member) {
 	return Extractor<Owner, Member>(member);
 }
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_EXTRACTOR_HPP_ */

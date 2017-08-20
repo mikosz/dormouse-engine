@@ -92,8 +92,7 @@ BOOST_AUTO_TEST_CASE(LogsUsingCategorySpecifiedInScopedContext) {
 	DE_LOGGER_LOCAL_CATEGORY("INTERNAL");
 }
 
-} // namespace local_context
-} // namespace external_context
+} // namespace external_context::local_context
 
 BOOST_AUTO_TEST_CASE(ExpressionsInLoggingInstructionsAreNotEvaluatedIfLevelUnderLoggerLevel) {
 	BOOST_ASSERT((DE_LOGGER)->getLevel() == Level::INFO);

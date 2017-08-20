@@ -1,8 +1,7 @@
 #ifndef DORMOUSEENGINE_SYSTEM_PLATFORM_HPP_
 #define DORMOUSEENGINE_SYSTEM_PLATFORM_HPP_
 
-namespace dormouse_engine {
-namespace system {
+namespace dormouse_engine::system {
 
 enum class Platform {
 	WINDOWS,
@@ -36,7 +35,6 @@ const Compiler COMPILER = Compiler::GCC;
 const Compiler COMPILER = Compiler::CLANG;
 #endif
 
-}  // namespace system
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::system
 
 #endif /* DORMOUSEENGINE_SYSTEM_PLATFORM_HPP_ */

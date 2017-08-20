@@ -6,9 +6,7 @@
 #include "dormouse-engine/configuration/parsers/HierarchicalParser.hpp"
 #include "dormouse-engine/configuration/hierarchical/HierarchicalConfiguration.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace readers {
+namespace dormouse_engine::configuration::readers {
 
 class HierarchicalConfigurationReader {
 public:
@@ -27,8 +25,6 @@ public:
 
 };
 
-} // namespace readers
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::readers
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_READERS_HIERARCHICALCONFIGURATIONREADER_HPP_ */

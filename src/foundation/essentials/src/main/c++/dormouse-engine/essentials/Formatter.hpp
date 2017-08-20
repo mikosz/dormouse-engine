@@ -6,8 +6,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 class FormatterError : public exceptions::RuntimeError {
 public:
@@ -95,7 +94,6 @@ private:
 
 };
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_FORMATTER_HPP_ */

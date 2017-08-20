@@ -12,8 +12,7 @@
 
 #include "configuration-exceptions.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 /**
  * Generic configuration interface. Design to support both simple key-value configurations as well as
@@ -153,7 +152,6 @@ public:
 
 };
 
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_CONFIGURATION_HPP_ */

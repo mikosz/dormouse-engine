@@ -7,8 +7,7 @@
 
 #include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <class ValueType, class... InitialiseArguments>
 class Initialisable {
@@ -36,7 +35,6 @@ protected:
 
 };
 
-}  // namespace essentials
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_INITIALISABLE_HPP_ */
