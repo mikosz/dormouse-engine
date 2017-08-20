@@ -6,3 +6,5 @@ BOOST_TOOLSET = "vc141"
 BOOST_MULTITHREADED = true
 
 DIRECTX_TEX_ROOT = "E:/work/DirectXTex"
+
+GRAPHICS_API = "dx11"

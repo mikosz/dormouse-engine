@@ -55,6 +55,7 @@ workspace "dormouse-engine"
 	filter {}
 
 	include "foundation"
+	include "sdk-wrappers"
 		
 	structure.create_install_project()
 	structure.create_run_tests_project()

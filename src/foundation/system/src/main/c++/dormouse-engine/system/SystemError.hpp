@@ -22,9 +22,6 @@ public:
 	{
 	}
 
-	~SystemError() throw() {
-	}
-
 	const std::error_code& errorCode() {
 		return errorCode_;
 	}
