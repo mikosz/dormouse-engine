@@ -3,8 +3,7 @@
 
 #include <functional>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 inline size_t hashCombine(size_t seed, size_t value) {
 	// Code from boost
@@ -15,7 +14,6 @@ inline size_t hashCombine(size_t seed, size_t value) {
 	return seed;
 }
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_HASH_COMBINE_HPP_ */

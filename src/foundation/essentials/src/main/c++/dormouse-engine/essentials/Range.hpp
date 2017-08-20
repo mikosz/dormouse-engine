@@ -5,8 +5,7 @@
 
 #include <boost/operators.hpp>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <class T, size_t EPSILON_RECIPROCAL = 10000u> // TODO: epsilon
 class Range {
@@ -141,7 +140,9 @@ Range<T> range(T begin, T end, T step = T(1)) {
 	return Range<T>(std::move(begin), std::move(end), std::move(step));
 }
 
-} // namespace essentials
+} // namespace dormouse_engine::essentials
+
+namespace dormouse_engine {
 
 using essentials::Range;
 using essentials::range;

@@ -10,8 +10,7 @@
 
 #include "dormouse-engine/essentials/pointee.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 void localtime(std::tm* tmPtr, std::time_t t) {
 	std::tm& tm = pointee(tmPtr);
@@ -33,7 +32,6 @@ void localtime(std::tm* tmPtr, std::time_t t) {
 #endif /* DE_COMPILER_VISUAL_CXX */
 }
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_LOCALTIMETHREADSAFE_HPP_ */

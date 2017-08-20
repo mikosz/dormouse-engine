@@ -13,8 +13,7 @@
 #include "dormouse-engine/essentials/pointee.hpp"
 #include "dormouse-engine/essentials/Extractor.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 /**
  * Implements the Configuration interface for simple flat configurations. The configuration is stored in a
@@ -105,7 +104,6 @@ private:
 
 };
 
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_FLATCONFIGURATION_HPP_ */

@@ -5,9 +5,7 @@
 #include <vector>
 #include <iosfwd>
 
-namespace dormouse_engine {
-namespace exceptions {
-namespace gcc {
+namespace dormouse_engine::exceptions::gcc {
 
 class Backtrace {
 public:
@@ -43,8 +41,6 @@ private:
 
 };
 
-} // namespace gcc
-} // namespace exceptions
-} // namespace dormouse_engine
+} // namespace dormouse_engine::exceptions::gcc
 
 #endif /* DORMOUSEENGINE_EXCEPTIONS_GCC_BACKTRACE_HPP_ */

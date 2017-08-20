@@ -106,11 +106,9 @@ BOOST_FIXTURE_TEST_CASE(LoggerCategorySetsAppropriateLogger, essentials::test_ut
 
 namespace fully_fledged_logger_configuration_test {
 
-
 DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST");
 
 namespace some_verbose_module {
-
 
 DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.LOGGER.FUNCTIONAL_TEST.SOME_VERBOSE_MODULE");
 

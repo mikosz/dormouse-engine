@@ -8,8 +8,7 @@
 #include <ostream> 
 #include <iterator> 
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <
 	class T,
@@ -64,7 +63,9 @@ private:
 
 };
 
-} // namespace essentials
+} // namespace dormouse_engine::essentials
+
+namespace dormouse_engine {
 
 using essentials::InfixOstreamIterator;
 

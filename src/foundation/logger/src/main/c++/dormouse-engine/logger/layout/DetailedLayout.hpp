@@ -7,9 +7,7 @@
 #include "Layout.hpp"
 #include "Clock.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class DetailedLayout : public Layout {
 public:
@@ -50,8 +48,6 @@ private:
 
 };
 
-} // namespace layout
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_DETAILEDLAYOUT_HPP_ */

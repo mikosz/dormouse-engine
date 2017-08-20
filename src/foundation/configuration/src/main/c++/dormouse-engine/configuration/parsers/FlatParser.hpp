@@ -6,9 +6,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-namespace dormouse_engine {
-namespace configuration {
-namespace parsers {
+namespace dormouse_engine::configuration::parsers {
 
 class FlatParser {
 public:
@@ -24,8 +22,6 @@ public:
 
 };
 
-} // namespace parsers
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::parsers
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_PARSERS_SIMPLEPARSER_HPP_ */

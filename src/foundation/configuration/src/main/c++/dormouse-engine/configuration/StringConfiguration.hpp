@@ -3,8 +3,7 @@
 
 #include "Configuration.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 template <class StringType>
 class StringConfiguration : public Configuration<StringType, StringType> {
@@ -61,7 +60,6 @@ public:
 
 } // namespace detail
 
-}  // namespace configuration
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_STRINGCONFIGURATION_HPP_ */

@@ -13,9 +13,7 @@
 #include "dormouse-engine/logger/layout/Layout.hpp"
 #include "dormouse-engine/logger/Context.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class Appender :
 	public essentials::Initialisable<
@@ -67,11 +65,8 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(Appender);
 
-} // namespace appender
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DORMOUSEENGINE_LOGGER_APPENDER_APPENDER_HPP_ */

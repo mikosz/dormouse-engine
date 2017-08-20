@@ -5,8 +5,7 @@
 
 #include "GenericException.hpp"
 
-namespace dormouse_engine {
-namespace exceptions {
+namespace dormouse_engine::exceptions {
 
 class RuntimeError : public GenericException<std::runtime_error> {
 public:
@@ -15,7 +14,6 @@ public:
 
 };
 
-} // namespace exceptions
-} // namespace dormouse_engine
+} // namespace dormouse_engine::exceptions
 
 #endif /* DORMOUSEENGINE_EXCEPTIONS_RUNTIMEERROR_HPP_ */

@@ -6,10 +6,7 @@
 #include "Selector.hpp"
 #include "Path.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace hierarchical {
-namespace node {
+namespace dormouse_engine::configuration::hierarchical::node {
 
 class SelectorHas : public Selector {
 public:
@@ -39,9 +36,6 @@ private:
 
 };
 
-} // namespace node
-} // namespace hierarchical
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::hierarchical::node
 
 #endif /* _DORMOUSEENGINE_CONFIGURATION_HIERARCHICAL_NODE_SELECTORHAS_HPP_ */

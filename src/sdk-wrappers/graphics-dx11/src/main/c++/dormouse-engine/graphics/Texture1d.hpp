@@ -8,8 +8,7 @@
 #include "PixelFormat.hpp"
 #include "Texture.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Device;
 class Image;
@@ -67,7 +66,6 @@ public:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_TEXTURE1D_HPP_ */

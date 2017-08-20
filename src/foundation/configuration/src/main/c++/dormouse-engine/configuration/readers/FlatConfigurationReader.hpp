@@ -10,9 +10,7 @@
 #include "dormouse-engine/configuration/parsers/FlatParser.hpp"
 #include "dormouse-engine/configuration/Configuration.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace readers {
+namespace dormouse_engine::configuration::readers {
 
 template <class Key, class Value>
 class FlatConfigurationReader {
@@ -52,8 +50,6 @@ private:
 
 };
 
-} // namespace readers
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::readers
 
 #endif /* DORMOUSEENGINE_CONFIUGRATION_READERS_SIMPLECONFIGURATIONREADER_HPP_ */

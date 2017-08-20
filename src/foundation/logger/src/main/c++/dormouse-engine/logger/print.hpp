@@ -6,8 +6,7 @@
 
 #include "dormouse-engine/essentials/IsIterable.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 template<class T>
 inline typename std::enable_if_t<!essentials::IsIterable<T>::value> print(std::ostream& os, const T& v) {
@@ -40,7 +39,6 @@ inline void print(std::ostream& os, const char* s) {
 	os << s;
 }
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_PRINT_HPP_ */

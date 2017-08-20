@@ -11,9 +11,7 @@
 
 #include "dormouse-engine/essentials/policy/creation/New.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class DebugWindowAppender : public Appender {
 public:
@@ -52,9 +50,7 @@ private:
 
 };
 
-} // namespace appender
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DE_COMPILER_VISUAL_CXX */
 

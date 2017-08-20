@@ -14,8 +14,7 @@
 #include "Shader.hpp"
 #include "ShaderType.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Resource;
 class Device;
@@ -92,7 +91,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_COMMANDLIST_HPP_ */

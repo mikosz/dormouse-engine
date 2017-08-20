@@ -3,8 +3,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 class NullPointerException : public exceptions::RuntimeError {
 public:
@@ -26,7 +25,6 @@ T& pointee(T* ptr) {
 	return *ptr;
 }
 
-}  // namespace essentials
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_ESSENTIALS_POINTEE_HPP_ */

@@ -3,8 +3,7 @@
 
 #include <tuple>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 namespace detail {
 
@@ -32,7 +31,6 @@ void forEachInTuple(const std::tuple<Ts...>& t, F f) {
 	detail::forEachInTuple(t, f, detail::GenSeq<sizeof...(Ts)>());
 }
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_FOR_EACH_IN_TUPLE_HPP_ */

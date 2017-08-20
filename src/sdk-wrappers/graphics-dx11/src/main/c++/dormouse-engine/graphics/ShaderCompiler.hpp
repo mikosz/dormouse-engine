@@ -19,8 +19,7 @@
 
 #include "ShaderType.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class ShaderCompiler {
 public:
@@ -56,7 +55,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_COMPILESHADER_HPP_ */

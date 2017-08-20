@@ -9,9 +9,7 @@
 #include "dormouse-engine/factory.hpp"
 #include "LogFile.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace log_file {
+namespace dormouse_engine::logger::log_file {
 
 class LogFileFactory {
 public:
@@ -28,7 +26,7 @@ private:
 		std::string,
 		factory::CreatorRegistry<
 			std::string,
-			policy::creation::Functor<FunctorType>,
+			essentials::policy::creation::Functor<FunctorType>,
 			factory::error_policy::ExceptionThrowing
 			>,
 		factory::storage::Permanent
@@ -40,8 +38,6 @@ private:
 
 DE_SMART_POINTER_DEFINITONS(LogFileFactory);
 
-} // namespace log_file
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::log_file
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGFILE_LOGFILEFACTORY_HPP_ */

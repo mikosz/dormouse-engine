@@ -3,9 +3,7 @@
 
 #include <iosfwd>
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class Clock {
 public:
@@ -43,8 +41,6 @@ std::istream& operator>>(std::istream& is, Clock::Precision& clockPrecision);
 
 std::ostream& operator<<(std::ostream& os, Clock::Precision clockPrecision);
 
-} // namespace layout
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_CLOCK_HPP_ */

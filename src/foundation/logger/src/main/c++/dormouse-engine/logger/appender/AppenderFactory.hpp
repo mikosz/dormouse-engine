@@ -9,9 +9,7 @@
 #include "dormouse-engine/logger/configuration/LoggerConfiguration.hpp"
 #include "dormouse-engine/logger/layout/LayoutFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class AppenderFactory {
 public:
@@ -24,7 +22,7 @@ public:
 	void registerType(const AppenderTypeId& appenderTypeId) {
 		typeFactory_.registerCreator(
 			appenderTypeId,
-			policy::creation::Functor<FunctorType>(
+			essentials::policy::creation::Functor<FunctorType>(
 				[]() {
 					return std::unique_ptr<Appender::Initialiser>(
 							new Appender::Initialiser(Appender::Initialiser::createInitialisable<ConcreteAppenderType>())
@@ -48,7 +46,7 @@ private:
 
 	using AppenderTypeFactory = Factory<
 		AppenderTypeId,
-		factory::CreatorRegistry<AppenderTypeId, policy::creation::Functor<FunctorType>, factory::error_policy::ExceptionThrowing>,
+		factory::CreatorRegistry<AppenderTypeId, essentials::policy::creation::Functor<FunctorType>, factory::error_policy::ExceptionThrowing>,
 		factory::storage::None
 		>;
 
@@ -62,8 +60,6 @@ private:
 
 };
 
-}  // namespace appender
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DORMOUSEENGINE_APPENDER_APPENDERFACTORY_HPP_ */

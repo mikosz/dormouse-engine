@@ -5,8 +5,7 @@
 
 #include "Category.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 struct Context {
 
@@ -39,7 +38,6 @@ private:
 
 };
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_CONTEXT_HPP_ */

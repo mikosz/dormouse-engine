@@ -6,8 +6,7 @@
 
 #include <boost/unordered_map.hpp>
 
-namespace dormouse_engine {
-namespace configuration {
+namespace dormouse_engine::configuration {
 
 template <class ConfigurationType>
 class ConfigurationUpdater {
@@ -72,7 +71,6 @@ void ConfigurationUpdater<ConfigurationType>::update(const Configuration& config
 	}
 }
 
-}  // namespace configuration
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::configuration
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_CONFIGURATIONUPDATER_HPP_ */

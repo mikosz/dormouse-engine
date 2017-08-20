@@ -1,0 +1,62 @@
+#ifndef _DORMOUSEENGINE_WM_WINDOW_HPP_
+#define _DORMOUSEENGINE_WM_WINDOW_HPP_
+
+#include <memory>
+#include <string>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include "dormouse-engine/system/windows/cleanup-macros.hpp"
+
+#include "dormouse-engine/system/windows/types.hpp"
+
+namespace dormouse_engine::wm {
+
+class App;
+
+class Window {
+public:
+
+	struct Configuration {
+
+		size_t width;
+
+		size_t height;
+
+		bool fullscreen;
+
+		std::string className;
+
+		std::string title;
+
+	};
+
+	Window(const Configuration& configuration, std::shared_ptr<App> app);
+
+	~Window();
+
+	size_t clientWidth() const;
+
+	size_t clientHeight() const;
+
+	bool fullscreen() const;
+
+	system::windows::WindowHandle handle() {
+		return handle_;
+	}
+
+private:
+
+	Configuration configuration_;
+
+	std::shared_ptr<App> app_;
+
+	system::windows::WindowHandle handle_;
+
+	static LRESULT CALLBACK messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam);
+
+};
+
+} // namespace dormouse_engine::wm
+
+#endif /* _DORMOUSEENGINE_WM_WINDOW_HPP_ */

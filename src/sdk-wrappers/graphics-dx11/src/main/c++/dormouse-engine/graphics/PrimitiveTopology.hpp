@@ -7,9 +7,7 @@
 
 #include "dormouse-engine/enums.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
-
+namespace dormouse_engine::graphics {
 
 DE_ENUM_VALUES(
 	PrimitiveTopology,
@@ -20,7 +18,6 @@ DE_ENUM_VALUES(
 	(PATCH_LIST_4_CONTROL_POINTS)(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST)
 	);
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_PRIMITIVETOPOLOGY_HPP_ */

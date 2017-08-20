@@ -9,21 +9,17 @@
 
 #include "LogFileFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace log_file {
+namespace dormouse_engine::logger::log_file {
 
 class GlobalLogFileFactory :
 	public essentials::Singleton<
 		GlobalLogFileFactory,
-		policy::creation::New<GlobalLogFileFactory>
+		essentials::policy::creation::New<GlobalLogFileFactory>
 		>,
 	public LogFileFactory
 {
 };
 
-} // namespace log_file
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::log_file
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGFILE_GLOBALLOGFILEFACTORY_HPP_ */

@@ -3,9 +3,7 @@
 
 #include "Layout.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class EmptyLayout : public Layout {
 public:
@@ -29,8 +27,6 @@ private:
 
 };
 
-} // namespace layout
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_EMPTYLAYOUT_HPP_ */

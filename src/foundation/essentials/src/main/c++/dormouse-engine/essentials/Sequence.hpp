@@ -5,8 +5,7 @@
 
 #include <utility>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <class T>
 class Sequence {
@@ -47,7 +46,6 @@ private:
 
 };
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_SEQUENCE_HPP_ */

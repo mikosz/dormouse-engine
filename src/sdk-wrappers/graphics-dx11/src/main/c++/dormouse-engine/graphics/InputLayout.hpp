@@ -11,8 +11,7 @@
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "PixelFormat.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Device;
 
@@ -65,7 +64,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_INPUTLAYOUTDESCRIPTION_HPP_ */

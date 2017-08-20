@@ -5,8 +5,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 enum class Level {
 	TRACE,
@@ -21,7 +20,6 @@ std::istream& operator>>(std::istream& is, Level& level);
 
 std::ostream& operator<<(std::ostream& os, Level level);
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_LEVEL_HPP_ */

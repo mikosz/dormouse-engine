@@ -13,9 +13,7 @@
 #include "../Configuration.hpp"
 #include "../configuration-exceptions.hpp"
 
-namespace dormouse_engine {
-namespace configuration {
-namespace hierarchical {
+namespace dormouse_engine::configuration::hierarchical {
 
 class AddOrSetNodePathChildHasSelector : public ConfigurationException {
 public:
@@ -126,11 +124,8 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(HierarchicalConfiguration);
 
-} // namespace hierarchical
-} // namespace configuration
-} // namespace dormouse_engine
+} // namespace dormouse_engine::configuration::hierarchical
 
 #endif /* DORMOUSEENGINE_CONFIGURATION_HIERARCHICAL_HIERARCHICALCONFIGURATION_HPP_ */

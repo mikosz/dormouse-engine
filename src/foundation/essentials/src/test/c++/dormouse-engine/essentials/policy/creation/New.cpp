@@ -7,9 +7,7 @@
 
 namespace {
 
-using namespace dormouse_engine;
-using namespace dormouse_engine::policy;
-using namespace dormouse_engine::policy::creation;
+using namespace dormouse_engine::essentials::policy::creation;
 
 struct Object {
 

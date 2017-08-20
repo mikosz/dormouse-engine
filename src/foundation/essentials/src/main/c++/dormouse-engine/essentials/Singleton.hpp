@@ -8,12 +8,11 @@
 
 #include "policy/creation/New.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 template <
 	class InstanceType,
-	class CreatorType = policy::creation::New<InstanceType>
+	class CreatorType = essentials::policy::creation::New<InstanceType>
 	>
 class Singleton : boost::noncopyable {
 public:
@@ -56,7 +55,6 @@ private:
 template <class InstanceType, class Creator>
 typename Singleton<InstanceType, Creator>::InstancePtr Singleton<InstanceType, Creator>::instance_;
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_SINGLETON_SINGLETON_HPP_ */

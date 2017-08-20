@@ -3,8 +3,7 @@
 
 #include <iterator>
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 namespace detail {
 
@@ -28,7 +27,6 @@ template <typename T>
 struct IsIterable : decltype(detail::IsIterable<T>(0)) {
 };
 
-} // namespace essentials
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_IS_ITERABLE_HPP_ */

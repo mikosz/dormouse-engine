@@ -7,8 +7,7 @@
 #include "Buffer.hpp"
 #include "PixelFormat.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class IndexBuffer : public Buffer {
 public:
@@ -45,7 +44,6 @@ inline std::uint32_t IndexBuffer::degenerateIndex<std::uint32_t>() {
 	return static_cast<std::uint32_t>(-1);
 }
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_INDEXBUFFER_HPP_ */

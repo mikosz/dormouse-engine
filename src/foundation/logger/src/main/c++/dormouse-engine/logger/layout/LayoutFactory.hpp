@@ -15,14 +15,12 @@
 
 #include "dormouse-engine/logger/configuration/LoggerConfiguration.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace layout {
+namespace dormouse_engine::logger::layout {
 
 class LayoutFactory :
 	public Factory<
 		std::string,
-		factory::CreatorRegistry<std::string, policy::creation::New<Layout>, factory::error_policy::ExceptionThrowing>,
+		factory::CreatorRegistry<std::string, essentials::policy::creation::New<Layout>, factory::error_policy::ExceptionThrowing>,
 		factory::storage::Permanent
 		>
 {
@@ -36,7 +34,7 @@ public:
 	essentials::Null registerType(const LayoutTypeId& layoutTypeId) {
 		typeFactory_.registerCreator(
 			layoutTypeId,
-			policy::creation::Functor<FunctorType>(
+			essentials::policy::creation::Functor<FunctorType>(
 				[]() {
 					return std::unique_ptr<Layout::Initialiser>(
 						new Layout::Initialiser(Layout::Initialiser::createInitialisable<ConcreteLayoutType>())
@@ -60,7 +58,7 @@ private:
 		LayoutTypeId,
 		factory::CreatorRegistry<
 			LayoutTypeId,
-			policy::creation::Functor<FunctorType>,
+			essentials::policy::creation::Functor<FunctorType>,
 			factory::error_policy::ExceptionThrowing
 			>,
 		factory::storage::None
@@ -74,8 +72,6 @@ private:
 
 };
 
-}  // namespace layout
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger::layout
 
 #endif /* DORMOUSEENGINE_LOGGER_LAYOUT_LAYOUTFACTORY_HPP_ */

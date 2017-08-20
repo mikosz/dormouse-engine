@@ -7,8 +7,7 @@
 
 #include "flag.hpp"
 
-namespace dormouse_engine {
-namespace enums {
+namespace dormouse_engine::enums {
 
 template <class FlagType>
 class Mask {
@@ -91,7 +90,9 @@ constexpr Mask<FlagType> operator^(FlagType lhs, FlagType rhs) noexcept {
 	return Mask<FlagType>() ^ lhs ^ rhs;
 }
 
-} // namespace enums
+} // namespace dormouse_engine::enums
+
+namespace dormouse_engine {
 
 using enums::Mask;
 

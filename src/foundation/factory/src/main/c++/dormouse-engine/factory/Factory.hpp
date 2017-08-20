@@ -5,8 +5,7 @@
 
 #include <boost/call_traits.hpp>
 
-namespace dormouse_engine {
-namespace factory {
+namespace dormouse_engine::factory {
 
 /**
  * A generic implementation of the "Factory" design pattern.
@@ -78,7 +77,6 @@ private:
 
 };
 
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory
 
 #endif /* DORMOUSEENGINE_FACTORY_FACTORY_HPP_ */

@@ -16,8 +16,7 @@
 #include "Context.hpp"
 #include "print.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 class Logger {
 private:
@@ -168,10 +167,8 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(Logger);
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGGER_HPP_ */

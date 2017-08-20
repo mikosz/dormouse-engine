@@ -1,5 +1,5 @@
-#ifndef DORMOUSEENGINE_FACTORY_ERROR_POLICY_EXCEPTIONTHROWING_HPP_
-#define DORMOUSEENGINE_FACTORY_ERROR_POLICY_EXCEPTIONTHROWING_HPP_
+#ifndef DORMOUSEENGINE_FACTORY_ERROR_ESSENTIALS_POLICY_EXCEPTIONTHROWING_HPP_
+#define DORMOUSEENGINE_FACTORY_ERROR_ESSENTIALS_POLICY_EXCEPTIONTHROWING_HPP_
 
 #include <sstream>
 
@@ -7,9 +7,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace factory {
-namespace error_policy {
+namespace dormouse_engine::factory::error_policy {
 
 template <class IdentifierType>
 class CreatorAlreadyRegistered : public exceptions::RuntimeError {
@@ -95,8 +93,6 @@ public:
 
 };
 
-} // namespace error_policy
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory::error_policy
 
-#endif /* DORMOUSEENGINE_FACTORY_ERROR_POLICY_EXCEPTIONTHROWING_HPP_ */
+#endif /* DORMOUSEENGINE_FACTORY_ERROR_ESSENTIALS_POLICY_EXCEPTIONTHROWING_HPP_ */

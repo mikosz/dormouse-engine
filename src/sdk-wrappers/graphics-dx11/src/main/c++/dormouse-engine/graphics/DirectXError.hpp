@@ -10,8 +10,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class DirectXError : public dormouse_engine::exceptions::RuntimeError {
 public:
@@ -41,7 +40,6 @@ inline void checkDirectXCall(HRESULT result, const std::string& errorMessage) {
 	}
 }
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DIRECTXERROR_HPP_ */

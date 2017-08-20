@@ -11,9 +11,7 @@
 #include "dormouse-engine/logger/configuration/LoggerConfiguration.hpp"
 #include "dormouse-engine/logger/layout/LayoutFactory.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace appender {
+namespace dormouse_engine::logger::appender {
 
 class ConsoleAppender : public Appender {
 public:
@@ -55,8 +53,6 @@ private:
 
 };
 
-} // namespace appender
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::appender
 
 #endif /* DORMOUSEENGINE_LOGGER_APPENDER_CONSOLEAPPENDER_HPP_ */

@@ -59,11 +59,9 @@ BOOST_AUTO_TEST_SUITE(MacrosTestSuite);
 
 namespace external_context {
 
-
 DE_LOGGER_CATEGORY("EXTERNAL");
 
 namespace local_context {
-
 
 DE_LOGGER_CATEGORY("LOCAL");
 
@@ -92,8 +90,9 @@ BOOST_AUTO_TEST_CASE(LogsUsingCategorySpecifiedInScopedContext) {
 	DE_LOGGER_LOCAL_CATEGORY("INTERNAL");
 }
 
-} // namespace local_context
 } // namespace external_context
+
+} // namespace local_context
 
 BOOST_AUTO_TEST_CASE(ExpressionsInLoggingInstructionsAreNotEvaluatedIfLevelUnderLoggerLevel) {
 	BOOST_ASSERT((DE_LOGGER)->getLevel() == Level::INFO);

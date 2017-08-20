@@ -6,9 +6,7 @@
 
 #include "dormouse-engine/enums.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
-
+namespace dormouse_engine::graphics {
 
 DE_ENUM_VALUES(
 	PixelFormat,
@@ -44,7 +42,6 @@ size_t formatRowPitch(PixelFormat format, size_t width);
 size_t formatSlicePitch(PixelFormat format, size_t height, size_t rowPitch);
 const char* const formatHLSLType(PixelFormat format);
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_PIXELFORMAT_HPP_ */

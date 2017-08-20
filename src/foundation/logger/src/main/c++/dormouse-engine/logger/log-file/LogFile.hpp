@@ -9,9 +9,7 @@
 
 #include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
-namespace dormouse_engine {
-namespace logger {
-namespace log_file {
+namespace dormouse_engine::logger::log_file {
 
 class LogFile {
 public:
@@ -46,8 +44,6 @@ private:
 
 DE_SMART_POINTER_DEFINITONS(LogFile);
 
-} // namespace log_file
-} // namespace logger
-} // namespace dormouse_engine
+} // namespace dormouse_engine::logger::log_file
 
 #endif /* DORMOUSEENGINE_LOGGER_LOGFILE_LOGFILE_HPP_ */

@@ -5,13 +5,11 @@
 
 namespace /* anonymous */ {
 
-
 DE_FLAG(TestFlag,
 	(VALUE0)
 	(VALUE1)
 	(VALUE2)
 	);
-
 
 DE_FLAG_VALUES(TestFlagValues,
 	(VALUE3)(3)

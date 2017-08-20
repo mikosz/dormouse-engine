@@ -9,13 +9,12 @@
 
 #include "Logger.hpp"
 
-namespace dormouse_engine {
-namespace logger {
+namespace dormouse_engine::logger {
 
 class SystemLogger :
 	public essentials::Singleton<
 		Logger,
-		policy::creation::New<SystemLogger>
+		essentials::policy::creation::New<SystemLogger>
 		>,
 	public Logger
 {
@@ -25,7 +24,6 @@ public:
 
 };
 
-}  // namespace logger
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::logger
 
 #endif /* DORMOUSEENGINE_LOGGER_SYSTEMLOGGER_HPP_ */

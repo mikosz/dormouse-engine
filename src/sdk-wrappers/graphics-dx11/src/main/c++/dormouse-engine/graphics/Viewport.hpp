@@ -4,8 +4,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
-namespace dormouse_engine {
-namespace graphics {
+namespace dormouse_engine::graphics {
 
 class Viewport {
 public:
@@ -38,7 +37,6 @@ private:
 
 };
 
-} // namespace graphics
-} // namespace dormouse_engine
+} // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_VIEWPORT_HPP_ */

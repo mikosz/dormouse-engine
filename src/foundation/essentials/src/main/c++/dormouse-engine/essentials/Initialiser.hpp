@@ -7,8 +7,7 @@
 
 #include "dormouse-engine/exceptions/LogicError.hpp"
 
-namespace dormouse_engine {
-namespace essentials {
+namespace dormouse_engine::essentials {
 
 class ObjectAlreadyInitialised : public exceptions::LogicError {
 };
@@ -55,7 +54,6 @@ private:
 
 };
 
-}  // namespace essentials
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::essentials
 
 #endif /* DORMOUSEENGINE_UTILS_INITIALISER_HPP_ */

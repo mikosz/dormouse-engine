@@ -3,10 +3,7 @@
 
 #include <memory>
 
-namespace dormouse_engine {
-namespace factory {
-namespace storage {
-namespace detail {
+namespace dormouse_engine::factory::storage::detail {
 
 template <class T>
 struct InstanceType {
@@ -31,9 +28,6 @@ struct InstanceType<std::weak_ptr<T>> {
 template <class T>
 using InstanceTypeT = typename InstanceType<T>::Type;
 
-} // namespace detail
-} // namespace storage
-} // namespace factory
-} // namespace dormouse_engine
+} // namespace dormouse_engine::factory::storage::detail
 
 #endif /* DORMOUSEENGINE_FACTORY_STORAGE_DETAIL_INSTANCETYPE_HPP_ */

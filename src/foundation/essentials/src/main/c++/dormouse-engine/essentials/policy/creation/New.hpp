@@ -1,11 +1,9 @@
-#ifndef DORMOUSEENGINE_POLICY_NEW_HPP_
-#define DORMOUSEENGINE_POLICY_NEW_HPP_
+#ifndef DORMOUSEENGINE_ESSENTIALS_POLICY_NEW_HPP_
+#define DORMOUSEENGINE_ESSENTIALS_POLICY_NEW_HPP_
 
 #include <memory>
 
-namespace dormouse_engine {
-namespace policy {
-namespace creation {
+namespace dormouse_engine::essentials::policy::creation {
 
 template <class InstanceType, class... Arguments>
 class New {
@@ -57,8 +55,6 @@ private:
 
 };
 
-} // namespace creation
-} // namespace policy
-} // namespace dormouse_engine
+} // namespace dormouse_engine::essentials::policy::creation
 
-#endif /* DORMOUSEENGINE_POLICY_NEW_HPP_ */
+#endif /* DORMOUSEENGINE_ESSENTIALS_POLICY_NEW_HPP_ */

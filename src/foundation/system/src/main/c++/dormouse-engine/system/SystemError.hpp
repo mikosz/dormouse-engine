@@ -5,8 +5,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-namespace dormouse_engine {
-namespace system {
+namespace dormouse_engine::system {
 
 class SystemError : public exceptions::RuntimeError {
 public:
@@ -34,7 +33,6 @@ private:
 
 };
 
-}  // namespace system
-}  // namespace dormouse_engine
+} // namespace dormouse_engine::system
 
 #endif /* DORMOUSEENGINE_SYSTEM_SYSTEMERROR_HPP_ */
