@@ -5,7 +5,7 @@ include "gmock.lua"
 
 workspace "dormouse-engine"
 
-	configurations { "DebugStatic", "ReleaseStatic" }
+	configurations { "DebugStatic", "DebugMemcheckStatic", "ReleaseStatic" }
 	
 	platforms { "Win64" }
 	
@@ -16,6 +16,10 @@ workspace "dormouse-engine"
 	filter "configurations:Debug*"
 		symbols "On"
 		
+	filter "configurations:DebugMemcheckStatic"
+		buildoptions { "/Ob0" } -- disable inline expansion
+		flags { "NoFramePointer" }
+	
 	filter "configurations:Release*"
 		defines { "NDEBUG" }
 		optimize "On"
