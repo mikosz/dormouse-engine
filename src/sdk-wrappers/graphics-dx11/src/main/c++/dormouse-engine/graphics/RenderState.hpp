@@ -1,0 +1,64 @@
+#ifndef _DORMOUSEENGINE_GRAPHICS_DX11_RENDERSTATE_HPP_
+#define _DORMOUSEENGINE_GRAPHICS_DX11_RENDERSTATE_HPP_
+
+#include <d3d11.h>
+#include "dormouse-engine/system/windows/cleanup-macros.hpp"
+
+#include "dormouse-engine/enums.hpp"
+#include "dormouse-engine/system/windows/COMWrapper.hpp"
+
+namespace dormouse_engine {
+namespace graphics {
+
+class Renderer;
+
+class RenderState {
+public:
+
+	DE_MEMBER_ENUM_VALUES(
+		CullMode,
+		(BACK)(D3D11_CULL_BACK)
+		(FRONT)(D3D11_CULL_FRONT)
+		(NONE)(D3D11_CULL_NONE)
+		);
+
+	DE_MEMBER_ENUM_VALUES(
+		FillMode,
+		(SOLID)(D3D11_FILL_SOLID)
+		(WIREFRAME)(D3D11_FILL_WIREFRAME)
+		);
+
+	struct Configuration {
+
+		CullMode cullMode = CullMode::BACK;
+
+		FillMode fillMode = FillMode::SOLID;
+
+		bool frontCounterClockwise = false;
+
+		bool blendingEnabled = false;
+
+	};
+
+	RenderState(Renderer& renderer, const Configuration& configuration);
+
+	ID3D11RasterizerState& internalRasteriserState() const {
+		return *rasteriserState_;
+	}
+
+	ID3D11BlendState& internalBlendState() const {
+		return *blendState_;
+	}
+
+private:
+
+	system::windows::COMWrapper<ID3D11RasterizerState> rasteriserState_;
+
+	system::windows::COMWrapper<ID3D11BlendState> blendState_;
+
+};
+
+} // namespace graphics
+} // namespace dormouse_engine
+
+#endif /* _DORMOUSEENGINE_GRAPHICS_DX11_RENDERSTATE_HPP_ */
