@@ -18,7 +18,7 @@ public:
 
 	IndexBuffer() = default;
 
-	IndexBuffer(Renderer& renderer, const Configuration& configuration, const void* initialData = 0) :
+	IndexBuffer(Device& renderer, const Configuration& configuration, const void* initialData = 0) :
 		Buffer(renderer, CreationPurpose::INDEX_BUFFER, configuration, initialData),
 		pixelFormat_(configuration.stride == 2 ? PixelFormat::I16_UINT : PixelFormat::I32_UINT)
 	{

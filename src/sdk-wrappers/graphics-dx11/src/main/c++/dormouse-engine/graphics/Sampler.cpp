@@ -1,12 +1,12 @@
 #include "Sampler.hpp"
 
 #include "DirectXError.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-Sampler::Sampler(Renderer& renderer, const Configuration& configuration) {
+Sampler::Sampler(Device& renderer, const Configuration& configuration) {
 	D3D11_SAMPLER_DESC samplerDesc;
 	std::memset(&samplerDesc, 0, sizeof(samplerDesc));
 

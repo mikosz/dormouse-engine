@@ -5,7 +5,7 @@
 #include "ConstantBuffer.hpp"
 #include "IndexBuffer.hpp"
 #include "VertexBuffer.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "RenderState.hpp"
 #include "Resource.hpp"
 #include "Sampler.hpp"

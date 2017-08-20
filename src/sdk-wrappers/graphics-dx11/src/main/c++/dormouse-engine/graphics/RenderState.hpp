@@ -10,7 +10,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 
 class RenderState {
 public:
@@ -40,7 +40,7 @@ public:
 
 	};
 
-	RenderState(Renderer& renderer, const Configuration& configuration);
+	RenderState(Device& renderer, const Configuration& configuration);
 
 	ID3D11RasterizerState& internalRasteriserState() const {
 		return *rasteriserState_;

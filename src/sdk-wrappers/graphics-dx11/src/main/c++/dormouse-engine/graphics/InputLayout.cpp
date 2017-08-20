@@ -3,7 +3,7 @@
 #include <iterator>
 
 #include "DirectXError.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "ShaderCompiler.hpp"
 
 using namespace dormouse_engine;
@@ -25,7 +25,7 @@ size_t inputSlotIndex(InputLayout::SlotType inputSlot) {
 
 system::windows::COMWrapper<ID3D11InputLayout> createLayout(
 	const InputLayout::Elements& elements,
-	Renderer& renderer,
+	Device& renderer,
 	std::vector<std::uint8_t> shaderData
 	)
 {
@@ -120,7 +120,7 @@ InputLayout::Element::Element(
 }
 
 InputLayout::InputLayout(
-	Renderer& renderer,
+	Device& renderer,
 	const Elements& elements
 	) :
 	dxInputLayout_(createLayout(elements, renderer, createDummyVertexShader(elements)))

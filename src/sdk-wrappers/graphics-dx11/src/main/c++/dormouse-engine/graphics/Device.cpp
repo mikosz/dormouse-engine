@@ -1,4 +1,4 @@
-#include "Renderer.hpp"
+#include "Device.hpp"
 
 #include <algorithm>
 
@@ -71,7 +71,7 @@ std::tuple<size_t, size_t> windowDimensions(system::windows::WindowHandle window
 void createD3DDevice(
 	system::windows::WindowHandle windowHandle,
 	IDXGIFactory& dxgiFactory,
-	const Renderer::Configuration& configuration,
+	const Device::Configuration& configuration,
 	const DXGI_RATIONAL& refreshRate,
 	system::windows::COMWrapper<IDXGISwapChain>* swapChain,
 	system::windows::COMWrapper<ID3D11Device>* device,
@@ -160,7 +160,7 @@ void createD3DDevice(
 }
 
 void extractBackBuffer(
-	Renderer& renderer,
+	Device& renderer,
 	IDXGISwapChain* swapChain,
 	Texture2d* backBuffer
 	)
@@ -176,7 +176,7 @@ void extractBackBuffer(
 
 } // anonymous namespace
 
-Renderer::Renderer(system::windows::WindowHandle windowHandle, const Configuration& configuration) :
+Device::Device(system::windows::WindowHandle windowHandle, const Configuration& configuration) :
 	configuration_(configuration)
 {
 	auto dxgiFactory = createDXGIFactory();
@@ -216,11 +216,11 @@ Renderer::Renderer(system::windows::WindowHandle windowHandle, const Configurati
 	depthStencil_.initialise(*this, depthStencilConfig);
 }
 
-CommandList& Renderer::getImmediateCommandList() {
+CommandList& Device::getImmediateCommandList() {
 	return immediateCommandList_;
 }
 
-CommandList Renderer::createDeferredCommandList() {
+CommandList Device::createDeferredCommandList() {
 	system::windows::COMWrapper<ID3D11DeviceContext> deferredContext;
 	checkDirectXCall(
 		d3dDevice_->CreateDeferredContext(0, &deferredContext.get()),
@@ -229,7 +229,7 @@ CommandList Renderer::createDeferredCommandList() {
 	return CommandList(deferredContext);
 }
 
-void Renderer::beginScene() {
+void Device::beginScene() {
 	// TODO: move to pulp or disperse
 	float colour[] = { 1.0f, 0.0f, 1.0f, 1.0f };
 	immediateCommandList_.internalDeviceContext().ClearRenderTargetView(&backBuffer_.internalRenderTargetView(), colour);
@@ -241,11 +241,11 @@ void Renderer::beginScene() {
 		);
 }
 
-void Renderer::endScene() {
+void Device::endScene() {
 	swapChain_->Present(configuration_.vsync, 0);
 }
 
-Renderer::LockedData Renderer::lock(Resource& data, LockPurpose lockPurpose) {
+Device::LockedData Device::lock(Resource& data, LockPurpose lockPurpose) {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	checkDirectXCall(
 		immediateCommandList_.internalDeviceContext().Map(data.internalResource(), 0, static_cast<D3D11_MAP>(lockPurpose), 0, &mappedResource),
@@ -260,7 +260,7 @@ Renderer::LockedData Renderer::lock(Resource& data, LockPurpose lockPurpose) {
 		);
 }
 
-void Renderer::submit(CommandList& /*commandList*/) {
+void Device::submit(CommandList& /*commandList*/) {
 	/*system::windows::COMWrapper<ID3D11CommandList> d3dCommandList;
 	checkDirectXCall(
 		commandList.internalDeviceContext().FinishCommandList(false, &d3dCommandList.get()),

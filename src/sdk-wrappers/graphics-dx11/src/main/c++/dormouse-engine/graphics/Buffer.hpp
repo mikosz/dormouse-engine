@@ -15,7 +15,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 
 class Buffer : public Resource {
 public:
@@ -63,7 +63,7 @@ public:
 
 	Buffer() = default;
 
-	Buffer(Renderer& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData = nullptr);
+	Buffer(Device& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData = nullptr);
 
 	const Configuration& configuration() const noexcept {
 		return configuration_;

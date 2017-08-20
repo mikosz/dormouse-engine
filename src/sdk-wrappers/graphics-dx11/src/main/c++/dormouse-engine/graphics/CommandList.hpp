@@ -18,7 +18,7 @@ namespace dormouse_engine {
 namespace graphics {
 
 class Resource;
-class Renderer;
+class Device;
 class ConstantBuffer;
 class IndexBuffer;
 class VertexBuffer;

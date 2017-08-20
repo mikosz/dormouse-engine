@@ -1,5 +1,5 @@
-#ifndef _DORMOUSEENGINE_GRAPHICS_DX11_RENDERER_HPP_
-#define _DORMOUSEENGINE_GRAPHICS_DX11_RENDERER_HPP_
+#ifndef _DORMOUSEENGINE_GRAPHICS_DX11_DEVICE_HPP_
+#define _DORMOUSEENGINE_GRAPHICS_DX11_DEVICE_HPP_
 
 #include <functional>
 #include <memory>
@@ -20,9 +20,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Device;
-
-class Renderer {
+class Device {
 public:
 
 	constexpr static auto NDC_NEAR = -1.0f;
@@ -55,7 +53,7 @@ public:
 
 	};
 
-	Renderer(system::windows::WindowHandle windowHandle, const Configuration& configuration);
+	Device(system::windows::WindowHandle windowHandle, const Configuration& configuration);
 
 	CommandList& getImmediateCommandList();
 
@@ -102,4 +100,4 @@ private:
 } // namespace graphics
 } // namespace dormouse_engine
 
-#endif /* _DORMOUSEENGINE_GRAPHICS_DX11_RENDERER_HPP_ */
+#endif /* _DORMOUSEENGINE_GRAPHICS_DX11_DEVICE_HPP_ */

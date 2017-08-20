@@ -10,7 +10,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 
 class Sampler {
 public:
@@ -46,7 +46,7 @@ public:
 	Sampler() {
 	}
 
-	Sampler(Renderer& renderer, const Configuration& configuration);
+	Sampler(Device& renderer, const Configuration& configuration);
 
 	ID3D11SamplerState& internalSamplerState() {
 		return *samplerState_;

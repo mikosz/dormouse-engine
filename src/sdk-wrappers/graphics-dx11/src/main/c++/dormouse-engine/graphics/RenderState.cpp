@@ -1,7 +1,7 @@
 #include "RenderState.hpp"
 
 #include "DirectXError.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
@@ -9,7 +9,7 @@ using namespace dormouse_engine::graphics;
 namespace /* anonymous */ {
 
 system::windows::COMWrapper<ID3D11RasterizerState> createRasteriserState(
-	Renderer& renderer,
+	Device& renderer,
 	const RenderState::Configuration& configuration
 	)
 {
@@ -30,7 +30,7 @@ system::windows::COMWrapper<ID3D11RasterizerState> createRasteriserState(
 }
 
 system::windows::COMWrapper<ID3D11BlendState> createBlendState(
-	Renderer& renderer,
+	Device& renderer,
 	const RenderState::Configuration& configuration
 	)
 {
@@ -59,7 +59,7 @@ system::windows::COMWrapper<ID3D11BlendState> createBlendState(
 
 } // anonymous namespace
 
-RenderState::RenderState(Renderer& renderer, const Configuration& configuration) :
+RenderState::RenderState(Device& renderer, const Configuration& configuration) :
 	rasteriserState_(createRasteriserState(renderer, configuration)),
 	blendState_(createBlendState(renderer, configuration))
 {

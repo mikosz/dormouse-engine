@@ -1,12 +1,12 @@
 #include "Texture.hpp"
 
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-void Texture::initialise(Renderer& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags) {
+void Texture::initialise(Device& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags) {
 	if (purposeFlags & CreationPurpose::SHADER_RESOURCE) {
 		checkDirectXCall(
 			renderer.internalDevice().CreateShaderResourceView(internalResource(), nullptr, &shaderResourceView_.get()),

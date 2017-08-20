@@ -3,7 +3,7 @@
 #include <cstring>
 
 #include "dormouse-engine/essentials/Range.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "DirectXError.hpp"
 #include "Image.hpp"
 
@@ -13,11 +13,11 @@ using namespace dormouse_engine::graphics;
 // TODO: this whole setup with Resource/Buffer/Texture/Texture1d/Texture2d is messy and
 // unnecessary
 
-Texture2d::Texture2d(Renderer& renderer, const Configuration& configuration) {
+Texture2d::Texture2d(Device& renderer, const Configuration& configuration) {
 	initialise(renderer, configuration);
 }
 
-Texture2d::Texture2d(Renderer& renderer, const Image& image) {
+Texture2d::Texture2d(Device& renderer, const Image& image) {
 	Configuration config;
 	config.width = image.size().first;
 	config.height = image.size().second;
@@ -35,7 +35,7 @@ Texture2d::Texture2d(Renderer& renderer, const Image& image) {
 	initialise(renderer, config);
 }
 
-void Texture2d::initialise(Renderer& renderer, const Configuration& configuration) {
+void Texture2d::initialise(Device& renderer, const Configuration& configuration) {
 	reset();
 
 	D3D11_TEXTURE2D_DESC desc;
@@ -114,7 +114,7 @@ void Texture2d::initialise(Renderer& renderer, const Configuration& configuratio
 }
 
 void Texture2d::initialise(
-    Renderer& renderer,
+    Device& renderer,
     dormouse_engine::Mask<CreationPurpose> purposeFlags,
     system::windows::COMWrapper<ID3D11Texture2D> texture
     )

@@ -3,18 +3,18 @@
 #include <cstring>
 
 #include "dormouse-engine/essentials/Range.hpp"
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "DirectXError.hpp"
 #include "Image.hpp" // TODO: will only need Image when it gets extracted
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-Texture1d::Texture1d(Renderer& renderer, const Configuration& configuration) {
+Texture1d::Texture1d(Device& renderer, const Configuration& configuration) {
 	initialise(renderer, configuration);
 }
 
-Texture1d::Texture1d(Renderer& renderer, const Image& image) {
+Texture1d::Texture1d(Device& renderer, const Image& image) {
 	Configuration config;
 	config.width = image.size().first;
 	config.arraySize = image.arraySize();
@@ -29,7 +29,7 @@ Texture1d::Texture1d(Renderer& renderer, const Image& image) {
 	initialise(renderer, config);
 }
 
-void Texture1d::initialise(Renderer& renderer, const Configuration& configuration) {
+void Texture1d::initialise(Device& renderer, const Configuration& configuration) {
 	reset();
 
 	D3D11_TEXTURE1D_DESC desc;
@@ -104,7 +104,7 @@ void Texture1d::initialise(Renderer& renderer, const Configuration& configuratio
 }
 
 void Texture1d::initialise(
-	Renderer& renderer,
+	Device& renderer,
 	dormouse_engine::Mask<CreationPurpose> purposeFlags,
 	system::windows::COMWrapper<ID3D11Texture1D> texture
 )

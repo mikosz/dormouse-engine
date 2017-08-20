@@ -11,7 +11,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 class Image;
 
 class Texture1d : public Texture {
@@ -48,19 +48,19 @@ public:
 	Texture1d() {
 	}
 
-	Texture1d(Renderer& renderer, const Configuration& configuration);
+	Texture1d(Device& renderer, const Configuration& configuration);
 
-	Texture1d(Renderer& renderer, const Image& image);
+	Texture1d(Device& renderer, const Image& image);
 
 	Texture1d(system::windows::COMWrapper<ID3D11Texture1D> texture)
 	{
 		resource_.reset(texture.get());
 	}
 
-	void initialise(Renderer& renderer, const Configuration& configuration);
+	void initialise(Device& renderer, const Configuration& configuration);
 
 	void initialise(
-		Renderer& renderer,
+		Device& renderer,
 		dormouse_engine::Mask<CreationPurpose> purposeFlags,
 		system::windows::COMWrapper<ID3D11Texture1D> texture
 	);

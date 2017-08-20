@@ -9,7 +9,7 @@ namespace graphics {
 class ConstantBuffer : public Buffer { // TODO: this, Vertex and IndexBuffer classes are probably useless.
 public:
 
-	ConstantBuffer(Renderer& renderer, const Configuration& configuration, const void* initialData = 0) :
+	ConstantBuffer(Device& renderer, const Configuration& configuration, const void* initialData = 0) :
 		Buffer(renderer, CreationPurpose::CONSTANT_BUFFER, configuration, initialData)
 	{
 	}

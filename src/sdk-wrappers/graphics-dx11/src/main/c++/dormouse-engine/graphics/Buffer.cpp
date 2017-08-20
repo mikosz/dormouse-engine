@@ -4,13 +4,13 @@
 #include <stdexcept>
 #include <functional>
 
-#include "Renderer.hpp"
+#include "Device.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-Buffer::Buffer(Renderer& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData) :
+Buffer::Buffer(Device& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData) :
 	configuration_(std::move(configuration))
 {
 	D3D11_BUFFER_DESC desc;

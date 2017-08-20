@@ -14,7 +14,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 
 class InputLayout final {
 public:
@@ -51,7 +51,7 @@ public:
 	using Elements = std::vector<Element>;
 
 	InputLayout(
-		Renderer& renderer,
+		Device& renderer,
 		const Elements& elements
 		);
 

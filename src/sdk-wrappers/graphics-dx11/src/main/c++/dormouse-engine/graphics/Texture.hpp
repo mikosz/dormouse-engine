@@ -14,7 +14,7 @@
 namespace dormouse_engine {
 namespace graphics {
 
-class Renderer;
+class Device;
 
 class Texture : public Resource {
 public:
@@ -26,7 +26,7 @@ public:
 		(DEPTH_STENCIL)(D3D11_BIND_DEPTH_STENCIL)
 		);
 
-	void initialise(Renderer& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags);
+	void initialise(Device& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags);
 
 	void reset();
 
