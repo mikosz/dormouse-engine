@@ -4,7 +4,7 @@ structure.library_project(
 	"graphics",
 	function()
 		includedirs { directx_tex_include_dir() }
-		links { "exceptions", "system" }
+		links { "exceptions", "system", "logger" }
 		link_directx_tex_libs()
 	end
 	)
