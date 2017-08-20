@@ -167,7 +167,6 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(Logger);
 
 } // namespace dormouse_engine::logger

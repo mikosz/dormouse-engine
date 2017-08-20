@@ -9,7 +9,6 @@
 
 namespace dormouse_engine::graphics {
 
-
 DE_ENUM_VALUES(
 	PrimitiveTopology,
 	(INVALID)(D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED)

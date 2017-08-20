@@ -8,7 +8,6 @@
 
 namespace dormouse_engine::graphics {
 
-
 DE_ENUM_VALUES(
 	PixelFormat,
 	// colour formats

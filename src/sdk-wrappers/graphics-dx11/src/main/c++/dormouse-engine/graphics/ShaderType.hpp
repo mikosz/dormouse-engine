@@ -11,7 +11,6 @@ struct ID3D11PixelShader;
 
 namespace dormouse_engine::graphics {
 
-
 DE_ENUM(ShaderType,
 	(VERTEX)
 	(GEOMETRY)

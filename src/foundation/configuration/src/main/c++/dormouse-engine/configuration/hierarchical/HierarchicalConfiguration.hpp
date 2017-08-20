@@ -124,7 +124,6 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(HierarchicalConfiguration);
 
 } // namespace dormouse_engine::configuration::hierarchical

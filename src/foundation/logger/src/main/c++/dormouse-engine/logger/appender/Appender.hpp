@@ -65,7 +65,6 @@ private:
 
 };
 
-
 DE_SMART_POINTER_DEFINITONS(Appender);
 
 } // namespace dormouse_engine::logger::appender

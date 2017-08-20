@@ -59,11 +59,9 @@ BOOST_AUTO_TEST_SUITE(MacrosTestSuite);
 
 namespace external_context {
 
-
 DE_LOGGER_CATEGORY("EXTERNAL");
 
 namespace local_context {
-
 
 DE_LOGGER_CATEGORY("LOCAL");
 
