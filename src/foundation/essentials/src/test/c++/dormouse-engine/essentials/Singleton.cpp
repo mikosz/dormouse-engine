@@ -1,9 +1,9 @@
 #define BOOST_TEST_NO_LIB
 #include <boost/test/auto_unit_test.hpp>
 
-#include <memory>
-
 #include "dormouse-engine/essentials/Singleton.hpp"
+
+#include <memory>
 
 namespace {
 

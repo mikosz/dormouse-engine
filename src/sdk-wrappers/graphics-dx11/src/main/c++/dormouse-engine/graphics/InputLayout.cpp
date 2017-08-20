@@ -94,7 +94,7 @@ std::vector<std::uint8_t> createDummyVertexShader(const InputLayout::Elements& e
 	shaderData.emplace_back('\0');
 
 	return ShaderCompiler().compile(
-        shaderData,
+        essentials::viewBuffer(shaderData),
 		"-- input layout generated --",
 		"main",
 		ShaderType::VERTEX,

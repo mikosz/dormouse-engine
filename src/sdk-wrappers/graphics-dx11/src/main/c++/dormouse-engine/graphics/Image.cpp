@@ -39,7 +39,7 @@ std::string ImageLoadingError::buildMessage(const std::string& path, const std::
 	return result;
 }
 
-Image Image::load(essentials::BufferView data, const std::string& path) {
+Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 	try {
 		DE_LOG_DEBUG << "Loading image " << path;
 
@@ -48,13 +48,13 @@ Image Image::load(essentials::BufferView data, const std::string& path) {
 
 		if (boost::algorithm::ends_with(path, ".tga")) { // TODO: refactor?
 			system::windows::checkSystemCall(
-				DirectX::LoadFromTGAMemory(data.bytes(), data.size(), &metadata, scratchImage),
+				DirectX::LoadFromTGAMemory(data.data(), data.size(), &metadata, scratchImage),
 				"Failed to load a targa file"
 			);
 		} else if (boost::algorithm::ends_with(path, ".dds")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromDDSMemory(
-					data.bytes(),
+					data.data(),
 					data.size(),
 					DirectX::DDS_FLAGS_NONE,
 					&metadata,
@@ -65,7 +65,7 @@ Image Image::load(essentials::BufferView data, const std::string& path) {
 		} else if (boost::algorithm::ends_with(path, ".bmp")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromWICMemory( // TODO: definitely refactor
-					data.bytes(),
+					data.data(),
 					data.size(),
 					DirectX::WIC_CODEC_BMP,
 					&metadata,
@@ -76,7 +76,7 @@ Image Image::load(essentials::BufferView data, const std::string& path) {
 		} else if (boost::algorithm::ends_with(path, ".png")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromWICMemory( // TODO: definitely refactor
-					data.bytes(),
+					data.data(),
 					data.size(),
 					DirectX::WIC_CODEC_PNG,
 					&metadata,

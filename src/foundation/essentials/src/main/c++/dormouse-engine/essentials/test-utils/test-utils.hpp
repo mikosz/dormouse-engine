@@ -13,12 +13,14 @@ namespace dormouse_engine::essentials::test_utils {
 
 inline void writeToFile(const boost::filesystem::path& path, const std::string& s) {
 	std::ofstream ofs(path.string().c_str());
+	BOOST_ASSERT(ofs.good());
 	ofs << s;
 	ofs.close();
 }
 
 inline std::string readFile(const boost::filesystem::path& path) {
 	std::ifstream ifs(path.string().c_str());
+	BOOST_ASSERT(ifs.good());
 	std::ostringstream oss;
 	oss << ifs.rdbuf();
 	return oss.str();

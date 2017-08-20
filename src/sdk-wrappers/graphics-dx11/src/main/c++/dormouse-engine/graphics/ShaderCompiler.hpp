@@ -13,10 +13,9 @@
 #include <d3dcompiler.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/enums/Mask.hpp"
-
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
-
 #include "ShaderType.hpp"
 
 namespace dormouse_engine::graphics {
@@ -41,11 +40,11 @@ public:
     }
 
     ShaderData compile(
-    	const std::vector<std::uint8_t>& code,
-        const std::string& name,
+		essentials::ConstBufferView code,
+		const std::string& name,
 	    const std::string& entrypoint,
     	ShaderType type,
-        IncludeHandler includeHandler,
+        IncludeHandler includeHandler = IncludeHandler(),
         CompilerFlags instanceFlags = CompilerFlags()
         ) const;
 

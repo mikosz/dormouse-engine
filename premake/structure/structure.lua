@@ -23,26 +23,64 @@ local source_patterns = function(source_dir_name)
 	return { source_dir(source_dir_name).."**.hpp", source_dir(source_dir_name).."**.cpp" }
 end
 
-local create_vpaths = function(patterns, source_dir_name)
+local create_source_vpaths = function(patterns, source_directory)
 	for _, pattern in pairs(patterns) do
 		for _, file in pairs(os.matchfiles(pattern)) do
-			local file_with_namespace = file:sub(string.len(source_dir(source_dir_name)) + 1)
+			local file_with_namespace = file:sub(string.len(source_directory) + 1)
 			local namespace_path = path.getdirectory(file_with_namespace)
 			vpaths { [ namespace_path:gsub("/", "::") ] = file }
 		end
 	end
 end
 
-local sources = function(source_dir_name)
+local add_sources = function(source_dir_name)
 	local patterns = source_patterns(source_dir_name)
-	create_vpaths(patterns, source_dir_name)
+	create_source_vpaths(patterns, source_dir(source_dir_name))
 	files(patterns)
+end
+
+local create_resource_vpaths = function(pattern, resource_directory)
+	for _, file in pairs(os.matchfiles(pattern)) do
+		local file_with_parents = file:sub(string.len(resource_directory) + 1)
+		local parent_path = path.getdirectory(file_with_parents)
+		vpaths { [ path.join(".resources", parent_path) ] = file }
+	end
+end
+
+local add_copy_resources_job = function(resource_directory, resource_path)
+	filter("files:"..resource_path)
+		local file_with_parents = resource_path:sub(string.len(resource_directory) + 1)
+		local parent_path = path.getdirectory(file_with_parents)
+
+		local source = "%{file.relpath}"
+		local target = path.join("%{prj.location}", parent_path, "%{file.name}")
+		
+		buildmessage("copying "..source.." -> "..target)
+		
+		buildcommands {
+			"{COPY} "..source.." "..target
+		}
+		
+		buildoutputs { target }
+	filter {}
+end
+
+local add_resources = function(source_dir_name)
+	resource_directory = "src/"..source_dir_name.."/resources/"
+	pattern = resource_directory.."**"
+	create_resource_vpaths(pattern, resource_directory)
+	files(pattern)
+	
+	for _, file in pairs(os.matchfiles(pattern)) do
+		add_copy_resources_job(resource_directory, file)
+	end
 end
 
 local create_source_project = function(name, source_dir_name)
 	group(m.current_group)
 	project(name)
-		sources(source_dir_name)
+		add_sources(source_dir_name)
+		add_resources(source_dir_name)
 		
 		table.insert(all_projects, name)
 end

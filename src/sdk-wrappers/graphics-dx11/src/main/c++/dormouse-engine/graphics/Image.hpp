@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "dormouse-engine/essentials/types.hpp"
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "PixelFormat.hpp"
 
@@ -40,7 +40,7 @@ public:
 
 	using Dimensions = std::pair<size_t, size_t>; // TODO: find a better type
 
-	static Image load(essentials::BufferView data, const std::string& path);
+	static Image load(essentials::ConstBufferView data, const std::string& path);
 
 	const std::uint8_t* pixels() const {
 		return pixels_.data();

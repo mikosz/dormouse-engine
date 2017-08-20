@@ -5,10 +5,13 @@
 #include <string>
 #include <sstream>
 
+#include "dormouse-engine/essentials/debug.hpp"
+#include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/graphics/ConstantBuffer.hpp"
 #include "dormouse-engine/graphics/ShaderReflection.hpp"
 #include "dormouse-engine/graphics/InputLayout.hpp"
 #include "dormouse-engine/graphics/Shader.hpp"
+#include "dormouse-engine/graphics/ShaderCompiler.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
@@ -17,28 +20,25 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
-std::string readBinaryData(const std::string& path) {
-	// TODO: temp! shader object needs to be copied in correct place
-	std::ifstream ifs(path.c_str(), std::ios::in | std::ios::binary);
-	std::ostringstream oss;
-	oss << ifs.rdbuf();
-	auto data = oss.str();
-
-	BOOST_REQUIRE(!ifs.bad());
-	BOOST_REQUIRE(!data.empty());
-
-	return data;
-}
-
 ShaderReflection reflect(const std::string& path) {
-	auto shaderData = readBinaryData(path);
+	auto shaderCode = essentials::test_utils::readFile(path);
+
+	auto flags = ShaderCompiler::CompilerFlags();
+
+	if (essentials::IS_DEBUG) {
+		flags = flags | ShaderCompiler::CompilerFlag::DEBUG | ShaderCompiler::CompilerFlag::SKIP_OPTIMISATION;
+	}
+
+	auto compiler = ShaderCompiler(flags);
+	auto shaderData = compiler.compile(essentials::viewBuffer(shaderCode), path, "main", ShaderType::VERTEX);
+
 	return ShaderReflection(shaderData.data(), shaderData.size());
 }
 
 BOOST_AUTO_TEST_SUITE(MilkGraphicsShaderReflectionTestSuite);
 
 BOOST_AUTO_TEST_CASE(RetrievesSimpleInputParameters) {
-	auto reflection = reflect("Debug/SimpleInputParameter.v.cso");
+	auto reflection = reflect("test/graphics/SimpleInputParameter.v.hlsl");
 
 	BOOST_REQUIRE_EQUAL(reflection.inputParameters().size(), 1);
 
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(RetrievesSimpleInputParameters) {
 }
 
 BOOST_AUTO_TEST_CASE(RetrievesComplexInputParameters) {
-	auto reflection = reflect("Debug/ComplexInputParameter.v.cso");
+	auto reflection = reflect("test/graphics/ComplexInputParameter.v.hlsl");
 
 	BOOST_REQUIRE_EQUAL(reflection.inputParameters().size(), 4);
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(RetrievesComplexInputParameters) {
 }
 
 BOOST_AUTO_TEST_CASE(RetrievesSimpleConstantBuffers) {
-	auto reflection = reflect("Debug/SimpleConstantBuffer.v.cso");
+	auto reflection = reflect("test/graphics/SimpleConstantBuffer.v.hlsl");
 
 	BOOST_REQUIRE_EQUAL(reflection.constantBuffers().size(), 1);
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(RetrievesSimpleConstantBuffers) {
 }
 
 BOOST_AUTO_TEST_CASE(RetrievesConstantBuffersWithNestedStructs) {
-	auto reflection = reflect("Debug/ConstantBufferWithNestedStructs.v.cso");
+	auto reflection = reflect("test/graphics/ConstantBufferWithNestedStructs.v.hlsl");
 
 	BOOST_REQUIRE_EQUAL(reflection.constantBuffers().size(), 1);
 
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(RetrievesConstantBuffersWithNestedStructs) {
 }
 
 BOOST_AUTO_TEST_CASE(RetrievesConstantBuffersWithArrays) {
-	auto reflection = reflect("Debug/ConstantBufferWithArrays.v.cso");
+	auto reflection = reflect("test/graphics/ConstantBufferWithArrays.v.hlsl");
 
 	BOOST_REQUIRE_EQUAL(reflection.constantBuffers().size(), 2);
 
