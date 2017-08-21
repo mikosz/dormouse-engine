@@ -60,6 +60,7 @@ workspace "dormouse-engine"
 
 	include "foundation"
 	include "sdk-wrappers"
+	include "core"
 		
 	structure.create_build_all_project()
 	structure.create_install_project()
