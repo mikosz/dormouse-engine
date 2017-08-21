@@ -59,9 +59,9 @@ Buffer::Buffer(Device& renderer, CreationPurpose purpose, Configuration configur
 		std::memset(&srvDesc, 0, sizeof(decltype(srvDesc)));
 
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-		srvDesc.Format = static_cast<DXGI_FORMAT>(configuration_.elementFormat);
+		srvDesc.Format = static_cast<DXGI_FORMAT>(configuration_.elementFormat.id());
 		srvDesc.Buffer.ElementOffset = 0;
-		srvDesc.Buffer.NumElements = static_cast<UINT>(configuration_.size / formatSize(configuration_.elementFormat));
+		srvDesc.Buffer.NumElements = static_cast<UINT>(configuration_.size / configuration_.elementFormat.pixelSize());
 
 		checkDirectXCall(
 			renderer.internalDevice().CreateShaderResourceView(resource_.get(), &srvDesc, &shaderResourceView_.get()),

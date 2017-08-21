@@ -10,7 +10,7 @@ namespace /* anonymous */ {
 using namespace dormouse_engine::essentials;
 using namespace std::string_literals;
 
-BOOST_AUTO_TEST_SUITE(TypesTestSuite);
+BOOST_AUTO_TEST_SUITE(MemoryTestSuite);
 
 BOOST_AUTO_TEST_CASE(BufferViewViewsRawData) {
 	int ints[] = { 1, 2, 3 };
@@ -124,6 +124,6 @@ BOOST_AUTO_TEST_CASE(ConstBufferViewConstructibleFromNonConst) {
 	static_assert(std::is_same_v<decltype(constView)::ByteType, const Byte>);
 }
 
-BOOST_AUTO_TEST_SUITE_END(/* TypesTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* MemoryTestSuite */);
 
 } // anonymous namespace

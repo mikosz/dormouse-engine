@@ -96,16 +96,15 @@ Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 			std::back_inserter(pixels)
 			);
 
-		if (allPixelFormatValues().count(static_cast<PixelFormat>(metadata.format)) == 0) {
-			throw std::runtime_error("Unsupported image format");
-		}
+		auto pixelFormatId = PixelFormatId();
+		fromIntegral(pixelFormatId, static_cast<std::underlying_type_t<decltype(metadata.format)>>(metadata.format));
 
 		return Image(
 			std::move(pixels),
 			{ metadata.width, metadata.height },
 			metadata.arraySize,
 			metadata.mipLevels,
-			static_cast<PixelFormat>(metadata.format)
+			PixelFormat(pixelFormatId)
 			);
 	} catch (const std::exception& e) {
 		throw ImageLoadingError(path, e);

@@ -46,7 +46,7 @@ void Texture2d::initialise(Device& renderer, const Configuration& configuration)
 	desc.Height = static_cast<UINT>(configuration.height);
 	desc.MipLevels = static_cast<UINT>(configuration.mipLevels);
 	desc.ArraySize = static_cast<UINT>(configuration.arraySize);
-	desc.Format = static_cast<DXGI_FORMAT>(configuration.pixelFormat);
+	desc.Format = static_cast<DXGI_FORMAT>(configuration.pixelFormat.id());
 	desc.SampleDesc.Count = static_cast<UINT>(configuration.sampleCount);
 	desc.SampleDesc.Quality = static_cast<UINT>(configuration.sampleQuality);
 	desc.BindFlags = configuration.purposeFlags.integralValue();
@@ -80,7 +80,7 @@ void Texture2d::initialise(Device& renderer, const Configuration& configuration)
 		subresourceData.resize(configuration.arraySize * configuration.mipLevels);
 		std::memset(subresourceData.data(), 0, subresourceData.size() * sizeof(D3D11_SUBRESOURCE_DATA));
 
-		const auto pixelSize = formatSize(configuration.pixelFormat);
+		const auto pixelSize = configuration.pixelFormat.pixelSize();
 		const auto* data = reinterpret_cast<const std::uint8_t*>(configuration.initialData);
 
 		for (const auto textureIndex : dormouse_engine::range(size_t(0), configuration.arraySize)) {
@@ -88,8 +88,8 @@ void Texture2d::initialise(Device& renderer, const Configuration& configuration)
 				const auto subresourceIndex = textureIndex * configuration.mipLevels + mipIndex;
 				const auto textureWidth = configuration.width >> mipIndex;
 				const auto textureHeight = configuration.height >> mipIndex;
-				const auto rowPitch = formatRowPitch(configuration.pixelFormat, textureWidth);
-				const auto slicePitch = formatSlicePitch(configuration.pixelFormat, textureHeight, rowPitch);
+				const auto rowPitch = configuration.pixelFormat.rowPitch(textureWidth);
+				const auto slicePitch = configuration.pixelFormat.slicePitch(textureHeight, rowPitch);
 
 				subresourceData[subresourceIndex].pSysMem = data;
 				// TODO: this will not work for compressed formats

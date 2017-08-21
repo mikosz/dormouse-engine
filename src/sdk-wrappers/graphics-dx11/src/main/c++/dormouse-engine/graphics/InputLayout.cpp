@@ -2,12 +2,16 @@
 
 #include <iterator>
 
+#include "dormouse-engine/exceptions/LogicError.hpp"
+#include "dormouse-engine/essentials/Range.hpp"
 #include "DirectXError.hpp"
 #include "Device.hpp"
 #include "ShaderCompiler.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
+
+using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
@@ -40,7 +44,7 @@ system::windows::COMWrapper<ID3D11InputLayout> createLayout(
 
 		desc.SemanticName = element.semantic.c_str();
 		desc.SemanticIndex = static_cast<UINT>(element.semanticIndex);
-		desc.Format = static_cast<DXGI_FORMAT>(element.format);
+		desc.Format = static_cast<DXGI_FORMAT>(element.format.id());
 		desc.InputSlot = static_cast<UINT>(inputSlotIndex(element.inputSlotType));
 		desc.InputSlotClass = static_cast<D3D11_INPUT_CLASSIFICATION>(element.inputSlotType);
 		desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
@@ -62,6 +66,35 @@ system::windows::COMWrapper<ID3D11InputLayout> createLayout(
 		);
 
 	return layout;
+}
+
+std::string formatHLSLType(const PixelFormat& format) {
+	const auto channelsUsed = format.channelsUsed();
+	if (channelsUsed == 0) {
+		throw exceptions::LogicError("Can't provide a HLSL type for empty pixel format");
+	}
+
+	const auto channelType = format.channel(0).dataType;
+
+	for (auto channelIndex : essentials::range<size_t>(0, channelsUsed)) {
+		if (channelType != format.channel(channelIndex).dataType) {
+			throw exceptions::LogicError("Can't provide a HLSL type for non-uniform pixel format");
+		}
+	}
+
+	auto result = std::string();
+
+	switch (channelType) {
+	case PixelFormat::DataType::FLOAT:
+		result = "float";
+		break;
+	default:
+		throw exceptions::LogicError("Can't provide a HLSL type for data type "s + toString(channelType));
+	}
+
+	result += std::to_string(channelsUsed);
+
+	return result;
 }
 
 std::vector<std::uint8_t> createDummyVertexShader(const InputLayout::Elements& elements) {
