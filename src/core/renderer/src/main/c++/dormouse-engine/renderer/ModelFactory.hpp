@@ -5,14 +5,14 @@
 #include <string>
 #include <unordered_map>
 
-#include <coconut-tools/factory.hpp>
+#include "dormouse-engine/factory.hpp"
 
-#include "coconut/milk/fs.hpp"
+#include "dormouse-engine/milk/fs.hpp"
 
 #include "shader/PassFactory.hpp"
 #include "Model.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 namespace detail {
 
@@ -79,6 +79,6 @@ using ModelFactory =
 		std::mutex
 		>;
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_MODELFACTORY_HPP_ */

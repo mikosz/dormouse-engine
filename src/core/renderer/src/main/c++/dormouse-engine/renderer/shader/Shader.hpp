@@ -4,16 +4,16 @@
 #include <vector>
 #include <unordered_map>
 
-#include "coconut/milk/graphics/Shader.hpp"
+#include "dormouse-engine/milk/graphics/Shader.hpp"
 
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
 
-#include "coconut/pulp/mesh/MaterialConfiguration.hpp"
+#include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 
 #include "Resource.hpp"
 #include "ConstantBuffer.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class PassContext;
 class Actor;
@@ -88,6 +88,6 @@ CT_MAKE_POINTER_DEFINITIONS(HullShader);
 CT_MAKE_POINTER_DEFINITIONS(DomainShader);
 CT_MAKE_POINTER_DEFINITIONS(PixelShader);
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_SHADER_HPP_ */

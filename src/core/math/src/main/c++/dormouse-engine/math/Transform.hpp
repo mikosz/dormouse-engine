@@ -4,7 +4,7 @@
 #include "homogeneous.hpp"
 #include "Matrix.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 class Transform {
 public:
@@ -109,10 +109,12 @@ inline Transform operator<<(const Transform& first, const Transform& second) {
 	return first.then(second);
 }
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 using math::Transform;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_TRANSFORM_HPP_ */

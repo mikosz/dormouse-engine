@@ -3,13 +3,13 @@
 
 #include "Lens.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class OrthographicLens : public Lens {
 public:
 
 	OrthographicLens(
-		pulp::math::Handedness handedness,
+		math::Handedness handedness,
 		float viewWidth,
 		float viewHeight,
 		float nearZ,
@@ -24,6 +24,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_ORTHOGRAPHIC_HPP_ */

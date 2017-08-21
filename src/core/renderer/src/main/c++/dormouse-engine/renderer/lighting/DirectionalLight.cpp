@@ -1,9 +1,9 @@
 #include "DirectionalLight.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::lighting;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::lighting;
 
 shader::ReflectiveInterface<DirectionalLight>::ReflectiveInterface() {
 	// TODO: address of return value (would rather pass value)...

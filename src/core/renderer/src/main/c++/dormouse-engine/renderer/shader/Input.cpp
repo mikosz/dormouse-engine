@@ -2,10 +2,10 @@
 
 #include <algorithm>
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::shader;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::shader;
 
 namespace /* anonymous */ {
 

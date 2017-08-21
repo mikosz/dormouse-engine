@@ -1,12 +1,12 @@
 #include "PassFactory.hpp"
 
-#include <coconut-tools/logger.hpp>
+#include "dormouse-engine/logger.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::shader;
-using namespace coconut::pulp::renderer::shader::detail;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::shader;
+using namespace dormouse_engine::renderer::shader::detail;
 
 namespace /* anonymous */ {
 

@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "coconut/pulp/math/Vector.hpp"
+#include "dormouse-engine/math/Vector.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 // TODO: put me somewhere else
 
@@ -25,6 +25,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::math
+} // namespace dormouse_engine::math
 
 #endif /* _DORMOUSEENGINE_MATH_PERLINNOISE_HPP_ */

@@ -4,9 +4,9 @@
 
 #include "ScalarEqual.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::math;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::math;
 
 Transform Transform::orthographicProjection(
 	Handedness handedness,

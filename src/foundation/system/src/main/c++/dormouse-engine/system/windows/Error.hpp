@@ -8,7 +8,7 @@
 #include <windows.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
-#include <dormouse-engine/exceptions/RuntimeError.hpp>
+#include "dormouse-engine/exceptions/RuntimeError.hpp"
 
 namespace dormouse_engine::system::windows {
 

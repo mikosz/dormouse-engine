@@ -7,7 +7,7 @@
 #include "Transform.hpp"
 #include "Vector.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 class Frustum {
 public:
@@ -33,10 +33,12 @@ private:
 
 };
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 using math::Frustum;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_FRUSTUM_HPP_ */

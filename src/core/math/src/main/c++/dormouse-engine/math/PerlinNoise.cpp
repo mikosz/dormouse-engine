@@ -6,9 +6,9 @@
 
 #include "common.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::math;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::math;
 
 /*
  * Perlin-noise implementation based on https://github.com/sol-prog/Perlin_Noise

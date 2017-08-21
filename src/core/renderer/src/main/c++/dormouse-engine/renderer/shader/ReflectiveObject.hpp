@@ -6,14 +6,14 @@
 #include <functional>
 #include <algorithm>
 
-#include <coconut-tools/exceptions/RuntimeError.hpp>
-#include <coconut-tools/concurrent/fake.hpp>
-#include <coconut-tools/singleton/Singleton.hpp>
-#include <coconut-tools/utils/Range.hpp>
+#include "dormouse-engine/exceptions/RuntimeError.hpp"
+#include "dormouse-engine/concurrent/fake.hpp"
+#include "dormouse-engine/singleton/Singleton.hpp"
+#include "dormouse-engine/essentials/Range.hpp"
 
 #include "Property.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 // This reflection mechanism could probably be easily extended to a generic one and moved to tools.
 
@@ -205,6 +205,6 @@ void bindResourceProperty(
 	throw coconut_tools::exceptions::RuntimeError(oss.str());
 }
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_REFLECTIVEOBJECT_HPP_ */

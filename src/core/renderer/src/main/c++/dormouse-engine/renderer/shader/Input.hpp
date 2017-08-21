@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "coconut/milk/graphics/InputLayout.hpp"
+#include "dormouse-engine/milk/graphics/InputLayout.hpp"
 #include "Parameter.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class Actor;
 
@@ -45,6 +45,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_INPUT_HPP_ */

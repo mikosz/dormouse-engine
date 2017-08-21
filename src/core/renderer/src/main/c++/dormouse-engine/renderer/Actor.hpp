@@ -4,12 +4,12 @@
 #include <chrono>
 #include <string>
 
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
-#include "coconut/pulp/renderer/shader/Property.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/renderer/shader/Property.hpp"
 
 #include "Orientation.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class CommandBuffer;
 
@@ -74,6 +74,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(Actor);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_ACTOR_HPP_ */

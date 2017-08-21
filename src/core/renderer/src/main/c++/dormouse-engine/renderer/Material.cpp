@@ -1,10 +1,10 @@
 #include "Material.hpp"
 
-#include "coconut/milk/graphics/ImageLoader.hpp"
+#include "dormouse-engine/milk/graphics/ImageLoader.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 namespace /* anonymous */ {
 

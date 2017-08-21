@@ -1,11 +1,11 @@
 #include "PerspectiveLens.hpp"
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/pulp/math/Transform.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/math/Transform.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 PerspectiveLens::PerspectiveLens(
 	Handedness handedness,

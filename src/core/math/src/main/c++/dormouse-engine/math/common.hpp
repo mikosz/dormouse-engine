@@ -1,17 +1,19 @@
 #ifndef _DORMOUSEENGINE_MATH_COMMON_HPP_
 #define _DORMOUSEENGINE_MATH_COMMON_HPP_
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 template <class T>
 inline T lerp(T from, T to, float factor) { 
 	return (1.0f - factor) * from + factor * to; 
 }
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 using math::lerp;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_COMMON_HPP_ */

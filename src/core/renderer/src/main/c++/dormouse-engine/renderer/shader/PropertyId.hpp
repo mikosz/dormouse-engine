@@ -6,9 +6,9 @@
 #include <iosfwd>
 #include <algorithm>
 
-#include <coconut-tools/utils/InfixOstreamIterator.hpp>
+#include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 class PropertyDescriptor {
 public:
@@ -112,6 +112,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PROPERTYID_HPP_ */

@@ -1,16 +1,16 @@
 #include "OrthographicLens.hpp"
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/pulp/math/Transform.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/math/Transform.hpp"
 
 #include <functional>
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 OrthographicLens::OrthographicLens(
-	pulp::math::Handedness handedness,
+	math::Handedness handedness,
 	float viewWidth,
 	float viewHeight,
 	float nearZ,

@@ -1,13 +1,13 @@
 #define BOOST_TEST_NO_LIB
 #include <boost/test/auto_unit_test.hpp>
 
-#include <coconut-tools/utils/Range.hpp>
+#include "dormouse-engine/essentials/Range.hpp"
 
-#include "coconut/pulp/math/Matrix.hpp"
+#include "dormouse-engine/math/Matrix.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::math;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::math;
 
 namespace /* anonymous */ {
 
@@ -68,8 +68,8 @@ BOOST_AUTO_TEST_CASE(MatrixIsConstructibleFromVectors) {
 		Vec4(13.0f, 14.0f, 15.0f, 16.0f)
 		);
 
-	for (const auto rowIndex : coconut_tools::range(0, 4)) {
-		for (const auto columnIndex : coconut_tools::range(0, 4)) {
+	for (const auto rowIndex : essentials::range(0, 4)) {
+		for (const auto columnIndex : essentials::range(0, 4)) {
 			const auto expected = (rowIndex * 4.0f) + columnIndex + 1.0f;
 			BOOST_CHECK_EQUAL(mtx[rowIndex][columnIndex], expected);
 		}
@@ -84,8 +84,8 @@ BOOST_AUTO_TEST_CASE(MatrixIsConstructibleFromInitialiserLists) {
 		{ 13.0f, 14.0f, 15.0f, 16.0f }
 		);
 
-	for (const auto rowIndex : coconut_tools::range(0, 4)) {
-		for (const auto columnIndex : coconut_tools::range(0, 4)) {
+	for (const auto rowIndex : essentials::range(0, 4)) {
+		for (const auto columnIndex : essentials::range(0, 4)) {
 			const auto expected = (rowIndex * 4.0f) + columnIndex + 1.0f;
 			BOOST_CHECK_EQUAL(mtx[rowIndex][columnIndex], expected);
 		}
@@ -95,8 +95,8 @@ BOOST_AUTO_TEST_CASE(MatrixIsConstructibleFromInitialiserLists) {
 BOOST_AUTO_TEST_CASE(DefaultMatrixConstructorYieldsZeroes) {
 	auto mtx = Matrix4x4();
 
-	for (const auto rowIndex : coconut_tools::range(0, 4)) {
-		for (const auto columnIndex : coconut_tools::range(0, 4)) {
+	for (const auto rowIndex : essentials::range(0, 4)) {
+		for (const auto columnIndex : essentials::range(0, 4)) {
 			BOOST_CHECK_EQUAL(mtx[rowIndex][columnIndex], 0.0f);
 		}
 	}

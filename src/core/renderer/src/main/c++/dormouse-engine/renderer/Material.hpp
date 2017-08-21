@@ -5,18 +5,18 @@
 #include <memory>
 #include <unordered_map>
 
-#include <coconut-tools/exceptions/RuntimeError.hpp>
+#include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-#include "coconut/milk/fs/FilesystemContext.hpp"
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/milk/graphics/RenderState.hpp"
-#include "coconut/milk/graphics/Texture.hpp"
-#include "coconut/milk/graphics/Sampler.hpp"
-#include "coconut/pulp/mesh/MaterialConfiguration.hpp"
+#include "dormouse-engine/milk/fs/FilesystemContext.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/RenderState.hpp"
+#include "dormouse-engine/milk/graphics/Texture.hpp"
+#include "dormouse-engine/milk/graphics/Sampler.hpp"
+#include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 #include "shader/Property.hpp"
 #include "shader/PassFactory.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class Material {
 public:
@@ -52,6 +52,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_MATERIAL_HPP_ */

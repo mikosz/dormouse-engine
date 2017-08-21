@@ -5,7 +5,7 @@
 
 #include <boost/operators.hpp>
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 const float PI = static_cast<float>(3.14159264f);
 
@@ -100,7 +100,9 @@ inline const Angle operator""_deg(long double d) noexcept {
 	return degrees(static_cast<float>(d));
 }
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 using math::PI;
 using math::Angle;
@@ -114,6 +116,6 @@ using math::operator ""_rad;
 
 } // namespace math_literals
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_ANGLE_HPP_ */

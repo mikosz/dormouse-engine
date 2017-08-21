@@ -6,14 +6,14 @@
 #include <vector>
 #include <numeric>
 
-#include <coconut-tools/exceptions/LogicError.hpp>
+#include "dormouse-engine/exceptions/LogicError.hpp"
 
-#include "coconut/milk/graphics/ConstantBuffer.hpp"
+#include "dormouse-engine/milk/graphics/ConstantBuffer.hpp"
 
 #include "../DrawCommand.hpp"
 #include "Parameter.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 class ConstantBuffer {
 public:
@@ -70,6 +70,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_CONSTANTBUFFER_HPP_ */

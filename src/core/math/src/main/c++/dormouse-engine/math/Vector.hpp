@@ -14,10 +14,10 @@
 
 #include <boost/operators.hpp>
 
-#include "coconut-tools/utils/InfixOstreamIterator.hpp"
+#include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
 #include "ScalarEqual.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 template <class ScalarType, size_t DIMENSIONS_PARAM, class ScalarEqualityFunc = ScalarEqual<ScalarType>>
 class Vector :
@@ -77,7 +77,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Vector& vector) {
 		os << '<';
 		std::copy(vector.elements_.begin(), vector.elements_.end(),
-			coconut_tools::InfixOstreamIterator<ScalarType>(os, ", "));
+			dormouse_engine::essentials::InfixOstreamIterator<ScalarType>(os, ", "));
 		os << '>';
 		return os;
 	}
@@ -283,7 +283,9 @@ using Vec4 = Vector<float, 4>;
 static_assert(sizeof(Vec4) == sizeof(float) * 4, "Empty base optimisation didn't work");
 static_assert(std::is_trivially_copyable<Vec4>::value, "Vector is not trivially copiable");
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 // TODO: re-enable when primitive::Vector is removed
 // using math::Vector;
@@ -291,6 +293,6 @@ using math::Vec2;
 using math::Vec3;
 using math::Vec4;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_VECTOR_HPP_ */

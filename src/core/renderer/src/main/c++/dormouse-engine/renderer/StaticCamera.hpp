@@ -3,19 +3,19 @@
 
 #include "Camera.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class StaticCamera : public Camera {
 public:
 
-	const pulp::math::Matrix& viewTransformation() const override {
-		return pulp::math::Matrix::IDENTITY;
+	const math::Matrix& viewTransformation() const override {
+		return math::Matrix::IDENTITY;
 	}
 
 };
 
 CT_MAKE_POINTER_DEFINITIONS(StaticCamera);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_STATICCAMERA_HPP_ */

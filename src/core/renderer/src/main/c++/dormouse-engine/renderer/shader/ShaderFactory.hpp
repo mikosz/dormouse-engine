@@ -6,16 +6,16 @@
 #include <string>
 #include <unordered_map>
 
-#include <coconut-tools/factory.hpp>
+#include "dormouse-engine/factory.hpp"
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/milk/graphics/ShaderType.hpp"
-#include "coconut/milk/graphics/ShaderCompiler.hpp"
-#include "coconut/milk/fs.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/ShaderType.hpp"
+#include "dormouse-engine/milk/graphics/ShaderCompiler.hpp"
+#include "dormouse-engine/milk/fs.hpp"
 #include "Input.hpp"
 #include "Shader.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 namespace detail {
 
@@ -86,6 +86,6 @@ using ShaderFactory =
 		std::mutex
 		>;
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_SHADERFACTORY_HPP_ */

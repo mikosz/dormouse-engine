@@ -1,13 +1,13 @@
 #define BOOST_TEST_NO_LIB
 #include <boost/test/auto_unit_test.hpp>
 
-#include <coconut-tools/utils/Range.hpp>
+#include "dormouse-engine/essentials/Range.hpp"
 
-#include "coconut/pulp/math/Transform.hpp"
+#include "dormouse-engine/math/Transform.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::math;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::math;
 
 namespace /* anonymous */ {
 

@@ -4,16 +4,16 @@
 #include <mutex>
 #include <memory>
 
-#include <coconut-tools/factory.hpp>
+#include "dormouse-engine/factory.hpp"
 
-#include "coconut/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
 
-#include "coconut/milk/fs.hpp"
+#include "dormouse-engine/milk/fs.hpp"
 
 #include "ShaderFactory.hpp"
 #include "Pass.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 namespace detail {
 
@@ -60,6 +60,6 @@ using PassFactory =
 		std::mutex
 		>;
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PASSFACTORY_HPP_ */

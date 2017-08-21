@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/milk/graphics/Viewport.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/Viewport.hpp"
 #include "shader/ReflectiveObject.hpp"
 #include "shader/Pass.hpp"
 #include "lighting/DirectionalLight.hpp"
@@ -16,7 +16,7 @@
 #include "Camera.hpp"
 #include "Lens.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class CommandBuffer;
 
@@ -92,6 +92,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(Scene);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_SCENE_HPP_ */

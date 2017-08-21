@@ -4,22 +4,22 @@
 #include <cstdint>
 #include <vector>
 
-#include "coconut/milk/graphics/CommandList.hpp"
-#include "coconut/milk/graphics/ConstantBuffer.hpp"
-#include "coconut/milk/graphics/RenderState.hpp"
-#include "coconut/milk/graphics/Sampler.hpp"
-#include "coconut/milk/graphics/ShaderType.hpp"
-#include "coconut/milk/graphics/InputLayout.hpp"
-#include "coconut/milk/graphics/Shader.hpp"
-#include "coconut/milk/graphics/Texture.hpp"
-#include "coconut/milk/graphics/Viewport.hpp"
-#include "coconut/milk/graphics/VertexBuffer.hpp"
-#include "coconut/milk/graphics/IndexBuffer.hpp"
-#include "coconut/milk/graphics/PrimitiveTopology.hpp"
+#include "dormouse-engine/milk/graphics/CommandList.hpp"
+#include "dormouse-engine/milk/graphics/ConstantBuffer.hpp"
+#include "dormouse-engine/milk/graphics/RenderState.hpp"
+#include "dormouse-engine/milk/graphics/Sampler.hpp"
+#include "dormouse-engine/milk/graphics/ShaderType.hpp"
+#include "dormouse-engine/milk/graphics/InputLayout.hpp"
+#include "dormouse-engine/milk/graphics/Shader.hpp"
+#include "dormouse-engine/milk/graphics/Texture.hpp"
+#include "dormouse-engine/milk/graphics/Viewport.hpp"
+#include "dormouse-engine/milk/graphics/VertexBuffer.hpp"
+#include "dormouse-engine/milk/graphics/IndexBuffer.hpp"
+#include "dormouse-engine/milk/graphics/PrimitiveTopology.hpp"
 
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 // TODO: figure out the draw command types. Compute command should also be incorporated here, but wont
 // use the stuff from this class (add GPUCommand as superclass with run and key?)
@@ -241,6 +241,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(DrawCommand);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_DRAWCOMMAND_HPP_ */

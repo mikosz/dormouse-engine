@@ -1,7 +1,7 @@
 #ifndef _DORMOUSEENGINE_MATH_SCALAREQUAL_HPP_
 #define _DORMOUSEENGINE_MATH_SCALAREQUAL_HPP_
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 template <class ScalarType>
 struct ScalarEqual {
@@ -21,6 +21,6 @@ struct ScalarEqual<float> {
 
 };
 
-} // namespace coconut::pulp::math
+} // namespace dormouse_engine::math
 
 #endif /* _DORMOUSEENGINE_MATH_SCALAREQUAL_HPP_ */

@@ -4,16 +4,16 @@
 #include <string>
 #include <vector>
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/milk/graphics/Texture2d.hpp"
-#include "coconut/milk/graphics/Viewport.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/Texture2d.hpp"
+#include "dormouse-engine/milk/graphics/Viewport.hpp"
 
-#include "coconut/pulp/mesh/MaterialConfiguration.hpp"
+#include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 
 #include "shader/Pass.hpp"
 #include "shader/Property.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class Scene;
 class Actor;
@@ -61,6 +61,6 @@ public:
 
 };
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_PASSCONTEXT_HPP_ */

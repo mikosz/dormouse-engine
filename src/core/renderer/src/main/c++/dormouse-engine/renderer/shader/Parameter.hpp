@@ -3,7 +3,7 @@
 
 #include "Property.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 class Parameter {
 public:
@@ -45,6 +45,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PARAMETER_HPP_ */

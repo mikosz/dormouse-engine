@@ -6,21 +6,21 @@
 #include <unordered_map>
 #include <sstream>
 
-#include <coconut-tools/exceptions/RuntimeError.hpp>
-#include <coconut-tools/exceptions/LogicError.hpp>
+#include "dormouse-engine/exceptions/RuntimeError.hpp"
+#include "dormouse-engine/exceptions/LogicError.hpp"
 
-#include "coconut/milk/graphics/ShaderReflection.hpp"
-#include "coconut/milk/graphics/ShaderType.hpp"
-#include "coconut/milk/graphics/PixelFormat.hpp"
-#include "coconut/milk/graphics/Texture1d.hpp"
-#include "coconut/milk/graphics/Texture2d.hpp"
-#include "coconut/milk/graphics/Sampler.hpp"
-#include "coconut/pulp/primitive/Primitive.hpp"
-#include "coconut/pulp/math/Vector.hpp"
-#include "coconut/pulp/math/Matrix.hpp"
+#include "dormouse-engine/milk/graphics/ShaderReflection.hpp"
+#include "dormouse-engine/milk/graphics/ShaderType.hpp"
+#include "dormouse-engine/milk/graphics/PixelFormat.hpp"
+#include "dormouse-engine/milk/graphics/Texture1d.hpp"
+#include "dormouse-engine/milk/graphics/Texture2d.hpp"
+#include "dormouse-engine/milk/graphics/Sampler.hpp"
+#include "dormouse-engine/primitive/Primitive.hpp"
+#include "dormouse-engine/math/Vector.hpp"
+#include "dormouse-engine/math/Matrix.hpp"
 #include "PropertyId.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class DrawCommand;
 
@@ -367,6 +367,6 @@ void bindResourceProperty(
 	size_t slot
 	);
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PROPERTY_HPP_ */

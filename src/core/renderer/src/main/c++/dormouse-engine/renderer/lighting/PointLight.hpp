@@ -1,19 +1,19 @@
 #ifndef _DORMOUSEENGINE_RENDERER_LIGHTING_POINTLIGHT_HPP_
 #define _DORMOUSEENGINE_RENDERER_LIGHTING_POINTLIGHT_HPP_
 
-#include "coconut/pulp/math/Vector.hpp"
+#include "dormouse-engine/math/Vector.hpp"
 
-namespace coconut::pulp::renderer::lighting {
+namespace dormouse_engine::renderer::lighting {
 
 class PointLight {
 public:
 
 	PointLight(
-		const pulp::math::Vec3& position,
-		const pulp::math::Vec3& attenuation, // <constant, linear, quadratic>
-		const pulp::math::Vec4& ambientColour,
-		const pulp::math::Vec4& diffuseColour,
-		const pulp::math::Vec4& specularColour
+		const math::Vec3& position,
+		const math::Vec3& attenuation, // <constant, linear, quadratic>
+		const math::Vec4& ambientColour,
+		const math::Vec4& diffuseColour,
+		const math::Vec4& specularColour
 		) :
 		position_(position),
 		attenuation_(attenuation),
@@ -23,40 +23,40 @@ public:
 	{
 	}
 
-	const pulp::math::Vec3& position() const {
+	const math::Vec3& position() const {
 		return position_;
 	}
 
-	const pulp::math::Vec3& attenuation() const {
+	const math::Vec3& attenuation() const {
 		return attenuation_;
 	}
 
-	const pulp::math::Vec4& ambientColour() const {
+	const math::Vec4& ambientColour() const {
 		return ambientColour_;
 	}
 
-	const pulp::math::Vec4& diffuseColour() const {
+	const math::Vec4& diffuseColour() const {
 		return diffuseColour_;
 	}
 
-	const pulp::math::Vec4& specularColour() const {
+	const math::Vec4& specularColour() const {
 		return specularColour_;
 	}
 
 private:
 
-	pulp::math::Vec3 position_;
+	math::Vec3 position_;
 
-	pulp::math::Vec3 attenuation_;
+	math::Vec3 attenuation_;
 
-	pulp::math::Vec4 ambientColour_;
+	math::Vec4 ambientColour_;
 
-	pulp::math::Vec4 diffuseColour_;
+	math::Vec4 diffuseColour_;
 
-	pulp::math::Vec4 specularColour_;
+	math::Vec4 specularColour_;
 
 };
 
-} // namespace coconut::pulp::renderer::lighting
+} // namespace dormouse_engine::renderer::lighting
 
 #endif /* _DORMOUSEENGINE_RENDERER_LIGHTING_POINTLIGHT_HPP_ */

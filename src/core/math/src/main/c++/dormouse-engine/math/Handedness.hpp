@@ -1,7 +1,7 @@
 #ifndef _DORMOUSEENGINE_MATH_HANDEDNESS_HPP_
 #define _DORMOUSEENGINE_MATH_HANDEDNESS_HPP_
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 enum class Handedness {
 	LEFT,
@@ -10,8 +10,10 @@ enum class Handedness {
 
 } // namespace math
 
+namespace dormouse_engine {
+
 using math::Handedness;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_HANDEDNESS_HPP_ */

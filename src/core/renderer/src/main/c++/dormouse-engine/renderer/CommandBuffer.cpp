@@ -1,8 +1,8 @@
 #include "CommandBuffer.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 void CommandBuffer::add(DrawCommandUniquePtr drawCommand) {
 	commands_.emplace_back(std::move(drawCommand));

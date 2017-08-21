@@ -4,7 +4,7 @@
 #include "Quaternion.hpp"
 #include "Vector.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 class Angle;
 
@@ -63,6 +63,6 @@ inline void rotate(Vec3& vector, const Rotation& rotation) {
 	vector = rotation.apply(vector);
 }
 
-} // namespace coconut::pulp::math
+} // namespace dormouse_engine::math
 
 #endif /* _DORMOUSEENGINE_MATH_ROTATION_HPP_ */

@@ -1,10 +1,10 @@
 #ifndef _DORMOUSEENGINE_RENDERER_LENS_HPP_
 #define _DORMOUSEENGINE_RENDERER_LENS_HPP_
 
-#include "coconut/pulp/math/Matrix.hpp"
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/math/Matrix.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class Lens {
 public:
@@ -20,6 +20,6 @@ protected:
 
 CT_MAKE_POINTER_DEFINITIONS(Lens);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_LENS_HPP_ */

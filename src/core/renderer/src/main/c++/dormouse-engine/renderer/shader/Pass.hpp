@@ -4,7 +4,7 @@
 #include "Input.hpp"
 #include "Shader.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class PassContext;
 	
@@ -98,6 +98,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(Pass);
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PASS_HPP_ */

@@ -4,11 +4,11 @@
 #include <vector>
 #include <cstdint>
 
-#include "coconut/milk/graphics/CommandList.hpp"
+#include "dormouse-engine/milk/graphics/CommandList.hpp"
 
 #include "DrawCommand.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class CommandBuffer {
 public:
@@ -25,6 +25,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_COMMANDBUFFER_HPP_ */

@@ -2,13 +2,13 @@
 
 #include <cstring>
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/pulp/renderer/DrawCommand.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/renderer/DrawCommand.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::shader;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::shader;
 
 void* shader::writeDataProperty(
 	void* buffer,
@@ -17,7 +17,7 @@ void* shader::writeDataProperty(
 	const Property::DataType& format
 	)
 {
-	static_assert(std::is_trivially_copyable_v<pulp::math::Vec2>, "Vec2 is not trivially copyable");
+	static_assert(std::is_trivially_copyable_v<math::Vec2>, "Vec2 is not trivially copyable");
 
 	if (format.klass != Property::DataType::Class::VECTOR) {
 		throw IncompatibleDataType("Vec2s are not writeable to class " + toString(format.klass));
@@ -42,7 +42,7 @@ void* shader::writeDataProperty(
 	const Property::DataType& format
 	)
 {
-	static_assert(std::is_trivially_copyable_v<pulp::math::Vec3>, "Vec3 is not trivially copyable");
+	static_assert(std::is_trivially_copyable_v<math::Vec3>, "Vec3 is not trivially copyable");
 
 	if (format.klass != Property::DataType::Class::VECTOR) {
 		throw IncompatibleDataType("Vec3s are not writeable to class " + toString(format.klass));
@@ -67,7 +67,7 @@ void* shader::writeDataProperty(
 	const Property::DataType& format
 	)
 {
-	static_assert(std::is_trivially_copyable_v<pulp::math::Vec4>, "Vec4 is not trivially copyable");
+	static_assert(std::is_trivially_copyable_v<math::Vec4>, "Vec4 is not trivially copyable");
 
 	if (format.klass != Property::DataType::Class::VECTOR) {
 		throw IncompatibleDataType("Vec4s are not writeable to class " + toString(format.klass));
@@ -89,7 +89,7 @@ void* shader::writeDataProperty(
 	const Property::DataType& format
 	)
 {
-	static_assert(std::is_trivially_copyable_v<pulp::math::Matrix4x4>, "Matrix is not trivially copyable");
+	static_assert(std::is_trivially_copyable_v<math::Matrix4x4>, "Matrix is not trivially copyable");
 
 	if (format.scalarType != Property::DataType::ScalarType::FLOAT) {
 		throw IncompatibleDataType("Matrices are not writeable to scalar type " + toString(format.scalarType));
@@ -110,7 +110,7 @@ void* shader::writeDataProperty(
 		needsTranspose = !needsTranspose;
 	}
 
-	auto* target = reinterpret_cast<pulp::math::Matrix4x4*>(buffer);
+	auto* target = reinterpret_cast<math::Matrix4x4*>(buffer);
 
 	if (needsTranspose) {
 		*target = transpose(matrix.view());

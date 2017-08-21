@@ -3,13 +3,13 @@
 
 #include "Lens.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class PerspectiveLens : public Lens {
 public:
 
 	PerspectiveLens(
-		pulp::math::Handedness handedness,
+		math::Handedness handedness,
 		Angle fov,
 		float aspectRatio,
 		float nearZ,
@@ -24,6 +24,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_PERSPECTIVELENS_HPP_ */

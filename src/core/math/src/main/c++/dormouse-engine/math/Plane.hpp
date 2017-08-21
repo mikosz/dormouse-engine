@@ -4,7 +4,7 @@
 #include "Vector.hpp"
 #include "ScalarEqual.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 class Plane {
 public:
@@ -47,8 +47,10 @@ private:
 
 } // namespace math
 
+namespace dormouse_engine {
+
 using math::Plane;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_PLANE_HPP_ */

@@ -6,18 +6,18 @@
 
 #include <boost/optional.hpp>
 
-#include "coconut/milk/fs.hpp"
+#include "dormouse-engine/milk/fs.hpp"
 
-#include "coconut/milk/graphics/Renderer.hpp"
-#include "coconut/milk/graphics/RenderState.hpp"
-#include "coconut/milk/graphics/IndexBuffer.hpp"
-#include "coconut/milk/graphics/VertexBuffer.hpp"
-#include "coconut/milk/graphics/PrimitiveTopology.hpp"
+#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/milk/graphics/RenderState.hpp"
+#include "dormouse-engine/milk/graphics/IndexBuffer.hpp"
+#include "dormouse-engine/milk/graphics/VertexBuffer.hpp"
+#include "dormouse-engine/milk/graphics/PrimitiveTopology.hpp"
 
-#include "coconut/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
 
-#include "coconut/pulp/mesh/Mesh.hpp"
-#include "coconut/pulp/mesh/MaterialConfiguration.hpp"
+#include "dormouse-engine/mesh/Mesh.hpp"
+#include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 
 #include "shader/Input.hpp"
 #include "shader/PassFactory.hpp"
@@ -25,7 +25,7 @@
 #include "CommandBuffer.hpp"
 #include "Material.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 class CommandBuffer;
 
@@ -91,6 +91,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(Model);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_MODEL_HPP_ */

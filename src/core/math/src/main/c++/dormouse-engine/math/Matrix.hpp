@@ -10,14 +10,14 @@
 
 #include <boost/operators.hpp>
 
-#include "coconut-tools/utils/InfixOstreamIterator.hpp"
+#include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
 
 #include "Angle.hpp"
 #include "Handedness.hpp"
 #include "Vector.hpp"
 #include "ScalarEqual.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 template <class NextViewType, class GetElementFunc>
 class MatrixView {
@@ -253,7 +253,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
 		os << '<';
 		std::copy(matrix.elements_.begin(), matrix.elements_.end(),
-			coconut_tools::InfixOstreamIterator<Row>(os, ", "));
+			essentials::InfixOstreamIterator<Row>(os, ", "));
 		os << '>';
 		return os;
 	}
@@ -434,11 +434,13 @@ template <class ST, size_t R, size_t C, class SEF>
 const Matrix<ST, R, C, SEF>	Matrix<ST, R, C, SEF>::IDENTITY =
 	detail::makeIdentity<ST, R, C, SEF>();
 
-} // namespace math
+} // namespace dormouse_engine::math
+
+namespace dormouse_engine {
 
 using math::Matrix;
 using math::Matrix4x4;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_MATRIX_HPP_ */

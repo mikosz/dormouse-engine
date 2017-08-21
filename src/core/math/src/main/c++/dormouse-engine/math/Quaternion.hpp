@@ -6,7 +6,7 @@
 #include "ScalarEqual.hpp"
 #include "Vector.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 template <class ScalarType, class ScalarEqualityFunc = ScalarEqual<ScalarType>>
 class Quaternion :
@@ -173,9 +173,11 @@ using Quat = Quaternion<float>;
 
 } // namespace math
 
+namespace dormouse_engine {
+
 using math::Quaternion;
 using math::Quat;
 
-} // namespace coconut::pulp
+} // namespace dormouse_engine
 
 #endif /* _DORMOUSEENGINE_MATH_QUATERNION_HPP_ */

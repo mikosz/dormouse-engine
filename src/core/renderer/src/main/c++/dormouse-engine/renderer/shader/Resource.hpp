@@ -1,10 +1,10 @@
 #ifndef _DORMOUSEENGINE_RENDERER_SHADER_RESOURCE_HPP_
 #define _DORMOUSEENGINE_RENDERER_SHADER_RESOURCE_HPP_
 
-#include "coconut/milk/graphics/ShaderType.hpp"
+#include "dormouse-engine/milk/graphics/ShaderType.hpp"
 #include "Property.hpp"
 
-namespace coconut::pulp::renderer::shader {
+namespace dormouse_engine::renderer::shader {
 
 class Resource {
 public:
@@ -38,6 +38,6 @@ private:
 
 };
 
-} // namespace coconut::pulp::renderer::shader
+} // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_RESOURCE_HPP_ */

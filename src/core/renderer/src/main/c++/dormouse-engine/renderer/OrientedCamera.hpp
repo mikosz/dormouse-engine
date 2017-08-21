@@ -1,14 +1,14 @@
 #ifndef _DORMOUSEENGINE_RENDERER_ORIENTEDCAMERA_HPP_
 #define _DORMOUSEENGINE_RENDERER_ORIENTEDCAMERA_HPP_
 
-#include "coconut/pulp/math/Transform.hpp"
-#include "coconut/pulp/math/Vector.hpp"
+#include "dormouse-engine/math/Transform.hpp"
+#include "dormouse-engine/math/Vector.hpp"
 
-#include "coconut/milk/utils/Lazy.hpp"
+#include "dormouse-engine/milk/utils/Lazy.hpp"
 
 #include "Camera.hpp"
 
-namespace coconut::pulp::renderer {
+namespace dormouse_engine::renderer {
 
 // TODO: humbug
 class OrientedCamera : public Camera {
@@ -54,6 +54,6 @@ private:
 
 CT_MAKE_POINTER_DEFINITIONS(OrientedCamera);
 
-} // namespace coconut::pulp::renderer
+} // namespace dormouse_engine::renderer
 
 #endif /* _DORMOUSEENGINE_RENDERER_ORIENTEDCAMERA_HPP_ */

@@ -4,7 +4,7 @@
 #include "Vector.hpp"
 #include "ScalarEqual.hpp"
 
-namespace coconut::pulp::math {
+namespace dormouse_engine::math {
 
 class HomogeneousCoordinates {
 public:
@@ -64,6 +64,6 @@ public:
 
 };
 
-} // namespace coconut::pulp::math
+} // namespace dormouse_engine::math
 
 #endif /* _DORMOUSEENGINE_MATH_HOMOGENEOUS_HPP_ */

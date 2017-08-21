@@ -3,9 +3,9 @@
 #include "Angle.hpp"
 #include "Vector.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::math;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::math;
 
 namespace /* anonymous */
 {

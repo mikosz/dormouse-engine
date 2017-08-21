@@ -7,17 +7,17 @@
 
 #include <boost/tokenizer.hpp>
 
-#include <coconut-tools/logger.hpp>
-#include <coconut-tools/exceptions/RuntimeError.hpp>
+#include "dormouse-engine/logger.hpp"
+#include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-#include "coconut/milk/graphics/ShaderReflection.hpp"
+#include "dormouse-engine/milk/graphics/ShaderReflection.hpp"
 
 #include "Property.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::shader;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::shader;
 
 namespace /* anonymous */ {
 

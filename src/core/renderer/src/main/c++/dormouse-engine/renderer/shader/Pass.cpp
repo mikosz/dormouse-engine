@@ -1,11 +1,11 @@
 #include "Pass.hpp"
 
-#include "coconut/pulp/renderer/PassContext.hpp"
+#include "dormouse-engine/renderer/PassContext.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
-using namespace coconut::pulp::renderer::shader;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::shader;
 
 void Pass::bind(DrawCommand& drawCommand, const Properties& properties) const {
 	drawCommand.setInputLayout(&input_.layout());

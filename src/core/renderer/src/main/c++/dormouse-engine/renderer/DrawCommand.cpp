@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 void DrawCommand::submit(milk::graphics::CommandList& commandList) {
 	assert(renderState_ != nullptr);

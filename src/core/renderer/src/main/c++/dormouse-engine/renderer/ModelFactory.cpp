@@ -1,13 +1,13 @@
 #include "ModelFactory.hpp"
 
-#include <coconut-tools/serialisation/BinaryDeserialiser.hpp>
-#include <coconut-tools/logger.hpp>
+#include "dormouse-engine/serialisation/BinaryDeserialiser.hpp"
+#include "dormouse-engine/logger.hpp"
 
-#include "coconut/pulp/mesh/obj/Importer.hpp"
+#include "dormouse-engine/mesh/obj/Importer.hpp"
 
-using namespace coconut;
-using namespace coconut::pulp;
-using namespace coconut::pulp::renderer;
+using namespace dormouse_engine;
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 
 namespace /* anonymous */ {
 
@@ -72,10 +72,10 @@ auto detail::ModelCreator::doCreate(
 		auto modelIS = filesystemContext.open(modelFiles_[id]);
 		coconut_tools::serialisation::BinaryDeserialiser deserialiser(*modelIS);
 
-		auto mesh = pulp::Mesh();
+		auto mesh = Mesh();
 		deserialiser >> mesh;
 
-		return std::make_unique<pulp::renderer::Model>(
+		return std::make_unique<renderer::Model>(
 			id,
 			std::move(mesh),
 			graphicsRenderer,
@@ -88,7 +88,7 @@ auto detail::ModelCreator::doCreate(
 		if (path.extension() == ".obj") {
 			auto directoryContext = filesystemContext; // TODO: need a constructor that creates a context off another context
 			directoryContext.changeWorkingDirectory(path.parent());
-			return std::make_unique<pulp::renderer::Model>(
+			return std::make_unique<renderer::Model>(
 				id,
 				importer.import(*filesystemContext.load(path), directoryContext),
 				graphicsRenderer,
