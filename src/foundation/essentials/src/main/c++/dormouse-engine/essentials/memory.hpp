@@ -1,5 +1,5 @@
-#ifndef DORMOUSEENGINE_ESSENTIALS_TYPES_HPP_
-#define DORMOUSEENGINE_ESSENTIALS_TYPES_HPP_
+#ifndef DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
+#define DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
 
 #include <array>
 #include <vector>
@@ -113,4 +113,4 @@ auto viewBuffer(const std::basic_string<C, T, A>& s) {
 
 } // namespace dormouse_engine::essentials
 
-#endif /* DORMOUSEENGINE_ESSENTIALS_TYPES_HPP_ */
+#endif /* DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_ */

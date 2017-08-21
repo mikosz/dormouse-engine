@@ -26,7 +26,7 @@ class Sampler;
 class RenderState;
 class InputLayout;
 class Viewport;
-enum class PixelFormat;
+class PixelFormat;
 
 class CommandList {
 public:

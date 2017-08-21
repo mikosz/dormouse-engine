@@ -35,7 +35,7 @@ ShaderReflection reflect(const std::string& path) {
 	return ShaderReflection(shaderData.data(), shaderData.size());
 }
 
-BOOST_AUTO_TEST_SUITE(MilkGraphicsShaderReflectionTestSuite);
+BOOST_AUTO_TEST_SUITE(GraphicsShaderReflectionTestSuite);
 
 BOOST_AUTO_TEST_CASE(RetrievesSimpleInputParameters) {
 	auto reflection = reflect("test/graphics/SimpleInputParameter.v.hlsl");
@@ -211,6 +211,6 @@ BOOST_AUTO_TEST_CASE(RetrievesConstantBuffersWithArrays) {
 	}
 }
 
-BOOST_AUTO_TEST_SUITE_END(/* MilkGraphicsShaderReflectionTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* GraphicsShaderReflectionTestSuite */);
 
 } // anonymous namespace

@@ -138,7 +138,7 @@ void CommandList::setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, si
 void CommandList::setIndexBuffer(IndexBuffer& buffer, size_t offset) {
 	auto* buf = reinterpret_cast<ID3D11Buffer*>(buffer.internalResource().get());
 
-	deviceContext_->IASetIndexBuffer(buf, static_cast<DXGI_FORMAT>(buffer.pixelFormat()), static_cast<UINT>(offset));
+	deviceContext_->IASetIndexBuffer(buf, static_cast<DXGI_FORMAT>(buffer.pixelFormat().id()), static_cast<UINT>(offset));
 }
 
 void CommandList::setVertexBuffer(VertexBuffer& buffer, size_t slot) {

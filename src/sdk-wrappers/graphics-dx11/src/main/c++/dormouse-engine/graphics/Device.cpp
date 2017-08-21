@@ -205,7 +205,7 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	depthStencilConfig.allowModifications = false;
 	depthStencilConfig.mipLevels = 1;
 	depthStencilConfig.arraySize = 1;
-	depthStencilConfig.pixelFormat = PixelFormat::D32_FLOAT;
+	depthStencilConfig.pixelFormat = FORMAT_D32_FLOAT;
 	depthStencilConfig.purposeFlags = Texture::CreationPurpose::DEPTH_STENCIL;
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;

@@ -39,7 +39,7 @@ void Texture1d::initialise(Device& renderer, const Configuration& configuration)
 	desc.Width = static_cast<UINT>(configuration.width);
 	desc.MipLevels = static_cast<UINT>(configuration.mipLevels);
 	desc.ArraySize = static_cast<UINT>(configuration.arraySize);
-	desc.Format = static_cast<DXGI_FORMAT>(configuration.pixelFormat);
+	desc.Format = static_cast<DXGI_FORMAT>(configuration.pixelFormat.id());
 	desc.BindFlags = configuration.purposeFlags.integralValue();
 	desc.MiscFlags = configuration.arraySize == 6 ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u; // TODO
 
@@ -71,15 +71,15 @@ void Texture1d::initialise(Device& renderer, const Configuration& configuration)
 		subresourceData.resize(configuration.arraySize * configuration.mipLevels);
 		std::memset(subresourceData.data(), 0, subresourceData.size() * sizeof(D3D11_SUBRESOURCE_DATA));
 
-		const auto pixelSize = formatSize(configuration.pixelFormat);
+		const auto pixelSize = configuration.pixelFormat.pixelSize();
 		const auto* data = reinterpret_cast<const std::uint8_t*>(configuration.initialData);
 
 		for (const auto textureIndex : dormouse_engine::range(size_t(0), configuration.arraySize)) {
 			for (const auto mipIndex : dormouse_engine::range(size_t(0), configuration.mipLevels)) {
 				const auto subresourceIndex = textureIndex * configuration.mipLevels + mipIndex;
 				const auto textureWidth = configuration.width >> mipIndex;
-				const auto rowPitch = formatRowPitch(configuration.pixelFormat, textureWidth);
-				const auto slicePitch = formatSlicePitch(configuration.pixelFormat, 1u, rowPitch);
+				const auto rowPitch = configuration.pixelFormat.rowPitch(textureWidth);
+				const auto slicePitch = configuration.pixelFormat.slicePitch(1u, rowPitch);
 
 				subresourceData[subresourceIndex].pSysMem = data;
 				// TODO: this will not work for compressed formats
