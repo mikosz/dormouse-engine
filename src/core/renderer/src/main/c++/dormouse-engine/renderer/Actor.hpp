@@ -4,7 +4,7 @@
 #include <chrono>
 #include <string>
 
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 #include "dormouse-engine/renderer/shader/Property.hpp"
 
 #include "Orientation.hpp"
@@ -72,7 +72,7 @@ private:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(Actor);
+DE_SMART_POINTER_DEFINITONS(Actor);
 
 } // namespace dormouse_engine::renderer
 

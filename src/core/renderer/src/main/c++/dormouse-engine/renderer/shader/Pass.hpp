@@ -96,7 +96,7 @@ private:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(Pass);
+DE_SMART_POINTER_DEFINITONS(Pass);
 
 } // namespace dormouse_engine::renderer::shader
 

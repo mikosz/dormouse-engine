@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "dormouse-engine/milk/graphics/TestSuite.hpp"
+#include "dormouse-engine/graphics/TestSuite.hpp"
 
-#include "dormouse-engine/milk/fs.hpp"
+#include "dormouse-engine/fs.hpp"
 
 #include "dormouse-engine/renderer/shader/InputFactory.hpp"
 #include "dormouse-engine/renderer/shader/ShaderFactory.hpp"
@@ -12,14 +12,14 @@
 #include "dormouse-engine/renderer/CommandBuffer.hpp"
 #include "dormouse-engine/renderer/Scene.hpp"
 
-#include "dormouse-engine/milk/graphics/DirectXError.hpp"
+#include "dormouse-engine/graphics/DirectXError.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::shader;
 
-BOOST_FIXTURE_TEST_SUITE(PulpRendererShaderShaderFactoryTestSuite, milk::graphics::TestSuite);
+BOOST_FIXTURE_TEST_SUITE(PulpRendererShaderShaderFactoryTestSuite, graphics::TestSuite);
 
 BOOST_AUTO_TEST_CASE(SetsConstantBuffers) {
 	// init shaders
@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(SetsConstantBuffers) {
 		{
 			auto material = MaterialConfiguration();
 
-			material.renderStateConfiguration().cullMode = milk::graphics::RenderState::CullMode::BACK;
-			material.renderStateConfiguration().fillMode = milk::graphics::RenderState::FillMode::SOLID;
+			material.renderStateConfiguration().cullMode = graphics::RenderState::CullMode::BACK;
+			material.renderStateConfiguration().fillMode = graphics::RenderState::FillMode::SOLID;
 			material.renderStateConfiguration().frontCounterClockwise = false;
 
 			material.properties().emplace(mesh::MaterialConfiguration::AMBIENT_COLOUR_PROPERTY,
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(SetsConstantBuffers) {
 
 			auto submesh = Submesh();
 
-			submesh.primitiveTopology() = milk::graphics::PrimitiveTopology::TRIANGLE_STRIP;
+			submesh.primitiveTopology() = graphics::PrimitiveTopology::TRIANGLE_STRIP;
 
 			auto vertex = Submesh::Vertex();
 			vertex.normal = Vector(0.0f, 0.0f, -1.0f);

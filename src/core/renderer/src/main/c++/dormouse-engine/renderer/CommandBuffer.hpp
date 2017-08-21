@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "dormouse-engine/milk/graphics/CommandList.hpp"
+#include "dormouse-engine/graphics/CommandList.hpp"
 
 #include "DrawCommand.hpp"
 
@@ -15,7 +15,7 @@ public:
 
 	void add(DrawCommandUniquePtr drawCommand);
 
-	void submit(milk::graphics::CommandList& commandList);
+	void submit(graphics::CommandList& commandList);
 
 private:
 

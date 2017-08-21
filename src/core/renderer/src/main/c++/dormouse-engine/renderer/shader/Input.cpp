@@ -36,7 +36,7 @@ void* writeElement(void* buffer, const Properties& properties, const Input::Para
 } // anonymous namespace
 
 Input::Input(
-	milk::graphics::InputLayout layout,
+	graphics::InputLayout layout,
 	Parameters perVertexParameters,
 	Parameters perInstanceParameters
 	) noexcept :

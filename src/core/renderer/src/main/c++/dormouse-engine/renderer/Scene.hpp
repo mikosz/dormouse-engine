@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
-#include "dormouse-engine/milk/graphics/Viewport.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/graphics/Viewport.hpp"
 #include "shader/ReflectiveObject.hpp"
 #include "shader/Pass.hpp"
 #include "lighting/DirectionalLight.hpp"
@@ -23,7 +23,7 @@ class CommandBuffer;
 class Scene {
 public:
 
-	Scene(milk::graphics::Renderer& graphicsRenderer);
+	Scene(graphics::Device& graphicsDevice);
 
 	void add(ActorSharedPtr actor, ModelSharedPtr model);
 
@@ -61,7 +61,7 @@ private:
 
 		std::vector<ActorSharedPtr> actors;
 
-		// milk::graphics::VertexBuffer instanceDataBuffer; // TODO: move from model?
+		// graphics::VertexBuffer instanceDataBuffer; // TODO: move from model?
 
 		Instance(ModelSharedPtr model) :
 			model(std::move(model))
@@ -80,17 +80,17 @@ private:
 	
 	LensSharedPtr lens_; // TODO
 
-	milk::graphics::Texture2d* renderTarget_; // TODO
+	graphics::Texture2d* renderTarget_; // TODO
 
-	milk::graphics::Texture2d* depthStencil_; // TODO
+	graphics::Texture2d* depthStencil_; // TODO
 
-	milk::graphics::Viewport viewport_; // TODO
+	graphics::Viewport viewport_; // TODO
 
 	friend class renderer::shader::ReflectiveInterface<Scene>;
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(Scene);
+DE_SMART_POINTER_DEFINITONS(Scene);
 
 } // namespace dormouse_engine::renderer
 

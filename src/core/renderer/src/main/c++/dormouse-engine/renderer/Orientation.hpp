@@ -5,7 +5,7 @@
 
 #include "dormouse-engine/math/Transform.hpp"
 #include "dormouse-engine/math/Vector.hpp"
-#include "dormouse-engine/milk/utils/Lazy.hpp"
+#include "dormouse-engine/essentials/Lazy.hpp"
 
 namespace dormouse_engine::renderer {
 

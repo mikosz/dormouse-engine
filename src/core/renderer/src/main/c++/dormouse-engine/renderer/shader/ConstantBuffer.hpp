@@ -8,7 +8,7 @@
 
 #include "dormouse-engine/exceptions/LogicError.hpp"
 
-#include "dormouse-engine/milk/graphics/ConstantBuffer.hpp"
+#include "dormouse-engine/graphics/ConstantBuffer.hpp"
 
 #include "../DrawCommand.hpp"
 #include "Parameter.hpp"
@@ -21,8 +21,8 @@ public:
 	using Parameters = std::vector<Parameter>;
 
 	ConstantBuffer(
-		milk::graphics::Renderer& renderer,
-		milk::graphics::ShaderType shaderType,
+		graphics::Device& renderer,
+		graphics::ShaderType shaderType,
 		size_t size,
 		size_t slot,
 		Parameters parameters
@@ -31,7 +31,7 @@ public:
 		slot_(slot),
 		buffer_(
 			renderer,
-			milk::graphics::Buffer::Configuration(
+			graphics::Buffer::Configuration(
 				size,
 				0,
 				true,
@@ -58,11 +58,11 @@ public:
 
 private:
 
-	milk::graphics::ShaderType stage_;
+	graphics::ShaderType stage_;
 
 	size_t slot_;
 
-	milk::graphics::ConstantBuffer buffer_;
+	graphics::ConstantBuffer buffer_;
 
 	std::vector<std::uint8_t> data_;
 

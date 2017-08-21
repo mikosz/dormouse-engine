@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "dormouse-engine/milk/graphics/InputLayout.hpp"
+#include "dormouse-engine/graphics/InputLayout.hpp"
 #include "Parameter.hpp"
 
 namespace dormouse_engine::renderer {
@@ -18,7 +18,7 @@ public:
 	using Parameters = std::vector<Parameter>;
 
 	Input(
-		milk::graphics::InputLayout layout,
+		graphics::InputLayout layout,
 		Parameters perVertexParameters,
 		Parameters perInstanceParameters
 		) noexcept;
@@ -31,13 +31,13 @@ public:
 
 	void* writeInstance(void* buffer, const Properties& properties) const;
 
-	const milk::graphics::InputLayout& layout() const {
+	const graphics::InputLayout& layout() const {
 		return layout_;
 	}
 
 private:
 
-	milk::graphics::InputLayout layout_;
+	graphics::InputLayout layout_;
 
 	Parameters perVertexParameters_;
 

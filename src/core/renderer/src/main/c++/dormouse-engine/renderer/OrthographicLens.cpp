@@ -1,6 +1,6 @@
 #include "OrthographicLens.hpp"
 
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/math/Transform.hpp"
 
 #include <functional>
@@ -24,7 +24,7 @@ OrthographicLens::OrthographicLens(
 		viewHeight * 0.5f,
 		nearZ,
 		farZ,
-		milk::graphics::Renderer::NDC_NEAR
+		graphics::Device::NDC_NEAR
 		).matrix())
 {
 }

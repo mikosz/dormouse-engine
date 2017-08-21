@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/renderer/DrawCommand.hpp"
 
 using namespace dormouse_engine;
@@ -106,7 +106,7 @@ void* shader::writeDataProperty(
 	}
 
 #pragma warning(suppress: 4127)
-	if (math::Matrix4x4::VECTOR_IS_SINGLE_ROW_MATRIX != milk::graphics::Renderer::VECTOR_IS_SINGLE_ROW_MATRIX) {
+	if (math::Matrix4x4::VECTOR_IS_SINGLE_ROW_MATRIX != graphics::Device::VECTOR_IS_SINGLE_ROW_MATRIX) {
 		needsTranspose = !needsTranspose;
 	}
 
@@ -140,13 +140,13 @@ void* shader::writeDataProperty(
 
 	switch (format.columns) {
 	case 2:
-		primitive.storeAs(buffer, milk::graphics::PixelFormat::R32G32_FLOAT);
+		primitive.storeAs(buffer, graphics::PixelFormat::R32G32_FLOAT);
 		break;
 	case 3:
-		primitive.storeAs(buffer, milk::graphics::PixelFormat::R32G32B32_FLOAT);
+		primitive.storeAs(buffer, graphics::PixelFormat::R32G32B32_FLOAT);
 		break;
 	case 4:
-		primitive.storeAs(buffer, milk::graphics::PixelFormat::R32G32B32A32_FLOAT);
+		primitive.storeAs(buffer, graphics::PixelFormat::R32G32B32A32_FLOAT);
 		break;
 	}
 
@@ -155,10 +155,10 @@ void* shader::writeDataProperty(
 
 void shader::bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Texture1d& texture,
+	const graphics::Texture1d& texture,
 	const PropertyId& /*id*/,
-	milk::graphics::ShaderReflection::ResourceInfo::Type /*type*/,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type /*type*/,
+	graphics::ShaderType stage,
 	size_t slot
 	)
 {
@@ -167,10 +167,10 @@ void shader::bindResourceProperty(
 
 void shader::bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Texture2d& texture,
+	const graphics::Texture2d& texture,
 	const PropertyId& /*id*/,
-	milk::graphics::ShaderReflection::ResourceInfo::Type /*type*/,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type /*type*/,
+	graphics::ShaderType stage,
 	size_t slot
 	)
 {
@@ -179,10 +179,10 @@ void shader::bindResourceProperty(
 
 void shader::bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Sampler& sampler,
+	const graphics::Sampler& sampler,
 	const PropertyId& /*id*/,
-	milk::graphics::ShaderReflection::ResourceInfo::Type /*type*/,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type /*type*/,
+	graphics::ShaderType stage,
 	size_t slot
 	)
 {

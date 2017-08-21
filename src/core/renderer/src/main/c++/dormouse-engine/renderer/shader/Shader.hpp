@@ -4,9 +4,9 @@
 #include <vector>
 #include <unordered_map>
 
-#include "dormouse-engine/milk/graphics/Shader.hpp"
+#include "dormouse-engine/graphics/Shader.hpp"
 
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
 #include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 
@@ -76,17 +76,17 @@ private:
 
 } // namespace detail
 
-using VertexShader = detail::Shader<milk::graphics::VertexShader>;
-using GeometryShader = detail::Shader<milk::graphics::GeometryShader>;
-using HullShader = detail::Shader<milk::graphics::HullShader>;
-using DomainShader = detail::Shader<milk::graphics::DomainShader>;
-using PixelShader = detail::Shader<milk::graphics::PixelShader>;
+using VertexShader = detail::Shader<graphics::VertexShader>;
+using GeometryShader = detail::Shader<graphics::GeometryShader>;
+using HullShader = detail::Shader<graphics::HullShader>;
+using DomainShader = detail::Shader<graphics::DomainShader>;
+using PixelShader = detail::Shader<graphics::PixelShader>;
 
-CT_MAKE_POINTER_DEFINITIONS(VertexShader);
-CT_MAKE_POINTER_DEFINITIONS(GeometryShader);
-CT_MAKE_POINTER_DEFINITIONS(HullShader);
-CT_MAKE_POINTER_DEFINITIONS(DomainShader);
-CT_MAKE_POINTER_DEFINITIONS(PixelShader);
+DE_SMART_POINTER_DEFINITONS(VertexShader);
+DE_SMART_POINTER_DEFINITONS(GeometryShader);
+DE_SMART_POINTER_DEFINITONS(HullShader);
+DE_SMART_POINTER_DEFINITONS(DomainShader);
+DE_SMART_POINTER_DEFINITONS(PixelShader);
 
 } // namespace dormouse_engine::renderer::shader
 

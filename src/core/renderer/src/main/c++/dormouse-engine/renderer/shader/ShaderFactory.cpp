@@ -10,7 +10,7 @@
 #include "dormouse-engine/logger.hpp"
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 
-#include "dormouse-engine/milk/graphics/ShaderReflection.hpp"
+#include "dormouse-engine/graphics/ShaderReflection.hpp"
 
 #include "Property.hpp"
 
@@ -23,7 +23,7 @@ namespace /* anonymous */ {
 
 CT_LOGGER_CATEGORY("COCONUT.PULP.RENDERER.SHADER.SHADER_FACTORY");
 
-using milk::graphics::ShaderReflection;
+using graphics::ShaderReflection;
 
 PropertyDescriptor::Objects interpretIdentifier(const std::string& name) {
 	auto result = PropertyDescriptor::Objects();
@@ -94,7 +94,7 @@ ConstantBuffer::Parameters createParameters(
 
 Resource createResource(
 	const ShaderReflection::ResourceInfo& resourceInfo,
-	milk::graphics::ShaderType shaderType
+	graphics::ShaderType shaderType
 	)
 {
 	auto descriptor = interpretIdentifier(resourceInfo.name);
@@ -109,12 +109,12 @@ Resource createResource(
 }
 
 std::unique_ptr<UnknownShader> createShaderFromCompiledShader(
-	milk::graphics::Renderer& graphicsRenderer,
+	graphics::Device& graphicsDevice,
 	std::vector<std::uint8_t> shaderData,
-	milk::graphics::ShaderType shaderType
+	graphics::ShaderType shaderType
 	)
 {
-	using milk::graphics::ShaderReflection;
+	using graphics::ShaderReflection;
 
 	const auto reflection = ShaderReflection(shaderData.data(), shaderData.size());
 
@@ -139,7 +139,7 @@ std::unique_ptr<UnknownShader> createShaderFromCompiledShader(
 		}
 
 		constantBuffers.emplace_back(
-			graphicsRenderer,
+			graphicsDevice,
 			shaderType,
 			constantBuffer.size,
 			constantBuffer.slot,
@@ -153,29 +153,29 @@ std::unique_ptr<UnknownShader> createShaderFromCompiledShader(
 	}
 
 	switch (shaderType) {
-	case milk::graphics::ShaderType::VERTEX:
+	case graphics::ShaderType::VERTEX:
 	{
-		milk::graphics::VertexShader vs(graphicsRenderer, shaderData.data(), shaderData.size());
+		graphics::VertexShader vs(graphicsDevice, shaderData.data(), shaderData.size());
 		return std::make_unique<VertexShader>(std::move(vs), std::move(constantBuffers), std::move(resources));
 	}
-	case milk::graphics::ShaderType::GEOMETRY:
+	case graphics::ShaderType::GEOMETRY:
 	{
-		milk::graphics::GeometryShader gs(graphicsRenderer, shaderData.data(), shaderData.size());
+		graphics::GeometryShader gs(graphicsDevice, shaderData.data(), shaderData.size());
 		return std::make_unique<GeometryShader>(std::move(gs), std::move(constantBuffers), std::move(resources));
 	}
-	case milk::graphics::ShaderType::HULL:
+	case graphics::ShaderType::HULL:
 	{
-		milk::graphics::HullShader hs(graphicsRenderer, shaderData.data(), shaderData.size());
+		graphics::HullShader hs(graphicsDevice, shaderData.data(), shaderData.size());
 		return std::make_unique<HullShader>(std::move(hs), std::move(constantBuffers), std::move(resources));
 	}
-	case milk::graphics::ShaderType::DOMAIN:
+	case graphics::ShaderType::DOMAIN:
 	{
-		milk::graphics::DomainShader ds(graphicsRenderer, shaderData.data(), shaderData.size());
+		graphics::DomainShader ds(graphicsDevice, shaderData.data(), shaderData.size());
 		return std::make_unique<DomainShader>(std::move(ds), std::move(constantBuffers), std::move(resources));
 	}
-	case milk::graphics::ShaderType::PIXEL:
+	case graphics::ShaderType::PIXEL:
 	{
-		milk::graphics::PixelShader ps(graphicsRenderer, shaderData.data(), shaderData.size());
+		graphics::PixelShader ps(graphicsDevice, shaderData.data(), shaderData.size());
 		return std::make_unique<PixelShader>(std::move(ps), std::move(constantBuffers), std::move(resources));
 	}
 	}
@@ -183,11 +183,11 @@ std::unique_ptr<UnknownShader> createShaderFromCompiledShader(
 	throw coconut_tools::exceptions::RuntimeError("Unexpected shader type: " + toString(shaderType));
 }
 
-Input createShaderInput(milk::graphics::Renderer& graphicsRenderer, std::vector<std::uint8_t> shaderData) {
-	using milk::graphics::ShaderReflection;
+Input createShaderInput(graphics::Device& graphicsDevice, std::vector<std::uint8_t> shaderData) {
+	using graphics::ShaderReflection;
 	const auto reflection = ShaderReflection(shaderData.data(), shaderData.size());
 
-	auto inputLayoutElements = milk::graphics::InputLayout::Elements();
+	auto inputLayoutElements = graphics::InputLayout::Elements();
 	inputLayoutElements.reserve(reflection.inputParameters().size());
 
 	auto perVertexParameters = Input::Parameters();
@@ -197,18 +197,18 @@ Input createShaderInput(milk::graphics::Renderer& graphicsRenderer, std::vector<
 
 	for (const auto& inputParameter : reflection.inputParameters()) {
 		auto dataType = Property::DataType();
-		auto pixelFormat = milk::graphics::PixelFormat();
+		auto pixelFormat = graphics::PixelFormat();
 
 		// TODO: TEMP!!! ++
 		switch (inputParameter.dataType) {
 		case ShaderReflection::InputParameterInfo::DataType::FLOAT:
 			dataType.scalarType = Property::DataType::ScalarType::FLOAT;
 			if (inputParameter.elements == 2) {
-				pixelFormat = milk::graphics::PixelFormat::R32G32_FLOAT;
+				pixelFormat = graphics::PixelFormat::R32G32_FLOAT;
 			} else if (inputParameter.elements == 3) {
-				pixelFormat = milk::graphics::PixelFormat::R32G32B32_FLOAT;
+				pixelFormat = graphics::PixelFormat::R32G32B32_FLOAT;
 			} else if (inputParameter.elements == 4) {
-				pixelFormat = milk::graphics::PixelFormat::R32G32B32A32_FLOAT;
+				pixelFormat = graphics::PixelFormat::R32G32B32A32_FLOAT;
 			} else {
 				assert(false);
 			}
@@ -237,7 +237,7 @@ Input createShaderInput(milk::graphics::Renderer& graphicsRenderer, std::vector<
 			throw coconut_tools::exceptions::RuntimeError("Invalid semantic identifier: " + identifier);
 		}
 
-		auto inputSlot = milk::graphics::InputLayout::SlotType();
+		auto inputSlot = graphics::InputLayout::SlotType();
 		auto instanceDataStepRate = 0u; 
 
 		if (descriptorObjects.front().name == "instance") {
@@ -247,11 +247,11 @@ Input createShaderInput(milk::graphics::Renderer& graphicsRenderer, std::vector<
 				throw coconut_tools::exceptions::RuntimeError("Invalid semantic identifier: " + identifier);
 			}
 			perInstanceParameters.emplace_back(std::move(descriptorObjects), dataType, offset);
-			inputSlot = milk::graphics::InputLayout::SlotType::PER_INSTANCE_DATA;
+			inputSlot = graphics::InputLayout::SlotType::PER_INSTANCE_DATA;
 			instanceDataStepRate = 1u; // TODO
 		} else {
 			perVertexParameters.emplace_back(std::move(descriptorObjects), dataType, offset);
-			inputSlot = milk::graphics::InputLayout::SlotType::PER_VERTEX_DATA;
+			inputSlot = graphics::InputLayout::SlotType::PER_VERTEX_DATA;
 		}
 
 		inputLayoutElements.emplace_back(
@@ -269,7 +269,7 @@ Input createShaderInput(milk::graphics::Renderer& graphicsRenderer, std::vector<
 	perInstanceParameters.shrink_to_fit();
 
 	return Input(
-		milk::graphics::InputLayout(graphicsRenderer, std::move(inputLayoutElements)),
+		graphics::InputLayout(graphicsDevice, std::move(inputLayoutElements)),
 		std::move(perVertexParameters),
 		std::move(perInstanceParameters)
 		);
@@ -282,16 +282,16 @@ detail::ShaderCreator::ShaderCreator() :
 	shaderCompiler_(
 		// TODO: idea - could have a shorter function returning some AnyMask type which
 		// has a | and & operator
-		milk::graphics::ShaderCompiler::CompilerFlags() |
-		milk::graphics::ShaderCompiler::CompilerFlag::DEBUG |
-		milk::graphics::ShaderCompiler::CompilerFlag::SKIP_OPTIMISATION
+		graphics::ShaderCompiler::CompilerFlags() |
+		graphics::ShaderCompiler::CompilerFlag::DEBUG |
+		graphics::ShaderCompiler::CompilerFlag::SKIP_OPTIMISATION
 		)
 {
 }
 
 Input detail::ShaderCreator::createInput(
 	const std::string& id,
-	milk::graphics::Renderer& graphicsRenderer,
+	graphics::Device& graphicsDevice,
 	const milk::FilesystemContext& filesystemContext
 	) const
 {
@@ -300,9 +300,9 @@ Input detail::ShaderCreator::createInput(
 	auto shaderCode = shaderCode_(id, filesystemContext);
 	auto& binary = std::get<0>(shaderCode);
 
-	assert(std::get<1>(shaderCode) == milk::graphics::ShaderType::VERTEX);
+	assert(std::get<1>(shaderCode) == graphics::ShaderType::VERTEX);
 
-	return createShaderInput(graphicsRenderer, std::move(binary));
+	return createShaderInput(graphicsDevice, std::move(binary));
 }
 
 bool detail::ShaderCreator::hasShader(const std::string& id) const noexcept {
@@ -333,7 +333,7 @@ void detail::ShaderCreator::registerCompiledShader(std::string id, const Compile
 
 auto detail::ShaderCreator::doCreate(
 	const std::string& id,
-	milk::graphics::Renderer& graphicsRenderer,
+	graphics::Device& graphicsDevice,
 	const milk::FilesystemContext& filesystemContext
 	) -> Instance
 {
@@ -343,10 +343,10 @@ auto detail::ShaderCreator::doCreate(
 	auto& binary = std::get<0>(shaderCode);
 	auto& type = std::get<1>(shaderCode);
 
-	return createShaderFromCompiledShader(graphicsRenderer, std::move(binary), std::move(type));
+	return createShaderFromCompiledShader(graphicsDevice, std::move(binary), std::move(type));
 }
 
-std::tuple<std::vector<std::uint8_t>, milk::graphics::ShaderType> detail::ShaderCreator::shaderCode_(
+std::tuple<std::vector<std::uint8_t>, graphics::ShaderType> detail::ShaderCreator::shaderCode_(
 	const std::string& id,
 	const milk::FilesystemContext& filesystemContext
 	) const

@@ -10,13 +10,13 @@ using namespace dormouse_engine;
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
 
-void DrawCommand::submit(milk::graphics::CommandList& commandList) {
+void DrawCommand::submit(graphics::CommandList& commandList) {
 	assert(renderState_ != nullptr);
 	assert(inputLayout_ != nullptr);
 	assert(vertexShader_ != nullptr);
 	assert(pixelShader_ != nullptr);
 	assert(vertexBuffer_ != nullptr);
-	assert(primitiveTopology_ != milk::graphics::PrimitiveTopology::INVALID);
+	assert(primitiveTopology_ != graphics::PrimitiveTopology::INVALID);
 
 	commandList.setRenderState(*renderState_);
 	
@@ -26,7 +26,7 @@ void DrawCommand::submit(milk::graphics::CommandList& commandList) {
 
 	for (auto& constantBufferData: constantBuffersData_) {
 		auto lockedData = commandList.lock(
-			*constantBufferData.constantBuffer, milk::graphics::CommandList::LockPurpose::WRITE_DISCARD);
+			*constantBufferData.constantBuffer, graphics::CommandList::LockPurpose::WRITE_DISCARD);
 		std::copy(constantBufferData.data.begin(), constantBufferData.data.end(), lockedData.get());
 
 		commandList.setConstantBuffer(
@@ -66,10 +66,10 @@ void DrawCommand::submit(milk::graphics::CommandList& commandList) {
 }
 
 DrawCommand::ConstantBufferData::ConstantBufferData(
-	milk::graphics::ConstantBuffer* constantBuffer,
+	graphics::ConstantBuffer* constantBuffer,
 	std::uint8_t* dataPtr,
 	size_t size,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderType stage,
 	size_t slot
 	) :
 	constantBuffer(constantBuffer),

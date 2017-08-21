@@ -56,7 +56,7 @@ inline std::ostream& operator<<(std::ostream& os, const PropertyDescriptor& prop
 	std::copy(
 		propertyDescriptor.objects().begin(),
 		propertyDescriptor.objects().end(),
-		coconut_tools::InfixOstreamIterator<PropertyDescriptor::Object>(os, ".")
+		essentials::InfixOstreamIterator<PropertyDescriptor::Object>(os, ".")
 		);
 	return os;
 }
@@ -105,7 +105,7 @@ private:
 		std::copy(
 			propertyId.objectsIt_,
 			propertyId.objectsEnd_,
-			coconut_tools::InfixOstreamIterator<PropertyDescriptor::Object>(os, ".")
+			essentials::InfixOstreamIterator<PropertyDescriptor::Object>(os, ".")
 			);
 		return os;
 	}

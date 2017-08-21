@@ -1,6 +1,6 @@
 #include "PerspectiveLens.hpp"
 
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/math/Transform.hpp"
 
 using namespace dormouse_engine;
@@ -21,7 +21,7 @@ PerspectiveLens::PerspectiveLens(
 			aspectRatio,
 			nearZ,
 			farZ,
-			milk::graphics::Renderer::NDC_NEAR
+			graphics::Device::NDC_NEAR
 			).matrix()
 		)
 {

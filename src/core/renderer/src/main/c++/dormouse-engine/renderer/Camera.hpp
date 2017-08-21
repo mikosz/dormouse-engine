@@ -2,7 +2,7 @@
 #define _DORMOUSEENGINE_RENDERER_CAMERA_HPP_
 
 #include "dormouse-engine/math/Matrix.hpp"
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
 namespace dormouse_engine::renderer {
 
@@ -20,7 +20,7 @@ protected:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(Camera);
+DE_SMART_POINTER_DEFINITONS(Camera);
 
 } // namespace dormouse_engine::renderer
 

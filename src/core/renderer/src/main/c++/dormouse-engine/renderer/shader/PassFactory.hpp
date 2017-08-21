@@ -5,11 +5,7 @@
 #include <memory>
 
 #include "dormouse-engine/factory.hpp"
-
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
-
-#include "dormouse-engine/milk/fs.hpp"
-
+#include "dormouse-engine/graphics/Device.hpp"
 #include "ShaderFactory.hpp"
 #include "Pass.hpp"
 
@@ -22,16 +18,6 @@ public:
 
 	using Instance = std::unique_ptr<Pass>;
 
-	void scanShaderCodeDirectory(
-		const milk::fs::FilesystemContext& filesystemContext,
-		const milk::fs::Path& directory,
-		const std::string& entrypointName = "main");
-
-	void scanCompiledShaderDirectory(
-		const milk::fs::FilesystemContext& filesystemContext,
-		const milk::fs::Path& directory
-		);
-
 	ShaderFactory& shaderFactory() noexcept {
 		return shaderFactory_;
 	}
@@ -40,9 +26,8 @@ protected:
 
 	Instance doCreate(
 		const std::string& id,
-		milk::graphics::Renderer& graphicsRenderer,
-		const milk::fs::FilesystemContext& filesystemContext
-	);
+		graphics::Device& graphicsDevice
+		);
 
 private:
 

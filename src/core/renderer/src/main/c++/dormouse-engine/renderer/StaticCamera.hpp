@@ -14,7 +14,7 @@ public:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(StaticCamera);
+DE_SMART_POINTER_DEFINITONS(StaticCamera);
 
 } // namespace dormouse_engine::renderer
 

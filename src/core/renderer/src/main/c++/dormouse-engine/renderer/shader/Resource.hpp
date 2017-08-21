@@ -1,7 +1,7 @@
 #ifndef _DORMOUSEENGINE_RENDERER_SHADER_RESOURCE_HPP_
 #define _DORMOUSEENGINE_RENDERER_SHADER_RESOURCE_HPP_
 
-#include "dormouse-engine/milk/graphics/ShaderType.hpp"
+#include "dormouse-engine/graphics/ShaderType.hpp"
 #include "Property.hpp"
 
 namespace dormouse_engine::renderer::shader {
@@ -11,8 +11,8 @@ public:
 
 	Resource(
 		PropertyDescriptor propertyDescriptor,
-		milk::graphics::ShaderReflection::ResourceInfo::Type type,
-		milk::graphics::ShaderType stage,
+		graphics::ShaderReflection::ResourceInfo::Type type,
+		graphics::ShaderType stage,
 		size_t slot
 		) noexcept :
 		propertyDescriptor_(std::move(propertyDescriptor)),
@@ -30,9 +30,9 @@ private:
 
 	PropertyDescriptor propertyDescriptor_;
 
-	milk::graphics::ShaderType stage_;
+	graphics::ShaderType stage_;
 
-	milk::graphics::ShaderReflection::ResourceInfo::Type type_;
+	graphics::ShaderReflection::ResourceInfo::Type type_;
 
 	size_t slot_;
 

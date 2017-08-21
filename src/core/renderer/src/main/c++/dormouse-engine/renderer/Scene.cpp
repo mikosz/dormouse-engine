@@ -10,8 +10,8 @@ using namespace dormouse_engine::renderer;
 
 namespace /* anonymous */ {
 
-milk::graphics::Viewport::Configuration viewportConfiguration() {
-	milk::graphics::Viewport::Configuration configuration; // TODO TODO TODO
+graphics::Viewport::Configuration viewportConfiguration() {
+	graphics::Viewport::Configuration configuration; // TODO TODO TODO
 
 	configuration.width = 800.0f;
 	configuration.height = 600.0f;
@@ -33,9 +33,9 @@ shader::ReflectiveInterface<Scene>::ReflectiveInterface() {
 	emplaceMethod("directionalLights", [](const Scene& scene) { return shader::makeReflectiveObject(scene.directionalLights_); });
 }
 
-Scene::Scene(milk::graphics::Renderer& graphicsRenderer) :
-	renderTarget_(&graphicsRenderer.backBuffer()), // TODO
-	depthStencil_(&graphicsRenderer.depthStencil()), // TODO
+Scene::Scene(graphics::Device& graphicsDevice) :
+	renderTarget_(&graphicsDevice.backBuffer()), // TODO
+	depthStencil_(&graphicsDevice.depthStencil()), // TODO
 	viewport_(viewportConfiguration()) // TODO
 {
 }

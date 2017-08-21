@@ -3,13 +3,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "dormouse-engine/milk/system/cleanup-windows-macros.hpp"
+#include "dormouse-engine/system/cleanup-windows-macros.hpp"
 
 #include <boost/test/included/unit_test.hpp>
 
 #include "dormouse-engine/system/platform.hpp"
 
-#include "dormouse-engine/milk/system/App.hpp"
+#include "dormouse-engine/system/App.hpp"
 
 #ifdef CT_COMPILER_VISUAL_CXX
 #	pragma comment(linker, "/subsystem:windows")

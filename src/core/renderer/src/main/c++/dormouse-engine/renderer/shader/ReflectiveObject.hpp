@@ -7,8 +7,7 @@
 #include <algorithm>
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
-#include "dormouse-engine/concurrent/fake.hpp"
-#include "dormouse-engine/singleton/Singleton.hpp"
+#include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/Range.hpp"
 
 #include "Property.hpp"
@@ -83,7 +82,7 @@ private:
 template <class T>
 class ReflectiveInterface :
 	public ReflectiveInterfaceBase<T>,
-	public coconut_tools::singleton::Singleton<ReflectiveInterface<T>, coconut_tools::concurrent::FakeMutex>
+	public essentials::Singleton<ReflectiveInterface<T>>
 	// TODO: fix Singleton, should be more configurable
 {
 public:
@@ -139,8 +138,8 @@ void bindResourceProperty(
 	DrawCommand& drawCommand,
 	const ReflectiveObject<T>& object,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type type,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type type,
+	graphics::ShaderType stage,
 	size_t slot
 	)
 {
@@ -191,8 +190,8 @@ void bindResourceProperty(
 	DrawCommand& /*drawCommand*/,
 	const ReflectiveObject<std::vector<T>>& vector,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type /*type*/,
-	milk::graphics::ShaderType /*stage*/,
+	graphics::ShaderReflection::ResourceInfo::Type /*type*/,
+	graphics::ShaderType /*stage*/,
 	size_t /*slot*/
 	)
 {

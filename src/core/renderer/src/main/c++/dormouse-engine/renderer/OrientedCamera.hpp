@@ -4,7 +4,7 @@
 #include "dormouse-engine/math/Transform.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 
-#include "dormouse-engine/milk/utils/Lazy.hpp"
+#include "dormouse-engine/essentials/Lazy.hpp"
 
 #include "Camera.hpp"
 
@@ -52,7 +52,7 @@ private:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(OrientedCamera);
+DE_SMART_POINTER_DEFINITONS(OrientedCamera);
 
 } // namespace dormouse_engine::renderer
 

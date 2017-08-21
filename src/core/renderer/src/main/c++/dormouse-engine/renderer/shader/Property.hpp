@@ -9,13 +9,12 @@
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "dormouse-engine/exceptions/LogicError.hpp"
 
-#include "dormouse-engine/milk/graphics/ShaderReflection.hpp"
-#include "dormouse-engine/milk/graphics/ShaderType.hpp"
-#include "dormouse-engine/milk/graphics/PixelFormat.hpp"
-#include "dormouse-engine/milk/graphics/Texture1d.hpp"
-#include "dormouse-engine/milk/graphics/Texture2d.hpp"
-#include "dormouse-engine/milk/graphics/Sampler.hpp"
-#include "dormouse-engine/primitive/Primitive.hpp"
+#include "dormouse-engine/graphics/ShaderReflection.hpp"
+#include "dormouse-engine/graphics/ShaderType.hpp"
+#include "dormouse-engine/graphics/PixelFormat.hpp"
+#include "dormouse-engine/graphics/Texture1d.hpp"
+#include "dormouse-engine/graphics/Texture2d.hpp"
+#include "dormouse-engine/graphics/Sampler.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 #include "dormouse-engine/math/Matrix.hpp"
 #include "PropertyId.hpp"
@@ -30,8 +29,8 @@ class Property {
 public:
 
 	struct DataType { // TODO!!!
-		using Class = milk::graphics::ShaderReflection::Type::Class;
-		using ScalarType = milk::graphics::ShaderReflection::Type::ScalarType;
+		using Class = graphics::ShaderReflection::Type::Class;
+		using ScalarType = graphics::ShaderReflection::Type::ScalarType;
 
 		DataType() = default;
 
@@ -70,8 +69,8 @@ public:
 	void bindResource(
 		DrawCommand& drawCommand,
 		const PropertyId& id,
-		milk::graphics::ShaderReflection::ResourceInfo::Type type,
-		milk::graphics::ShaderType stage,
+		graphics::ShaderReflection::ResourceInfo::Type type,
+		graphics::ShaderType stage,
 		size_t slot
 		) const
 	{
@@ -90,8 +89,8 @@ private:
 		virtual void bindResource(
 			DrawCommand& drawCommand,
 			const PropertyId& id,
-			milk::graphics::ShaderReflection::ResourceInfo::Type type,
-			milk::graphics::ShaderType stage,
+			graphics::ShaderReflection::ResourceInfo::Type type,
+			graphics::ShaderType stage,
 			size_t slot
 			) const = 0;
 	};
@@ -115,8 +114,8 @@ private:
 		void bindResource(
 			DrawCommand& drawCommand,
 			const PropertyId& id,
-			milk::graphics::ShaderReflection::ResourceInfo::Type type,
-			milk::graphics::ShaderType stage,
+			graphics::ShaderReflection::ResourceInfo::Type type,
+			graphics::ShaderType stage,
 			size_t slot
 			) const override
 		{
@@ -181,8 +180,8 @@ inline void bindResourceProperty(
 	DrawCommand& /*drawCommand*/,
 	const T& property,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type /*type*/,
-	milk::graphics::ShaderType /*stage*/,
+	graphics::ShaderReflection::ResourceInfo::Type /*type*/,
+	graphics::ShaderType /*stage*/,
 	size_t /*slot*/
 	)
 {
@@ -210,8 +209,8 @@ public:
 	void bindResource(
 		DrawCommand& drawCommand, 
 		const PropertyId& id,
-		milk::graphics::ShaderReflection::ResourceInfo::Type type,
-		milk::graphics::ShaderType stage,
+		graphics::ShaderReflection::ResourceInfo::Type type,
+		graphics::ShaderType stage,
 		size_t slot
 		) const
 	{
@@ -250,8 +249,8 @@ inline void bindResourceProperty(
 	DrawCommand& drawCommand,
 	const Properties& properties,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type type,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type type,
+	graphics::ShaderType stage,
 	size_t slot
 	)
 {
@@ -342,28 +341,28 @@ void* writeDataProperty(
 
 void bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Texture1d& texture,
+	const graphics::Texture1d& texture,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type type,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type type,
+	graphics::ShaderType stage,
 	size_t slot
 	);
 
 void bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Texture2d& texture,
+	const graphics::Texture2d& texture,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type type,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type type,
+	graphics::ShaderType stage,
 	size_t slot
 	);
 
 void bindResourceProperty(
 	DrawCommand& drawCommand,
-	const milk::graphics::Sampler& sampler,
+	const graphics::Sampler& sampler,
 	const PropertyId& id,
-	milk::graphics::ShaderReflection::ResourceInfo::Type type,
-	milk::graphics::ShaderType stage,
+	graphics::ShaderReflection::ResourceInfo::Type type,
+	graphics::ShaderType stage,
 	size_t slot
 	);
 

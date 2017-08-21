@@ -2,7 +2,7 @@
 #define _DORMOUSEENGINE_RENDERER_LENS_HPP_
 
 #include "dormouse-engine/math/Matrix.hpp"
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
 namespace dormouse_engine::renderer {
 
@@ -18,7 +18,7 @@ protected:
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(Lens);
+DE_SMART_POINTER_DEFINITONS(Lens);
 
 } // namespace dormouse_engine::renderer
 

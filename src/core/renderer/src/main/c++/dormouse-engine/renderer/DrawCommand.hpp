@@ -4,20 +4,20 @@
 #include <cstdint>
 #include <vector>
 
-#include "dormouse-engine/milk/graphics/CommandList.hpp"
-#include "dormouse-engine/milk/graphics/ConstantBuffer.hpp"
-#include "dormouse-engine/milk/graphics/RenderState.hpp"
-#include "dormouse-engine/milk/graphics/Sampler.hpp"
-#include "dormouse-engine/milk/graphics/ShaderType.hpp"
-#include "dormouse-engine/milk/graphics/InputLayout.hpp"
-#include "dormouse-engine/milk/graphics/Shader.hpp"
-#include "dormouse-engine/milk/graphics/Texture.hpp"
-#include "dormouse-engine/milk/graphics/Viewport.hpp"
-#include "dormouse-engine/milk/graphics/VertexBuffer.hpp"
-#include "dormouse-engine/milk/graphics/IndexBuffer.hpp"
-#include "dormouse-engine/milk/graphics/PrimitiveTopology.hpp"
+#include "dormouse-engine/graphics/CommandList.hpp"
+#include "dormouse-engine/graphics/ConstantBuffer.hpp"
+#include "dormouse-engine/graphics/RenderState.hpp"
+#include "dormouse-engine/graphics/Sampler.hpp"
+#include "dormouse-engine/graphics/ShaderType.hpp"
+#include "dormouse-engine/graphics/InputLayout.hpp"
+#include "dormouse-engine/graphics/Shader.hpp"
+#include "dormouse-engine/graphics/Texture.hpp"
+#include "dormouse-engine/graphics/Viewport.hpp"
+#include "dormouse-engine/graphics/VertexBuffer.hpp"
+#include "dormouse-engine/graphics/IndexBuffer.hpp"
+#include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 
-#include "dormouse-engine/milk/utils/MakePointerDefinitionsMacro.hpp"
+#include "dormouse-engine/essentials/smart-pointer-definitions.hpp"
 
 namespace dormouse_engine::renderer {
 
@@ -40,77 +40,77 @@ public:
 		return 0ull; // TODO
 	}
 
-	void submit(milk::graphics::CommandList& commandList);
+	void submit(graphics::CommandList& commandList);
 
-	void setInputLayout(const milk::graphics::InputLayout* inputLayout) { // TODO: POINTERS!!! CONST!
+	void setInputLayout(const graphics::InputLayout* inputLayout) { // TODO: POINTERS!!! CONST!
 		inputLayout_ = inputLayout;
 	}
 
-	void setVertexShader(milk::graphics::VertexShader* vertexShader) {
+	void setVertexShader(graphics::VertexShader* vertexShader) {
 		vertexShader_ = vertexShader;
 	}
 
-	void setGeometryShader(milk::graphics::GeometryShader* geometryShader) {
+	void setGeometryShader(graphics::GeometryShader* geometryShader) {
 		geometryShader_ = geometryShader;
 	}
 
-	void setHullShader(milk::graphics::HullShader* hullShader) {
+	void setHullShader(graphics::HullShader* hullShader) {
 		hullShader_ = hullShader;
 	}
 
-	void setDomainShader(milk::graphics::DomainShader* domainShader) {
+	void setDomainShader(graphics::DomainShader* domainShader) {
 		domainShader_ = domainShader;
 	}
 
-	void setPixelShader(milk::graphics::PixelShader* pixelShader) {
+	void setPixelShader(graphics::PixelShader* pixelShader) {
 		pixelShader_ = pixelShader;
 	}
 
-	void setRenderState(const milk::graphics::RenderState* renderState) {
+	void setRenderState(const graphics::RenderState* renderState) {
 		renderState_ = renderState;
 	}
 
 	void addConstantBufferData(
-		milk::graphics::ConstantBuffer* constantBuffer,
+		graphics::ConstantBuffer* constantBuffer,
 		std::uint8_t* data,
 		size_t size,
-		milk::graphics::ShaderType stage,
+		graphics::ShaderType stage,
 		size_t slot
 		) {
 		constantBuffersData_.emplace_back(constantBuffer, data, size, stage, slot);
 	}
 
 	void addTexture(
-		milk::graphics::Texture texture,
-		milk::graphics::ShaderType stage,
+		graphics::Texture texture,
+		graphics::ShaderType stage,
 		size_t slot
 		)
 	{
 		textures_.emplace_back(std::move(texture), stage, slot);
 	}
 
-	void addSampler(milk::graphics::Sampler sampler, milk::graphics::ShaderType stage, size_t slot) {
+	void addSampler(graphics::Sampler sampler, graphics::ShaderType stage, size_t slot) {
 		samplers_.emplace_back(std::move(sampler), stage, slot);
 	}
 
-	void setRenderTarget(milk::graphics::Texture2d* texture) { // TODO: pointers
+	void setRenderTarget(graphics::Texture2d* texture) { // TODO: pointers
 		renderTarget_ = texture;
 	}
 
-	void setDepthStencil(milk::graphics::Texture2d* texture) {
+	void setDepthStencil(graphics::Texture2d* texture) {
 		depthStencil_ = texture;
 	}
 
-	void setViewport(milk::graphics::Viewport* viewport) {
+	void setViewport(graphics::Viewport* viewport) {
 		viewport_ = viewport;
 	}
 
 		// TODO: pointers!
-	void setVertexBuffer(milk::graphics::VertexBuffer* vertexBuffer) {
+	void setVertexBuffer(graphics::VertexBuffer* vertexBuffer) {
 		vertexBuffer_ = vertexBuffer;
 	}
 
-	void setIndexBuffer(milk::graphics::IndexBuffer* indexBuffer) { // TODO: index count and index buffer in one call?
+	void setIndexBuffer(graphics::IndexBuffer* indexBuffer) { // TODO: index count and index buffer in one call?
 		indexBuffer_ = indexBuffer;
 	}
 
@@ -118,11 +118,11 @@ public:
 		indexCount_ = indexCount;
 	}
 
-	void setPrimitiveTopology(milk::graphics::PrimitiveTopology primitiveTopology) {
+	void setPrimitiveTopology(graphics::PrimitiveTopology primitiveTopology) {
 		primitiveTopology_ = primitiveTopology;
 	}
 
-	void setInstanceDataBuffer(milk::graphics::VertexBuffer* instanceDataBuffer) {
+	void setInstanceDataBuffer(graphics::VertexBuffer* instanceDataBuffer) {
 		instanceDataBuffer_ = instanceDataBuffer;
 	}
 
@@ -136,19 +136,19 @@ private:
 
 		using Data = std::vector<std::uint8_t>; // TODO: array? pointer?
 
-		milk::graphics::ConstantBuffer* constantBuffer;
+		graphics::ConstantBuffer* constantBuffer;
 
 		Data data;
 
-		milk::graphics::ShaderType stage;
+		graphics::ShaderType stage;
 
 		size_t slot;
 
 		ConstantBufferData(
-			milk::graphics::ConstantBuffer* constantBuffer,
+			graphics::ConstantBuffer* constantBuffer,
 			std::uint8_t* dataPtr,
 			size_t size,
-			milk::graphics::ShaderType stage,
+			graphics::ShaderType stage,
 			size_t slot
 			);
 
@@ -156,11 +156,11 @@ private:
 
 	struct Resource {
 
-		milk::graphics::ShaderType stage;
+		graphics::ShaderType stage;
 
 		size_t slot;
 
-		Resource(milk::graphics::ShaderType stage, size_t slot) :
+		Resource(graphics::ShaderType stage, size_t slot) :
 			stage(stage),
 			slot(slot)
 		{
@@ -170,9 +170,9 @@ private:
 
 	struct Texture : Resource {
 
-		milk::graphics::Texture texture;
+		graphics::Texture texture;
 
-		Texture(milk::graphics::Texture texture, milk::graphics::ShaderType stage, size_t slot) :
+		Texture(graphics::Texture texture, graphics::ShaderType stage, size_t slot) :
 			Resource(stage, slot),
 			texture(texture)
 		{
@@ -182,9 +182,9 @@ private:
 
 	struct Sampler : Resource {
 
-		milk::graphics::Sampler sampler;
+		graphics::Sampler sampler;
 
-		Sampler(milk::graphics::Sampler sampler, milk::graphics::ShaderType stage, size_t slot) :
+		Sampler(graphics::Sampler sampler, graphics::ShaderType stage, size_t slot) :
 			Resource(stage, slot),
 			sampler(sampler)
 		{
@@ -199,25 +199,25 @@ private:
 	using Samplers = std::vector<Sampler>; // TODO: use array to avoid allocs
 
 	// TODO: pointers
-	milk::graphics::Viewport* viewport_ = nullptr;
+	graphics::Viewport* viewport_ = nullptr;
 
-	milk::graphics::Texture2d* renderTarget_ = nullptr;
+	graphics::Texture2d* renderTarget_ = nullptr;
 
-	milk::graphics::Texture2d* depthStencil_ = nullptr;
+	graphics::Texture2d* depthStencil_ = nullptr;
 
-	const milk::graphics::InputLayout* inputLayout_ = nullptr;
+	const graphics::InputLayout* inputLayout_ = nullptr;
 
-	milk::graphics::VertexShader* vertexShader_ = nullptr;
+	graphics::VertexShader* vertexShader_ = nullptr;
 
-	milk::graphics::GeometryShader* geometryShader_ = nullptr;
+	graphics::GeometryShader* geometryShader_ = nullptr;
 
-	milk::graphics::HullShader* hullShader_ = nullptr;
+	graphics::HullShader* hullShader_ = nullptr;
 
-	milk::graphics::DomainShader* domainShader_ = nullptr;
+	graphics::DomainShader* domainShader_ = nullptr;
 
-	milk::graphics::PixelShader* pixelShader_ = nullptr;
+	graphics::PixelShader* pixelShader_ = nullptr;
 
-	const milk::graphics::RenderState* renderState_ = nullptr;
+	const graphics::RenderState* renderState_ = nullptr;
 
 	Samplers samplers_;
 
@@ -225,21 +225,21 @@ private:
 
 	Textures textures_;
 
-	milk::graphics::VertexBuffer* vertexBuffer_ = nullptr;
+	graphics::VertexBuffer* vertexBuffer_ = nullptr;
 
-	milk::graphics::VertexBuffer* instanceDataBuffer_ = nullptr;
+	graphics::VertexBuffer* instanceDataBuffer_ = nullptr;
 
 	size_t instanceCount_ = 0u;
 
-	milk::graphics::IndexBuffer* indexBuffer_ = nullptr;
+	graphics::IndexBuffer* indexBuffer_ = nullptr;
 
 	size_t indexCount_ = 0u;
 
-	milk::graphics::PrimitiveTopology primitiveTopology_ = milk::graphics::PrimitiveTopology::INVALID;
+	graphics::PrimitiveTopology primitiveTopology_ = graphics::PrimitiveTopology::INVALID;
 
 };
 
-CT_MAKE_POINTER_DEFINITIONS(DrawCommand);
+DE_SMART_POINTER_DEFINITONS(DrawCommand);
 
 } // namespace dormouse_engine::renderer
 

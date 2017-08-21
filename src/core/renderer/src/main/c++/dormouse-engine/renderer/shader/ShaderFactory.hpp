@@ -7,11 +7,9 @@
 #include <unordered_map>
 
 #include "dormouse-engine/factory.hpp"
-
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
-#include "dormouse-engine/milk/graphics/ShaderType.hpp"
-#include "dormouse-engine/milk/graphics/ShaderCompiler.hpp"
-#include "dormouse-engine/milk/fs.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/graphics/ShaderType.hpp"
+#include "dormouse-engine/graphics/ShaderCompiler.hpp"
 #include "Input.hpp"
 #include "Shader.hpp"
 
@@ -26,20 +24,20 @@ public:
 
 	struct ShaderCodeInfo {
 		milk::AbsolutePath shaderCodePath;
-		milk::graphics::ShaderType shaderType;
+		graphics::ShaderType shaderType;
 		std::string entrypoint;
 	};
 
 	struct CompiledShaderInfo {
 		milk::AbsolutePath compiledShaderPath;
-		milk::graphics::ShaderType shaderType;
+		graphics::ShaderType shaderType;
 	};
 
     ShaderCreator();
 
 	Input createInput(
 		const std::string& id,
-		milk::graphics::Renderer& graphicsRenderer,
+		graphics::Device& graphicsDevice,
 		const milk::FilesystemContext& filesystemContext
 		) const;
 
@@ -53,7 +51,7 @@ protected:
 
 	Instance doCreate(
 		const std::string& id,
-		milk::graphics::Renderer& graphicsRenderer,
+		graphics::Device& graphicsDevice,
 		const milk::FilesystemContext& filesystemContext
 		);
 
@@ -63,13 +61,13 @@ private:
 
 	using CompiledShaderInfos = std::unordered_map<std::string, CompiledShaderInfo>;
 
-    milk::graphics::ShaderCompiler shaderCompiler_;
+    graphics::ShaderCompiler shaderCompiler_;
 
 	ShaderCodeInfos shaderCodeInfos_;
 
 	CompiledShaderInfos compiledShaderInfos_;
 
-	std::tuple<std::vector<std::uint8_t>, milk::graphics::ShaderType> shaderCode_(
+	std::tuple<std::vector<std::uint8_t>, graphics::ShaderType> shaderCode_(
 		const std::string& id,
 		const milk::FilesystemContext& filesystemContext
 		) const;

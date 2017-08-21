@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "dormouse-engine/milk/graphics/Renderer.hpp"
-#include "dormouse-engine/milk/graphics/Texture2d.hpp"
-#include "dormouse-engine/milk/graphics/Viewport.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/graphics/Texture2d.hpp"
+#include "dormouse-engine/graphics/Viewport.hpp"
 
 #include "dormouse-engine/mesh/MaterialConfiguration.hpp"
 
@@ -24,13 +24,13 @@ class Material;
 class PassContext {
 public:
 
-	milk::graphics::Renderer* graphicsRenderer = nullptr; // TODO: only needed if Model updates the instance data buffer
+	graphics::Device* graphicsDevice = nullptr; // TODO: only needed if Model updates the instance data buffer
 
-	milk::graphics::Viewport* viewport = nullptr;
+	graphics::Viewport* viewport = nullptr;
 
-	milk::graphics::Texture2d* backBuffer = nullptr;
+	graphics::Texture2d* backBuffer = nullptr;
 
-	milk::graphics::Texture2d* screenDepthStencil = nullptr;
+	graphics::Texture2d* screenDepthStencil = nullptr;
 
 	const Scene* scene = nullptr;
 
@@ -48,7 +48,7 @@ public:
 	shader::Properties properties;
 
 	void reset() {
-		graphicsRenderer = nullptr;
+		graphicsDevice = nullptr;
 		viewport = nullptr;
 		backBuffer = nullptr;
 		screenDepthStencil = nullptr;
