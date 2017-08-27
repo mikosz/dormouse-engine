@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "AppenderFactory.hpp"
 
 #include "ConsoleAppender.hpp"

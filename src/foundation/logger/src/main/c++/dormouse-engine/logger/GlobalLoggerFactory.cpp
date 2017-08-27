@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "GlobalLoggerFactory.hpp"
 
 #include <boost/filesystem.hpp>

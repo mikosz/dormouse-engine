@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "JSONParser.hpp"
 
 #include "dormouse-engine/system/platform.hpp"

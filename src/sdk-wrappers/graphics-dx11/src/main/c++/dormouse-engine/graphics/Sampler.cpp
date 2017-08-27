@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "Sampler.hpp"
 
 #include "DirectXError.hpp"

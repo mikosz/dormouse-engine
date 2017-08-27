@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "RenderState.hpp"
 
 #include "DirectXError.hpp"

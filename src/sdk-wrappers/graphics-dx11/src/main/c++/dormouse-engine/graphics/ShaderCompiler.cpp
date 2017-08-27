@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "ShaderCompiler.hpp"
 
 #include <algorithm>

@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "Shader.hpp"
 
 #include "Device.hpp"

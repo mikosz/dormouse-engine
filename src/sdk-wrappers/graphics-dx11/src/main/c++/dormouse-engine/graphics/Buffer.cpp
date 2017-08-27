@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "Buffer.hpp"
 
 #include <cstring>

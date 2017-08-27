@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "ConsoleAppender.hpp"
 
 using namespace dormouse_engine::logger::appender;

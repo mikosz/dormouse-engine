@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "LayoutFactory.hpp"
 
 #include "dormouse-engine/essentials/pointee.hpp"

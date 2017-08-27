@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "Texture1d.hpp"
 
 #include <cstring>

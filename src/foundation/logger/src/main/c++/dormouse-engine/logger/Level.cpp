@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "Level.hpp"
 
 #include <array>

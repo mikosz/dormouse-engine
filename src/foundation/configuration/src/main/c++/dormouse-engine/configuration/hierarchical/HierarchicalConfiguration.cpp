@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "HierarchicalConfiguration.hpp"
 
 #include <algorithm>

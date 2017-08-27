@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "configuration-exceptions.hpp"
 
 #include <sstream>

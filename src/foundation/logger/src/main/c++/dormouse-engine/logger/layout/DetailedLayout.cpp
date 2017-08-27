@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "DetailedLayout.hpp"
 
 #include <sstream>

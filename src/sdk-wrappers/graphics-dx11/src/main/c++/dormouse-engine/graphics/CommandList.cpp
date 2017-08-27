@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "CommandList.hpp"
 
 #include "dormouse-engine/exceptions/LogicError.hpp"
