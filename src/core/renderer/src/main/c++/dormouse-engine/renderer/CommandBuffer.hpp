@@ -21,7 +21,7 @@ public:
 
 private:
 
-	using Index = std::vector<std::tuple<DrawCommand, size_t>>;
+	using Index = std::vector<std::tuple<CommandKey, size_t>>;
 
 	using Commands = std::vector<DrawCommand>;
 
