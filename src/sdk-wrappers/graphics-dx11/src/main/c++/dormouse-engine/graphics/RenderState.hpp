@@ -39,7 +39,11 @@ public:
 
 	};
 
+	RenderState() = default;
+
 	RenderState(Device& renderer, const Configuration& configuration);
+
+	Configuration configuration() const;
 
 	ID3D11RasterizerState& internalRasteriserState() const {
 		return *rasteriserState_;
@@ -54,6 +58,14 @@ private:
 	system::windows::COMWrapper<ID3D11RasterizerState> rasteriserState_;
 
 	system::windows::COMWrapper<ID3D11BlendState> blendState_;
+
+	friend bool operator==(const RenderState& lhs, const RenderState& rhs) {
+		return lhs.rasteriserState_ == rhs.rasteriserState_ && lhs.blendState_ == rhs.blendState_;
+	}
+
+	friend bool operator!=(const RenderState& lhs, const RenderState& rhs) {
+		return !(lhs == rhs);
+	}
 
 };
 

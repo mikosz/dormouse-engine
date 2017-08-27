@@ -2,24 +2,21 @@
 
 #include <algorithm>
 
-using namespace dormouse_engine::renderer;
+using namespace dormouse_engine::renderer::command;
 
 void CommandBuffer::submit(dormouse_engine::graphics::CommandList& commandList) {
 	std::sort(index_.begin(), index_.end(), [](const auto lhs, const auto rhs) {
 			return std::get<CommandKey>(lhs).hash < std::get<CommandKey>(rhs).hash;
 		});
 
-	constexpr auto INVALID_INDEX = static_cast<size_t>(-1);
-	auto previous = INVALID_INDEX;
+	auto* previousCommand = static_cast<Command*>(nullptr);
 
 	for (const auto& entry : index_) {
 		const auto commandIndex = std::get<size_t>(entry);
 
-		const auto* previousCommand = static_cast<DrawCommand*>(nullptr);
-		if (previous != INVALID_INDEX) {
-			previousCommand = &commands_[previous];
-		}
-
 		commands_[commandIndex].submit(commandList, previousCommand);
+		previousCommand = &commands_[commandIndex];
 	}
+
+	commands_.clear();
 }

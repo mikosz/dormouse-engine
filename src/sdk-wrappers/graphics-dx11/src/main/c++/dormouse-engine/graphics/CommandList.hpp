@@ -69,9 +69,9 @@ public:
 
 	void setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, size_t slot);
 
-	void setIndexBuffer(IndexBuffer& buffer, size_t offset);
+	void setIndexBuffer(const IndexBuffer& buffer, size_t offset);
 
-	void setVertexBuffer(VertexBuffer& buffer, size_t slot);
+	void setVertexBuffer(const VertexBuffer& buffer, size_t slot);
 
 	void setInstanceDataBuffer(VertexBuffer& buffer, size_t slot);
 
