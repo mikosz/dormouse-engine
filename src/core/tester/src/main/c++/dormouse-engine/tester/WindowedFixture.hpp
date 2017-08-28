@@ -11,6 +11,10 @@ public:
 
 	WindowedFixture();
 
+	wm::App& app() {
+		return *app_;
+	}
+
 	wm::Window& window() {
 		return window_;
 	}

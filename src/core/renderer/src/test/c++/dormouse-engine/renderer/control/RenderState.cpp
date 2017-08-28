@@ -25,21 +25,21 @@ BOOST_AUTO_TEST_CASE(ReturnsEqualRenderStatesForSameConfiguration) {
 	BOOST_CHECK(renderStateL == renderStateR);
 }
 
-//BOOST_AUTO_TEST_CASE(ReturnsUnequalRenderStatesForDifferentConfiguration) {
-//	auto configuration = graphics::RenderState::Configuration();
-//	configuration.frontCounterClockwise = true;
-//	configuration.blendingEnabled = false;
-//	configuration.cullMode = graphics::RenderState::CullMode::FRONT;
-//	configuration.fillMode = graphics::RenderState::FillMode::WIREFRAME;
-//
-//	auto renderStateL = RenderState(graphicsDevice(), configuration);
-//
-//	configuration.blendingEnabled = !configuration.blendingEnabled;
-//
-//	auto renderStateR = RenderState(graphicsDevice(), configuration);
-//
-//	BOOST_CHECK(renderStateL != renderStateR);
-//}
+BOOST_AUTO_TEST_CASE(ReturnsUnequalRenderStatesForDifferentConfiguration) {
+	auto configuration = graphics::RenderState::Configuration();
+	configuration.frontCounterClockwise = true;
+	configuration.blendingEnabled = false;
+	configuration.cullMode = graphics::RenderState::CullMode::FRONT;
+	configuration.fillMode = graphics::RenderState::FillMode::WIREFRAME;
+
+	auto renderStateL = RenderState(graphicsDevice(), configuration);
+
+	configuration.blendingEnabled = !configuration.blendingEnabled;
+
+	auto renderStateR = RenderState(graphicsDevice(), configuration);
+
+	BOOST_CHECK(renderStateL != renderStateR);
+}
 
 BOOST_AUTO_TEST_SUITE_END(/* RenderStateFactoryTestSuite */);
 

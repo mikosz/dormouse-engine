@@ -227,7 +227,22 @@ constexpr auto FORMAT_D32_FLOAT = PixelFormat() << D32_FLOAT;
 namespace detail {
 
 constexpr const auto FORMAT_BY_ID = essentials::makeArray(
-	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_R32_FLOAT)
+	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_R32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32_FLOAT, FORMAT_R32G32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32_FLOAT, FORMAT_R32G32B32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32A32_FLOAT, FORMAT_R32G32B32A32_FLOAT),
+
+	std::make_pair(PixelFormatId::R32_UINT, FORMAT_R32_UINT),
+
+	std::make_pair(PixelFormatId::R8G8B8A8_UNORM, FORMAT_R8G8B8A8_UNORM),
+	std::make_pair(PixelFormatId::B8G8R8A8_UNORM, FORMAT_B8G8R8A8_UNORM),
+	std::make_pair(PixelFormatId::B8G8R8X8_UNORM, FORMAT_B8G8R8X8_UNORM),
+
+	std::make_pair(PixelFormatId::R8G8B8A8_UNORM_SRGB, FORMAT_R8G8B8A8_UNORM_SRGB),
+
+	std::make_pair(PixelFormatId::BC1_UNORM, FORMAT_BC1_UNORM),
+
+	std::make_pair(PixelFormatId::D32_FLOAT, FORMAT_D32_FLOAT)
 	);
 
 constexpr inline const PixelFormat& getFormatById(PixelFormatId pixelFormatId) {

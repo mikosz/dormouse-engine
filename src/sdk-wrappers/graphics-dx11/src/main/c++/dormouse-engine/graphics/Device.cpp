@@ -148,7 +148,7 @@ void createD3DDevice(
 	swapChainDesc.SampleDesc.Quality = sampleQuality;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = windowHandle;
-	swapChainDesc.Windowed = configuration.fullscreen;
+	swapChainDesc.Windowed = !configuration.fullscreen;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 	checkDirectXCall(
