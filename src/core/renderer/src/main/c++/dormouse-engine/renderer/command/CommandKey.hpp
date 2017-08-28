@@ -41,13 +41,19 @@ constexpr auto DEPTH_BITS = 24u;
 using MaterialId = std::uint32_t;
 constexpr auto MATERIAL_ID_BITS = 30u;
 
-struct CommandKey final {
-	FullscreenLayerId fullscreenLayerId : FULLSCREEN_LAYER_BITS;
-	ViewportId viewportId : VIEWPORT_ID_BITS;
-	ViewportLayer viewportLayer : VIEWPORT_LAYER_BITS;
-	TranslucencyType translucencyType : TRANSLUCENCY_TYPE_BITS;
-	Depth depth : DEPTH_BITS;
-	MaterialId materialId : MATERIAL_ID_BITS;
+union CommandKey {
+	using Hash = std::uint64_t;
+
+	struct {
+		FullscreenLayerId fullscreenLayerId : FULLSCREEN_LAYER_BITS;
+		ViewportId viewportId : VIEWPORT_ID_BITS;
+		ViewportLayer viewportLayer : VIEWPORT_LAYER_BITS;
+		TranslucencyType translucencyType : TRANSLUCENCY_TYPE_BITS;
+		Depth depth : DEPTH_BITS;
+		MaterialId materialId : MATERIAL_ID_BITS;
+	} attributes;
+
+	Hash hash;
 };
 
 static_assert(
@@ -61,7 +67,7 @@ static_assert(
 	sizeof(CommandKey) * 8u
 	);
 
-static_assert(sizeof(CommandKey) == sizeof(std::uint64_t));
+static_assert(sizeof(CommandKey) == sizeof(CommandKey::Hash));
 
 } // namespace dormouse_engine::renderer::command
 

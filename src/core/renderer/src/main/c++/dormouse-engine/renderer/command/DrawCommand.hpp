@@ -5,7 +5,7 @@
 #include "dormouse-engine/graphics/VertexBuffer.hpp"
 #include "dormouse-engine/graphics/IndexBuffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
-#include "dormouse-engine/graphics/RenderState.hpp"
+#include "../control/RenderState.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
@@ -19,7 +19,7 @@ public:
 
 	void submit(graphics::CommandList& commandList, const DrawCommand* previous) const;
 
-	void setRenderState(graphics::RenderState renderState) {
+	void setRenderState(control::RenderState renderState) {
 		renderState_ = std::move(renderState);
 	}
 
@@ -27,19 +27,22 @@ public:
 		vertexBuffer_ = std::move(vertexBuffer);
 	}
 
-	void setIndexBuffer(graphics::IndexBuffer indexBuffer) {
+	void setIndexBuffer(graphics::IndexBuffer indexBuffer, size_t indexCount) {
 		indexBuffer_ = std::move(indexBuffer);
+		indexCount_ = indexCount;
 	}
 
 private:
 
 	CommandKey key_;
 
-	graphics::RenderState renderState_;
+	control::RenderState renderState_;
 
 	graphics::VertexBuffer vertexBuffer_;
 
 	graphics::IndexBuffer indexBuffer_;
+
+	size_t indexCount_;
 
 	graphics::PrimitiveTopology primitiveTopology_;
 

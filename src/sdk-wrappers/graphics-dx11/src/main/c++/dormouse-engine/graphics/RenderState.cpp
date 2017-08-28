@@ -66,25 +66,3 @@ RenderState::RenderState(Device& renderer, const Configuration& configuration) :
 	blendState_(createBlendState(renderer, configuration))
 {
 }
-
-RenderState::Configuration RenderState::configuration() const {
-	auto result = Configuration();
-
-	if (rasteriserState_) {
-		auto rasteriserDesc = D3D11_RASTERIZER_DESC();
-		rasteriserState_->GetDesc(&rasteriserDesc);
-
-		result.cullMode = static_cast<CullMode>(rasteriserDesc.CullMode);
-		result.fillMode = static_cast<FillMode>(rasteriserDesc.FillMode);
-		result.frontCounterClockwise = rasteriserDesc.FrontCounterClockwise;
-	}
-
-	if (blendState_) {
-		auto blendDesc = D3D11_BLEND_DESC();
-		blendState_->GetDesc(&blendDesc);
-
-		result.blendingEnabled = blendDesc.RenderTarget[0].BlendEnable;
-	}
-
-	return result;
-}

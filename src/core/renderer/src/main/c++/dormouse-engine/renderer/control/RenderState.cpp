@@ -1,41 +1,41 @@
-#ifndef _DORMOUSEENGINE_RENDERER_OBJECTS_RENDERSTATEFACTORY_HPP_
-#define _DORMOUSEENGINE_RENDERER_OBJECTS_RENDERSTATEFACTORY_HPP_
+#include "RenderState.hpp"
 
+#include <cassert>
 #include <unordered_map>
+#include <vector>
 
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/hash-combine.hpp"
-#include "dormouse-engine/graphics/RenderState.hpp"
 
-namespace dormouse_engine::renderer::objects {
+using namespace dormouse_engine;
+using namespace dormouse_engine::renderer::control;
 
-struct RenderStatePreset {
-	static constexpr graphics::RenderState::Configuration OPAQUE = {
-		graphics::RenderState::CullMode::BACK,
-		graphics::RenderState::FillMode::SOLID,
-		false,
-		false
-		};
-};
-
+namespace /* anonymous */ {
+	
 class RenderStateFactory final :
 	public essentials::Singleton<RenderStateFactory>
 {
 public:
 
 	// TODO: this should be easily achievable using factory::Factory, but it isn't
-	graphics::RenderState create(
+	size_t create(
 		graphics::Device& graphicsDevice,
 		const graphics::RenderState::Configuration& configuration
 		)
 	{
-		auto it = instances_.find(configuration);
+		auto it = index_.find(configuration);
 
-		if (it == instances_.end()) {
-			it = instances_.emplace_hint(it, configuration, graphicsDevice, configuration);
+		if (it == index_.end()) {
+			it = index_.emplace_hint(it, configuration, instances_.size());
+			instances_.emplace_back(graphicsDevice, configuration);
 		}
 
 		return it->second;
+	}
+
+	graphics::RenderState get(size_t id) const {
+		assert(id < instances_.size());
+		return instances_[id];
 	}
 
 private:
@@ -58,7 +58,8 @@ private:
 		bool operator()(const graphics::RenderState::Configuration& lhs,
 			const graphics::RenderState::Configuration& rhs) const
 		{
-			return lhs.cullMode == rhs.cullMode &&
+			return
+				lhs.cullMode == rhs.cullMode &&
 				lhs.fillMode == rhs.fillMode &&
 				lhs.frontCounterClockwise == rhs.frontCounterClockwise &&
 				lhs.blendingEnabled == rhs.blendingEnabled
@@ -67,17 +68,31 @@ private:
 
 	};
 
-	using Instances = std::unordered_map<
+	using Index = std::unordered_map<
 		graphics::RenderState::Configuration,
-		graphics::RenderState,
+		size_t,
 		ConfigurationHash,
 		ConfigurationEqual
 		>;
 
+	using Instances = std::vector<graphics::RenderState>;
+
+	Index index_;
+
 	Instances instances_;
 
 };
+	
+} // anonymous namespace
 
-} // namespace dormouse_engine::renderer::objects
+RenderState::RenderState(
+	graphics::Device& graphicsDevice,
+	graphics::RenderState::Configuration configuration
+	) :
+	renderStateId_(RenderStateFactory::instance()->create(graphicsDevice, configuration))
+{
+}
 
-#endif /* _DORMOUSEENGINE_RENDERER_OBJECTS_RENDERSTATEFACTORY_HPP_ */
+void RenderState::bind(graphics::CommandList& commandList) const {
+	commandList.setRenderState(RenderStateFactory::instance()->get(renderStateId_));
+}

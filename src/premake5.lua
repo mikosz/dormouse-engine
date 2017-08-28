@@ -2,6 +2,7 @@ structure = require "structure"
 
 include "boost.lua"
 include "gmock.lua"
+include "ponder.lua"
 
 workspace "dormouse-engine"
 

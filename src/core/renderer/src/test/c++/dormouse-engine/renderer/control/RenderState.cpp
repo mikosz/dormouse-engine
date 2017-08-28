@@ -1,11 +1,11 @@
 #define BOOST_TEST_NO_LIB
 #include <boost/test/auto_unit_test.hpp>
 
-#include "dormouse-engine/renderer/objects/RenderStateFactory.hpp"
+#include "dormouse-engine/renderer/control/RenderState.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
-using namespace dormouse_engine::renderer::objects;
+using namespace dormouse_engine::renderer::control;
 
 namespace /* anonymous */ {
 
