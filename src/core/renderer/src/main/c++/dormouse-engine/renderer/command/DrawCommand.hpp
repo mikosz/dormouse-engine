@@ -6,6 +6,7 @@
 #include "dormouse-engine/graphics/IndexBuffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 #include "../control/RenderState.hpp"
+#include "../control/Sampler.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
@@ -23,6 +24,10 @@ public:
 		renderState_ = std::move(renderState);
 	}
 
+	void setSampler(control::Sampler sampler, graphics::ShaderType stage, size_t slot) {
+		set sampler at stage & slot to sampler (want an array)
+	}
+
 	void setVertexBuffer(graphics::VertexBuffer vertexBuffer) {
 		vertexBuffer_ = std::move(vertexBuffer);
 	}
@@ -37,6 +42,8 @@ private:
 	CommandKey key_;
 
 	control::RenderState renderState_;
+
+	...control::Sampler samplers_;
 
 	graphics::VertexBuffer vertexBuffer_;
 

@@ -47,7 +47,7 @@ public:
 
 	Sampler(Device& renderer, const Configuration& configuration);
 
-	ID3D11SamplerState& internalSamplerState() {
+	ID3D11SamplerState& internalSamplerState() const {
 		return *samplerState_;
 	}
 

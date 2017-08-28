@@ -77,7 +77,7 @@ public:
 
 	void setResource(const Resource& resource, ShaderType stage, size_t slot);
 
-	void setSampler(Sampler& sampler, ShaderType stage, size_t slot);
+	void setSampler(const Sampler& sampler, ShaderType stage, size_t slot);
 
 	void setRenderState(const RenderState& renderState);
 

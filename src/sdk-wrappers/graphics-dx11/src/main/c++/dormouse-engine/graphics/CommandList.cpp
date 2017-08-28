@@ -183,8 +183,8 @@ void CommandList::setResource(const Resource& resource, ShaderType stage, size_t
 	}
 }
 
-void CommandList::setSampler(Sampler& sampler, ShaderType stage, size_t slot) {
-	auto* ss = &sampler.internalSamplerState();
+void CommandList::setSampler(const Sampler& sampler, ShaderType stage, size_t slot) {
+	auto ss = &sampler.internalSamplerState();
 
 	switch (stage) {
 	case ShaderType::VERTEX:
