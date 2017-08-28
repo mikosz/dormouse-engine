@@ -1,2 +1,2 @@
-#define BOOST_TEST_MAIN
-#include <boost/test/included/unit_test.hpp>
+#define DE_TEST_MODULE "dormouse_engine::renderer"
+#include "dormouse-engine/tester/main.hpp"

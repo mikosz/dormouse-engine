@@ -64,9 +64,9 @@ Window::~Window() {
 	if (handle_ != 0) {
 		DestroyWindow(handle_);
 		handle_ = 0;
-
-		UnregisterClassA(configuration_.className.c_str(), app_->instance());
 	}
+
+	UnregisterClassA(configuration_.className.c_str(), app_->instance());
 }
 
 LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {

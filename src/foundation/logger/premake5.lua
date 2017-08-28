@@ -7,4 +7,5 @@ structure.library_project(
 
 project "logger-unit-test"
 	add_gmock_files()
+project "*"
 	
