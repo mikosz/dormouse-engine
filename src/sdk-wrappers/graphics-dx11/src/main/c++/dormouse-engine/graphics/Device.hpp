@@ -10,7 +10,7 @@
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "dormouse-engine/system/windows/types.hpp"
 
-#include "Texture2d.hpp"
+#include "Texture.hpp"
 #include "CommandList.hpp"
 #include "PrimitiveTopology.hpp"
 
@@ -66,11 +66,11 @@ public:
 
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
-	Texture2d& backBuffer() {
+	RenderTargetView backBuffer() const {
 		return backBuffer_;
 	}
 
-	Texture2d& depthStencil() {
+	DepthStencilView depthStencil() const {
 		return depthStencil_;
 	}
 
@@ -90,9 +90,9 @@ private:
 
 	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
-	Texture2d backBuffer_;
+	RenderTargetView backBuffer_;
 
-	Texture2d depthStencil_;
+	DepthStencilView depthStencil_;
 
 };
 

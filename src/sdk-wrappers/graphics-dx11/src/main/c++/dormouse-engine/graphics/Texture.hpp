@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/enums/Mask.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "PixelFormat.hpp"
@@ -25,21 +26,81 @@ public:
 		(DEPTH_STENCIL)(D3D11_BIND_DEPTH_STENCIL)
 		);
 
-	void initialise(Device& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags);
+	struct Configuration1d {
 
-	void reset();
+		size_t width;
 
-	ID3D11RenderTargetView& internalRenderTargetView() {
-		return *renderTargetView_;
-	}
+		size_t arraySize = 1u;
 
-	ID3D11DepthStencilView& internalDepthStencilView() {
-		return *depthStencilView_;
+		size_t mipLevels = 1u;
+
+		PixelFormat pixelFormat;
+
+		bool allowModifications;
+
+		bool allowCPURead;
+
+		bool allowGPUWrite;
+
+		dormouse_engine::Mask<CreationPurpose> purposeFlags;
+
+	};
+
+	struct Configuration2d : Configuration1d {
+
+		size_t height;
+
+		size_t sampleCount = 1u;
+
+		size_t sampleQuality = 0u;
+
+	};
+
+	Texture(
+		Device& device,
+		const Configuration1d& configuration,
+		essentials::ConstBufferView initialData = essentials::ConstBufferView()
+		);
+
+	Texture(
+		Device& device,
+		const Configuration2d& configuration,
+		essentials::ConstBufferView initialData = essentials::ConstBufferView()
+		);
+
+};
+
+class RenderTargetView {
+public:
+
+	RenderTargetView() = default;
+
+	RenderTargetView(Device& device, const Texture& texture);
+
+	RenderTargetView(Device& device, system::windows::COMWrapper<ID3D11Texture2D> texture2d); // TODO: move to detail somehow?
+
+	system::windows::COMWrapper<ID3D11RenderTargetView> internalRenderTargetView() const {
+		return renderTargetView_;
 	}
 
 private:
 
 	system::windows::COMWrapper<ID3D11RenderTargetView> renderTargetView_;
+
+};
+
+class DepthStencilView {
+public:
+
+	DepthStencilView() = default;
+
+	DepthStencilView(Device& device, const Texture& texture);
+
+	system::windows::COMWrapper<ID3D11DepthStencilView> internalDepthStencilView() const {
+		return depthStencilView_;
+	}
+
+private:
 
 	system::windows::COMWrapper<ID3D11DepthStencilView> depthStencilView_;
 

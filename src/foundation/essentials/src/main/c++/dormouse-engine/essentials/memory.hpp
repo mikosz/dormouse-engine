@@ -17,6 +17,8 @@ public:
 
 	using ByteType = ByteT;
 
+	BufferView() = default;
+
 	template <class T>
 	BufferView(T* elements, size_t elementCount) :
 		data_(reinterpret_cast<ByteT*>(elements)),
@@ -45,9 +47,9 @@ public:
 
 private:
 
-	ByteType* const data_;
+	ByteType* const data_ = nullptr;
 
-	const size_t size_;
+	const size_t size_ = 0u;
 
 };
 

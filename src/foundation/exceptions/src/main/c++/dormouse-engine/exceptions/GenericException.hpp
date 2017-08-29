@@ -75,6 +75,7 @@ private:
 
 };
 
+// TODO: cleanup! remove this macro, don't debug break if not under debugger, move intrinsics to system or at least .cpp
 #define EXCEPTION_CONSTRUCTORS(TYPE, PARENT) \
 	TYPE() : \
 		PARENT(#TYPE) \

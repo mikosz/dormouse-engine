@@ -16,17 +16,21 @@
 
 namespace dormouse_engine::graphics {
 
+class Buffer;
 class Resource;
 class Device;
 class ConstantBuffer;
 class IndexBuffer;
 class VertexBuffer;
-class Texture2d;
+class Texture;
 class Sampler;
 class RenderState;
 class InputLayout;
 class Viewport;
 class PixelFormat;
+class RenderTargetView;
+class DepthStencilView;
+class ResourceView;
 
 class CommandList {
 public:
@@ -51,7 +55,7 @@ public:
 
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
-	void setRenderTarget(Texture2d& renderTarget, Texture2d& depthStencil);
+	void setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil);
 
 	void setViewport(Viewport& viewport);
 
@@ -67,15 +71,13 @@ public:
 
 	void setPixelShader(PixelShader* pixelShader) noexcept;
 
-	void setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, size_t slot);
+	void setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot);
 
-	void setIndexBuffer(const IndexBuffer& buffer, size_t offset);
+	void setIndexBuffer(const Buffer& buffer, size_t offset);
 
-	void setVertexBuffer(const VertexBuffer& buffer, size_t slot);
+	void setVertexBuffer(const Buffer& buffer, size_t slot);
 
-	void setInstanceDataBuffer(VertexBuffer& buffer, size_t slot);
-
-	void setResource(const Resource& resource, ShaderType stage, size_t slot);
+	void setResource(const ResourceView& resource, ShaderType stage, size_t slot);
 
 	void setSampler(const Sampler& sampler, ShaderType stage, size_t slot);
 

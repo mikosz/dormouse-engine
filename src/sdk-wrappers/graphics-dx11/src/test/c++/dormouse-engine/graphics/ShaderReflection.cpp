@@ -7,7 +7,6 @@
 
 #include "dormouse-engine/essentials/debug.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
-#include "dormouse-engine/graphics/ConstantBuffer.hpp"
 #include "dormouse-engine/graphics/ShaderReflection.hpp"
 #include "dormouse-engine/graphics/InputLayout.hpp"
 #include "dormouse-engine/graphics/Shader.hpp"

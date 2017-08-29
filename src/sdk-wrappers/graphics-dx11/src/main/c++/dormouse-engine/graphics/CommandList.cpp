@@ -4,9 +4,8 @@
 
 #include "dormouse-engine/exceptions/LogicError.hpp"
 
-#include "ConstantBuffer.hpp"
-#include "IndexBuffer.hpp"
-#include "VertexBuffer.hpp"
+#include "Buffer.hpp"
+#include "Texture.hpp"
 #include "Device.hpp"
 #include "RenderState.hpp"
 #include "Resource.hpp"
@@ -65,10 +64,9 @@ CommandList::LockedData CommandList::lock(Resource& data, LockPurpose lockPurpos
 		);
 }
 
-void CommandList::setRenderTarget(Texture2d& renderTarget, Texture2d& depthStencil) {
-	auto* renderTargetView = &renderTarget.internalRenderTargetView();
-	auto* depthStencilView = &depthStencil.internalDepthStencilView();
-	deviceContext_->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+void CommandList::setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil) {
+	auto* renderTargetView = renderTarget.internalRenderTargetView().get();
+	deviceContext_->OMSetRenderTargets(1, &renderTargetView, depthStencil.internalDepthStencilView());
 }
 
 void CommandList::setViewport(Viewport& viewport) {
@@ -113,7 +111,7 @@ void CommandList::setPixelShader(PixelShader* pixelShader) noexcept {
 	deviceContext_->PSSetShader(&pixelShader->internalShader(), nullptr, 0);
 }
 
-void CommandList::setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, size_t slot) {
+void CommandList::setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot) {
 	auto* buf = reinterpret_cast<ID3D11Buffer*>(buffer.internalResource().get());
 
 	switch (stage) {
@@ -137,30 +135,39 @@ void CommandList::setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, si
 	}
 }
 
-void CommandList::setIndexBuffer(const IndexBuffer& buffer, size_t offset) {
+void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset) {
 	auto* buf = reinterpret_cast<ID3D11Buffer*>(buffer.internalResource().get());
 
-	deviceContext_->IASetIndexBuffer(buf, static_cast<DXGI_FORMAT>(buffer.pixelFormat().id()), static_cast<UINT>(offset));
+	auto desc = D3D11_BUFFER_DESC();
+	buf->GetDesc(&desc);
+
+	auto format = DXGI_FORMAT();
+	if (desc.StructureByteStride == 2) {
+		format = DXGI_FORMAT_R16_UINT;
+	} else if (desc.StructureByteStride == 4) {
+		format = DXGI_FORMAT_R32_UINT;
+	} else {
+		throw dormouse_engine::exceptions::LogicError(
+			"Unexpected byte stride for index buffer: " + std::to_string(desc.StructureByteStride));
+	}
+
+	deviceContext_->IASetIndexBuffer(buf, format, static_cast<UINT>(offset));
 }
 
-void CommandList::setVertexBuffer(const VertexBuffer& buffer, size_t slot) {
-	auto strideParam = static_cast<UINT>(buffer.stride());
-	UINT offsetParam = 0;
+void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot) {
 	auto* buf = reinterpret_cast<ID3D11Buffer*>(buffer.internalResource().get());
+
+	auto desc = D3D11_BUFFER_DESC();
+	buf->GetDesc(&desc);
+
+	auto strideParam = desc.StructureByteStride;
+	auto offsetParam = 0u;
 
 	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);
 }
 
-void CommandList::setInstanceDataBuffer(VertexBuffer& buffer, size_t slot) {
-	auto strideParam = static_cast<UINT>(buffer.stride());
-	UINT offsetParam = 0;
-	auto* buf = reinterpret_cast<ID3D11Buffer*>(buffer.internalResource().get());
-
-	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);
-}
-
-void CommandList::setResource(const Resource& resource, ShaderType stage, size_t slot) {
-	auto* srv = resource.internalShaderResourceView().get();
+void CommandList::setResource(const ResourceView& resource, ShaderType stage, size_t slot) {
+	auto* srv = resource.internalResourceView().get();
 
 	switch (stage) {
 	case ShaderType::VERTEX:

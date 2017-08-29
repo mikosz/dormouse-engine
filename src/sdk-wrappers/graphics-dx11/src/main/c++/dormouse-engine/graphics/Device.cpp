@@ -161,19 +161,15 @@ void createD3DDevice(
 		);
 }
 
-void extractBackBuffer(
-	Device& renderer,
-	IDXGISwapChain* swapChain,
-	Texture2d* backBuffer
-	)
-{
-	system::windows::COMWrapper<ID3D11Texture2D> texture;
+RenderTargetView extractBackBuffer(Device& renderer, IDXGISwapChain* swapChain) {
+	auto texture = system::windows::COMWrapper<ID3D11Texture2D>();
+
 	checkDirectXCall(
 		swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&texture.get())),
 		"Failed to extract the back buffer texture"
 		);
 
-	backBuffer->initialise(renderer, Texture::CreationPurpose::RENDER_TARGET, texture); // TODO: this interface needs work
+	return RenderTargetView(renderer, texture);
 }
 
 } // anonymous namespace
@@ -194,12 +190,12 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	createD3DDevice(windowHandle, *dxgiFactory, configuration, refreshRate, &swapChain_, &d3dDevice_, &immediateContext);
 	immediateCommandList_.initialise(immediateContext);
 
-	extractBackBuffer(*this, swapChain_, &backBuffer_);
+	backBuffer_ = extractBackBuffer(*this, swapChain_);
 
 	UINT quality;
 	d3dDevice_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &quality); // TODO: literal in code
 
-	Texture2d::Configuration depthStencilConfig;
+	Texture::Configuration2d depthStencilConfig;
 	depthStencilConfig.width = screenWidth;
 	depthStencilConfig.height = screenHeight;
 	depthStencilConfig.allowGPUWrite = true;
@@ -215,7 +211,9 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	depthStencilConfig.sampleCount = swapChainDesc.SampleDesc.Count;
 	depthStencilConfig.sampleQuality = swapChainDesc.SampleDesc.Quality;
 
-	depthStencil_.initialise(*this, depthStencilConfig);
+	auto depthStencilTexture = Texture(*this, depthStencilConfig);
+
+	depthStencil_ = DepthStencilView(*this, depthStencilTexture);
 }
 
 CommandList& Device::getImmediateCommandList() {
@@ -234,9 +232,10 @@ CommandList Device::createDeferredCommandList() {
 void Device::beginScene() {
 	// TODO: move to pulp or disperse
 	float colour[] = { 1.0f, 0.0f, 1.0f, 1.0f };
-	immediateCommandList_.internalDeviceContext().ClearRenderTargetView(&backBuffer_.internalRenderTargetView(), colour);
+	immediateCommandList_.internalDeviceContext().ClearRenderTargetView(
+		backBuffer_.internalRenderTargetView(), colour);
 	immediateCommandList_.internalDeviceContext().ClearDepthStencilView(
-		&depthStencil_.internalDepthStencilView(),
+		depthStencil_.internalDepthStencilView(),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		static_cast<UINT8>(0)

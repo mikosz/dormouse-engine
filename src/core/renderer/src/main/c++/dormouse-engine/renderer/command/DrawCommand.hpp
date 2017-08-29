@@ -2,8 +2,7 @@
 #define _DORMOUSEENGINE_RENDERER_COMMAND_DRAWCOMMAND_HPP_
 
 #include "dormouse-engine/graphics/CommandList.hpp"
-#include "dormouse-engine/graphics/VertexBuffer.hpp"
-#include "dormouse-engine/graphics/IndexBuffer.hpp"
+#include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
@@ -34,11 +33,11 @@ public:
 		resource_(stage, slot) = std::move(resource);
 	}
 
-	void setVertexBuffer(graphics::VertexBuffer vertexBuffer) {
+	void setVertexBuffer(graphics::Buffer vertexBuffer) {
 		vertexBuffer_ = std::move(vertexBuffer);
 	}
 
-	void setIndexBuffer(graphics::IndexBuffer indexBuffer, size_t indexCount) {
+	void setIndexBuffer(graphics::Buffer indexBuffer, size_t indexCount) {
 		indexBuffer_ = std::move(indexBuffer);
 		indexCount_ = indexCount;
 	}
@@ -61,9 +60,9 @@ private:
 
 	std::array<graphics::Resource, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
 
-	graphics::VertexBuffer vertexBuffer_;
+	graphics::Buffer vertexBuffer_;
 
-	graphics::IndexBuffer indexBuffer_;
+	graphics::Buffer indexBuffer_;
 
 	size_t indexCount_;
 
