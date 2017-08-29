@@ -94,5 +94,9 @@ RenderState::RenderState(
 }
 
 void RenderState::bind(graphics::CommandList& commandList) const {
-	commandList.setRenderState(RenderStateFactory::instance()->get(renderStateId_));
+	if (renderStateId_ == INVALID_RENDER_STATE_ID) {
+		commandList.setRenderState(graphics::RenderState());
+	} else {
+		commandList.setRenderState(RenderStateFactory::instance()->get(renderStateId_));
+	}
 }

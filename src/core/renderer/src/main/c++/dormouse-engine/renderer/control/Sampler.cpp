@@ -95,5 +95,9 @@ Sampler::Sampler(
 }
 
 void Sampler::bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const {
-	commandList.setSampler(SamplerFactory::instance()->get(samplerId_), stage, slot);
+	if (samplerId_ == INVALID_SAMPLER_ID) {
+		commandList.setSampler(graphics::Sampler(), stage, slot);
+	} else {
+		commandList.setSampler(SamplerFactory::instance()->get(samplerId_), stage, slot);
+	}
 }

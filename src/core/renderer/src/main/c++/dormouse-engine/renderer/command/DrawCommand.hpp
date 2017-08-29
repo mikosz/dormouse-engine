@@ -24,8 +24,10 @@ public:
 		renderState_ = std::move(renderState);
 	}
 
-	void setSampler(control::Sampler sampler, graphics::ShaderType stage, size_t slot) {
-		set sampler at stage & slot to sampler (want an array)
+	// TODO: graphics::shadertype is called stage here. Should rename graphics::shader to graphics::shaderstage
+	// which would avoid having two names denoting different things
+	void setSampler(control::Sampler sampler, graphics::ShaderType stage, size_t slot) {		
+		sampler_(stage, slot) = std::move(sampler);
 	}
 
 	void setVertexBuffer(graphics::VertexBuffer vertexBuffer) {
@@ -39,11 +41,19 @@ public:
 
 private:
 
+	static_assert(static_cast<size_t>(graphics::ShaderType::VERTEX) == 0u);
+	static_assert(static_cast<size_t>(graphics::ShaderType::GEOMETRY) == 1u);
+	static_assert(static_cast<size_t>(graphics::ShaderType::HULL) == 2u);
+	static_assert(static_cast<size_t>(graphics::ShaderType::DOMAIN) == 3u);
+	static_assert(static_cast<size_t>(graphics::ShaderType::PIXEL) == 4u);
+
+	static constexpr auto STAGE_COUNT = 5u; // vs, gs, hs, ds, ps
+
 	CommandKey key_;
 
 	control::RenderState renderState_;
 
-	...control::Sampler samplers_;
+	std::array<control::Sampler, STAGE_COUNT * graphics::SAMPLER_SLOT_COUNT_PER_SHADER> samplers_;
 
 	graphics::VertexBuffer vertexBuffer_;
 
@@ -52,6 +62,16 @@ private:
 	size_t indexCount_;
 
 	graphics::PrimitiveTopology primitiveTopology_;
+
+	control::Sampler& sampler_(graphics::ShaderType stage, size_t slot) {
+		assert(static_cast<size_t>(stage) < 5u);
+		assert(slot < STAGE_COUNT);
+		return samplers_[static_cast<size_t>(stage) * graphics::SAMPLER_SLOT_COUNT_PER_SHADER + slot];
+	}
+
+	control::Sampler sampler_(graphics::ShaderType stage, size_t slot) const {
+		return const_cast<DrawCommand&>(*this).sampler_(stage, slot);
+	}
 
 };
 

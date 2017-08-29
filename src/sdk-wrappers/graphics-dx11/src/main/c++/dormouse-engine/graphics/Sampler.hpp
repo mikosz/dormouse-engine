@@ -11,6 +11,8 @@ namespace dormouse_engine::graphics {
 
 class Device;
 
+const auto SAMPLER_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
+
 class Sampler {
 public:
 

@@ -13,11 +13,7 @@ namespace /* anonymous */ {
 BOOST_FIXTURE_TEST_SUITE(RenderStateFactoryTestSuite, tester::RenderingFixture);
 
 BOOST_AUTO_TEST_CASE(ReturnsEqualRenderStatesForSameConfiguration) {
-	auto configuration = graphics::RenderState::Configuration();
-	configuration.frontCounterClockwise = true;
-	configuration.blendingEnabled = false;
-	configuration.cullMode = graphics::RenderState::CullMode::FRONT;
-	configuration.fillMode = graphics::RenderState::FillMode::WIREFRAME;
+	const auto configuration = RenderState::OPAQUE;
 
 	auto renderStateL = RenderState(graphicsDevice(), configuration);
 	auto renderStateR = RenderState(graphicsDevice(), configuration);
@@ -26,11 +22,7 @@ BOOST_AUTO_TEST_CASE(ReturnsEqualRenderStatesForSameConfiguration) {
 }
 
 BOOST_AUTO_TEST_CASE(ReturnsUnequalRenderStatesForDifferentConfiguration) {
-	auto configuration = graphics::RenderState::Configuration();
-	configuration.frontCounterClockwise = true;
-	configuration.blendingEnabled = false;
-	configuration.cullMode = graphics::RenderState::CullMode::FRONT;
-	configuration.fillMode = graphics::RenderState::FillMode::WIREFRAME;
+	auto configuration = RenderState::OPAQUE;
 
 	auto renderStateL = RenderState(graphicsDevice(), configuration);
 

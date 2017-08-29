@@ -17,13 +17,17 @@ public:
 		false
 		};
 
+	RenderState() = default;
+
 	RenderState(graphics::Device& graphicsDevice, graphics::RenderState::Configuration configuration);
 
 	void bind(graphics::CommandList& commandList) const;
 
 private:
 
-	size_t renderStateId_;
+	static constexpr size_t INVALID_RENDER_STATE_ID = static_cast<size_t>(-1);
+
+	size_t renderStateId_ = INVALID_RENDER_STATE_ID;
 
 	friend bool operator==(const RenderState& lhs, const RenderState& rhs) {
 		return lhs.renderStateId_ == rhs.renderStateId_;

@@ -1,6 +1,7 @@
 #ifndef DORMOUSEENGINE_LOGGER_PRINT_HPP_
 #define DORMOUSEENGINE_LOGGER_PRINT_HPP_
 
+#include <string_view>
 #include <iosfwd>
 #include <type_traits>
 
@@ -32,6 +33,10 @@ inline typename std::enable_if_t<essentials::IsIterable<T>::value> print(std::os
 }
 
 inline void print(std::ostream& os, const std::string& s) {
+	os << s;
+}
+
+inline void print(std::ostream& os, const std::string_view& s) {
 	os << s;
 }
 

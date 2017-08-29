@@ -16,13 +16,17 @@ public:
 		graphics::Sampler::Filter::MIN_MAG_MIP_LINEAR
 		};
 
+	Sampler() = default;
+
 	Sampler(graphics::Device& graphicsDevice, graphics::Sampler::Configuration configuration);
 
 	void bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const;
 
 private:
 
-	size_t samplerId_;
+	static constexpr size_t INVALID_SAMPLER_ID = static_cast<size_t>(-1);
+
+	size_t samplerId_ = INVALID_SAMPLER_ID;
 
 	friend bool operator==(const Sampler& lhs, const Sampler& rhs) {
 		return lhs.samplerId_ == rhs.samplerId_;
