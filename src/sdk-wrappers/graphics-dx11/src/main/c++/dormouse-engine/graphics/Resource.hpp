@@ -8,15 +8,16 @@
 
 namespace dormouse_engine::graphics {
 
+const auto RESOURCE_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT;
+
 class Resource {
 public:
 
 	Resource() = default;
 
-	virtual ~Resource() = default;
-
 	void reset() {
 		resource_.reset();
+		shaderResourceView_.reset();
 	}
 
 	system::windows::COMWrapper<ID3D11Resource> internalResource() const { // TODO: move to detail interface
@@ -28,15 +29,6 @@ public:
 	}
 
 protected:
-
-	// TODO: is this how it's supposed to be done?
-	Resource(const Resource&) = default;
-
-	Resource(Resource&&) = default;
-
-	Resource& operator=(const Resource&) = default;
-
-	Resource& operator=(Resource&&) = default;
 
 	system::windows::COMWrapper<ID3D11Resource> resource_;
 

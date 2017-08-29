@@ -23,6 +23,16 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 		}
 	}
 
+	for (const auto stageIdx : range<size_t>(0u, STAGE_COUNT)) {
+		for (const auto slotIdx : range<size_t>(0u, graphics::RESOURCE_SLOT_COUNT_PER_SHADER)) {
+			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
+			const auto resource = resource_(stage, slotIdx);
+			if (!previous || (previous->resource_(stage, slotIdx) != resource)) {
+				commandList.setResource(resource, stage, slotIdx);
+			}
+		}
+	}
+
 	commandList.setVertexBuffer(vertexBuffer_, 0u);
 	commandList.setIndexBuffer(indexBuffer_, 0u);
 
