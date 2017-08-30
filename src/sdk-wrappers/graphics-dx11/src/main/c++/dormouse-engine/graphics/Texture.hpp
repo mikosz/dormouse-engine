@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "detail/detailfwd.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/enums/Mask.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
@@ -68,6 +69,15 @@ public:
 		essentials::ConstBufferView initialData = essentials::ConstBufferView()
 		);
 
+private:
+
+	Texture(system::windows::COMWrapper<ID3D11Texture2D> texture) :
+		Resource(std::move(texture))
+	{
+	}
+
+	friend struct detail::Internals;
+
 };
 
 class RenderTargetView {
@@ -75,17 +85,13 @@ public:
 
 	RenderTargetView() = default;
 
-	RenderTargetView(Device& device, const Texture& texture);
-
-	RenderTargetView(Device& device, system::windows::COMWrapper<ID3D11Texture2D> texture2d); // TODO: move to detail somehow?
-
-	system::windows::COMWrapper<ID3D11RenderTargetView> internalRenderTargetView() const {
-		return renderTargetView_;
-	}
+	RenderTargetView(const Texture& texture);
 
 private:
 
 	system::windows::COMWrapper<ID3D11RenderTargetView> renderTargetView_;
+
+	friend struct detail::Internals;
 
 };
 
@@ -96,13 +102,11 @@ public:
 
 	DepthStencilView(Device& device, const Texture& texture);
 
-	system::windows::COMWrapper<ID3D11DepthStencilView> internalDepthStencilView() const {
-		return depthStencilView_;
-	}
-
 private:
 
 	system::windows::COMWrapper<ID3D11DepthStencilView> depthStencilView_;
+
+	friend struct detail::Internals;
 
 };
 

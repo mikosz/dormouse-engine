@@ -6,6 +6,7 @@
 
 #include "dormouse-engine/enums.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "detail/detailfwd.hpp"
 
 namespace dormouse_engine::graphics {
 
@@ -49,13 +50,11 @@ public:
 
 	Sampler(Device& renderer, const Configuration& configuration);
 
-	ID3D11SamplerState& internalSamplerState() const {
-		return *samplerState_;
-	}
-
 private:
 
 	system::windows::COMWrapper<ID3D11SamplerState> samplerState_;
+
+	friend struct detail::Internals;
 
 };
 

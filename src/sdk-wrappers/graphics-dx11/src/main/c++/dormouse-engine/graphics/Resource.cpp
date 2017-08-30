@@ -2,6 +2,7 @@
 
 #include "Resource.hpp"
 
+#include "detail/Internals.hpp"
 #include "Device.hpp"
 #include "DirectXError.hpp"
 #include "Buffer.hpp"
@@ -9,17 +10,19 @@
 
 using namespace dormouse_engine::graphics;
 
-ResourceView::ResourceView(Device& device, const Texture& texture) {
+ResourceView::ResourceView(const Texture& texture) {
 	checkDirectXCall(
-		device.internalDevice().CreateShaderResourceView(
-			texture.internalResource(), nullptr, &resourceView_.get()),
+		detail::Internals::dxDevice(texture).CreateShaderResourceView(
+			&detail::Internals::dxResource(texture), nullptr, &resourceView_.get()),
 		"Failed to create a resource view"
 		);
 }
 
-ResourceView::ResourceView(Device& device, const Buffer& buffer, PixelFormat elementFormat) {
+ResourceView::ResourceView(const Buffer& buffer, PixelFormat elementFormat) {
+	auto& dxBuffer = static_cast<ID3D11Buffer&>(detail::Internals::dxResource(buffer));
+
 	auto bufferDesc = D3D11_BUFFER_DESC();
-	static_cast<ID3D11Buffer*>(buffer.internalResource().get())->GetDesc(&bufferDesc);
+	dxBuffer.GetDesc(&bufferDesc);
 
 	auto srvDesc = D3D11_SHADER_RESOURCE_VIEW_DESC();
 	std::memset(&srvDesc, 0, sizeof(decltype(srvDesc)));
@@ -30,8 +33,13 @@ ResourceView::ResourceView(Device& device, const Buffer& buffer, PixelFormat ele
 	srvDesc.Buffer.NumElements = static_cast<UINT>(bufferDesc.ByteWidth / elementFormat.pixelSize());
 
 	checkDirectXCall(
-		device.internalDevice().CreateShaderResourceView(
-			buffer.internalResource(), &srvDesc, &resourceView_.get()),
+		detail::Internals::dxDevice(buffer).CreateShaderResourceView(&dxBuffer, &srvDesc, &resourceView_.get()),
 		"Failed to create a shader resource view of buffer"
 		);
+}
+
+Resource::Id ResourceView::resourceId() const {
+	auto* dxResource = static_cast<ID3D11Resource*>(nullptr);
+	resourceView_->GetResource(&dxResource);
+	return reinterpret_cast<std::uintptr_t>(dxResource);
 }

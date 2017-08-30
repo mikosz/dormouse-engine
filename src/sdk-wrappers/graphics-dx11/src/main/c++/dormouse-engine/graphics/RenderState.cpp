@@ -2,6 +2,7 @@
 
 #include "RenderState.hpp"
 
+#include "detail/Internals.hpp"
 #include "DirectXError.hpp"
 #include "Device.hpp"
 
@@ -11,7 +12,7 @@ using namespace dormouse_engine::graphics;
 namespace /* anonymous */ {
 
 system::windows::COMWrapper<ID3D11RasterizerState> createRasteriserState(
-	Device& renderer,
+	Device& device,
 	const RenderState::Configuration& configuration
 	)
 {
@@ -24,7 +25,7 @@ system::windows::COMWrapper<ID3D11RasterizerState> createRasteriserState(
 
 	auto rasteriserState = system::windows::COMWrapper<ID3D11RasterizerState>();
 	checkDirectXCall(
-		renderer.internalDevice().CreateRasterizerState(&rasteriserDesc, &rasteriserState.get()),
+		detail::Internals::dxDevice(device).CreateRasterizerState(&rasteriserDesc, &rasteriserState.get()),
 		"Failed to create a rasteriser state"
 		);
 
@@ -32,7 +33,7 @@ system::windows::COMWrapper<ID3D11RasterizerState> createRasteriserState(
 }
 
 system::windows::COMWrapper<ID3D11BlendState> createBlendState(
-	Device& renderer,
+	Device& device,
 	const RenderState::Configuration& configuration
 	)
 {
@@ -52,7 +53,7 @@ system::windows::COMWrapper<ID3D11BlendState> createBlendState(
 
 	auto blendState = system::windows::COMWrapper<ID3D11BlendState>();
 	checkDirectXCall(
-		renderer.internalDevice().CreateBlendState(&blendDesc, &blendState.get()),
+		detail::Internals::dxDevice(device).CreateBlendState(&blendDesc, &blendState.get()),
 		"Failed to create a blend state"
 		);
 

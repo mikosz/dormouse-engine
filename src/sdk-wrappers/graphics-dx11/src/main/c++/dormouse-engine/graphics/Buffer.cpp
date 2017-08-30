@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <functional>
 
+#include "detail/Internals.hpp"
 #include "Device.hpp"
 #include "DirectXError.hpp"
 
@@ -57,7 +58,7 @@ system::windows::COMWrapper<ID3D11Resource> createBufferResource(
 	}
 
 	auto buffer = system::windows::COMWrapper<ID3D11Buffer>();
-	checkDirectXCall(device.internalDevice().CreateBuffer(&desc, dataPtr, &buffer.get()),
+	checkDirectXCall(detail::Internals::dxDevice(device).CreateBuffer(&desc, dataPtr, &buffer.get()),
 		"Failed to create a buffer");
 	
 	return buffer;

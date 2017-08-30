@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
+#include "detail/Internals.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
@@ -161,7 +162,7 @@ void createD3DDevice(
 		);
 }
 
-RenderTargetView extractBackBuffer(Device& renderer, IDXGISwapChain* swapChain) {
+RenderTargetView extractBackBuffer(IDXGISwapChain* swapChain) {
 	auto texture = system::windows::COMWrapper<ID3D11Texture2D>();
 
 	checkDirectXCall(
@@ -169,7 +170,7 @@ RenderTargetView extractBackBuffer(Device& renderer, IDXGISwapChain* swapChain) 
 		"Failed to extract the back buffer texture"
 		);
 
-	return RenderTargetView(renderer, texture);
+	return RenderTargetView(detail::Internals::createTextureFromDX11Texture(std::move(texture)));
 }
 
 } // anonymous namespace
@@ -190,7 +191,7 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	createD3DDevice(windowHandle, *dxgiFactory, configuration, refreshRate, &swapChain_, &d3dDevice_, &immediateContext);
 	immediateCommandList_.initialise(immediateContext);
 
-	backBuffer_ = extractBackBuffer(*this, swapChain_);
+	backBuffer_ = extractBackBuffer(swapChain_);
 
 	UINT quality;
 	d3dDevice_->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &quality); // TODO: literal in code
@@ -232,10 +233,13 @@ CommandList Device::createDeferredCommandList() {
 void Device::beginScene() {
 	// TODO: move to pulp or disperse
 	float colour[] = { 1.0f, 0.0f, 1.0f, 1.0f };
-	immediateCommandList_.internalDeviceContext().ClearRenderTargetView(
-		backBuffer_.internalRenderTargetView(), colour);
-	immediateCommandList_.internalDeviceContext().ClearDepthStencilView(
-		depthStencil_.internalDepthStencilView(),
+
+	auto& dxDeviceContext = detail::Internals::dxDeviceContext(immediateCommandList_);
+
+	dxDeviceContext.ClearRenderTargetView(
+		&detail::Internals::dxRenderTargetView(backBuffer_), colour);
+	dxDeviceContext.ClearDepthStencilView(
+		&detail::Internals::dxDepthStencilView(depthStencil_),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		static_cast<UINT8>(0)
@@ -247,16 +251,20 @@ void Device::endScene() {
 }
 
 Device::LockedData Device::lock(Resource& data, LockPurpose lockPurpose) {
+	auto& dxDeviceContext = detail::Internals::dxDeviceContext(immediateCommandList_);
+	auto& dxResource = detail::Internals::dxResource(data);
+
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	checkDirectXCall(
-		immediateCommandList_.internalDeviceContext().Map(data.internalResource(), 0, static_cast<D3D11_MAP>(lockPurpose), 0, &mappedResource),
+		dxDeviceContext.Map(
+			&dxResource, 0, static_cast<D3D11_MAP>(lockPurpose), 0, &mappedResource),
 		"Failed to map the provided resource"
 		);
 
 	return LockedData(
 		mappedResource.pData,
-		[&deviceContext = immediateCommandList_, internalBuffer = data.internalResource()](void*) {
-			deviceContext.internalDeviceContext().Unmap(internalBuffer, 0);
+		[&dxDeviceContext, &dxResource](void*) {
+			dxDeviceContext.Unmap(&dxResource, 0);
 		}
 		);
 }
@@ -267,5 +275,5 @@ void Device::submit(CommandList& /*commandList*/) {
 		commandList.internalDeviceContext().FinishCommandList(false, &d3dCommandList.get()),
 		"Failed to finish a command list"
 		); // TODO: false?
-	immediateCommandList_.internalDeviceContext().ExecuteCommandList(d3dCommandList, false);*/ // TODO: false?
+	detail::Internals::dxDeviceContext(immediateCommandList_).ExecuteCommandList(d3dCommandList, false);*/ // TODO: false?
 }

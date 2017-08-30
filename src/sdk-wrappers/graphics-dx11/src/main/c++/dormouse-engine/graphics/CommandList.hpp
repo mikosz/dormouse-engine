@@ -9,7 +9,7 @@
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
-
+#include "detail/detailfwd.hpp"
 #include "PrimitiveTopology.hpp"
 #include "Shader.hpp"
 #include "ShaderType.hpp"
@@ -83,13 +83,11 @@ public:
 
 	void setRenderState(const RenderState& renderState);
 
-	ID3D11DeviceContext& internalDeviceContext() {
-		return *deviceContext_;
-	}
-
 private:
 
 	system::windows::COMWrapper<ID3D11DeviceContext> deviceContext_;
+
+	friend struct detail::Internals;
 
 };
 

@@ -28,7 +28,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
 			const auto resource = resource_(stage, slotIdx);
 			if (!previous || (previous->resource_(stage, slotIdx) != resource)) {
-				commandList.setResource(resource, stage, slotIdx);
+				resource.bind(commandList, stage, slotIdx);
 			}
 		}
 	}

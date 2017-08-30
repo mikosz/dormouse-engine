@@ -5,6 +5,7 @@
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "detail/detailfwd.hpp"
 #include "PixelFormat.hpp"
 
 namespace dormouse_engine::graphics {
@@ -18,37 +19,45 @@ const auto RESOURCE_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_INPUT_RESOURCE_SL
 class Resource {
 public:
 
+	using Id = std::uintptr_t;
+
 	Resource() = default;
 
-	system::windows::COMWrapper<ID3D11Resource> internalResource() const { // TODO: move to detail interface
-		return resource_;
+	Id id() const {
+		return reinterpret_cast<Id>(resource_.get());
 	}
 
 protected:
-
-	system::windows::COMWrapper<ID3D11Resource> resource_;
 
 	Resource(system::windows::COMWrapper<ID3D11Resource> resource) :
 		resource_(std::move(resource))
 	{
 	}
 
+private:
+
+	system::windows::COMWrapper<ID3D11Resource> resource_;
+
+	friend struct detail::Internals;
+
 };
 
 class ResourceView {
 public:
 
-	ResourceView(Device& device, const Texture& texture);
+	ResourceView() = default;
 
-	ResourceView(Device& device, const Buffer& buffer, PixelFormat elementFormat);
+	ResourceView(const Texture& texture);
 
-	system::windows::COMWrapper<ID3D11ShaderResourceView> internalResourceView() const {
-		return resourceView_;
-	}
+	ResourceView(const Buffer& buffer, PixelFormat elementFormat);
+
+	Resource::Id resourceId() const;
 
 private:
 
 	system::windows::COMWrapper<ID3D11ShaderResourceView> resourceView_;
+
+	friend struct detail::Internals;
 
 };
 

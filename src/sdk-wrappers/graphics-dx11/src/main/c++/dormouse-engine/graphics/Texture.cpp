@@ -3,7 +3,7 @@
 #include "Texture.hpp"
 
 #include "dormouse-engine/essentials/Range.hpp"
-
+#include "detail/Internals.hpp"
 #include "Device.hpp"
 #include "DirectXError.hpp"
 
@@ -97,7 +97,7 @@ system::windows::COMWrapper<ID3D11Resource> createTexture1dResource(
 
 	auto texture = system::windows::COMWrapper<ID3D11Texture1D>();
 	checkDirectXCall(
-		device.internalDevice().CreateTexture1D(&desc, subresourceDataPtr, &texture.get()),
+		detail::Internals::dxDevice(device).CreateTexture1D(&desc, subresourceDataPtr, &texture.get()),
 		"Failed to create a 1D texture"
 		);
 
@@ -128,7 +128,7 @@ system::windows::COMWrapper<ID3D11Resource> createTexture2dResource(
 
 	auto texture = system::windows::COMWrapper<ID3D11Texture2D>();
 	checkDirectXCall(
-		device.internalDevice().CreateTexture2D(&desc, subresourceDataPtr, &texture.get()),
+		detail::Internals::dxDevice(device).CreateTexture2D(&desc, subresourceDataPtr, &texture.get()),
 		"Failed to create a 2D texture"
 	);
 
@@ -155,25 +155,18 @@ Texture::Texture(
 {
 }
 
-RenderTargetView::RenderTargetView(Device& device, const Texture& texture) {
+RenderTargetView::RenderTargetView(const Texture& texture) {
 	checkDirectXCall(
-		device.internalDevice().CreateRenderTargetView(
-			texture.internalResource(), nullptr, &renderTargetView_.get()),
-		"Failed to create a render target view of texture"
-		);
-}
-
-RenderTargetView::RenderTargetView(Device& device, system::windows::COMWrapper<ID3D11Texture2D> texture2d) {
-	checkDirectXCall(
-		device.internalDevice().CreateRenderTargetView(
-			texture2d.get(), nullptr, &renderTargetView_.get()),
+		detail::Internals::dxDevice(texture).CreateRenderTargetView(
+			&detail::Internals::dxResource(texture), nullptr, &renderTargetView_.get()),
 		"Failed to create a render target view of texture"
 		);
 }
 
 DepthStencilView::DepthStencilView(Device& device, const Texture& texture) {
 	checkDirectXCall(
-		device.internalDevice().CreateDepthStencilView(texture.internalResource(), nullptr, &depthStencilView_.get()),
+		detail::Internals::dxDevice(device).CreateDepthStencilView(
+			&detail::Internals::dxResource(texture), nullptr, &depthStencilView_.get()),
 		"Failed to create a depth stencil view of texture"
 		);
 }

@@ -6,6 +6,7 @@
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
+#include "../control/ResourceView.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
@@ -29,7 +30,7 @@ public:
 		sampler_(stage, slot) = std::move(sampler);
 	}
 
-	void setResource(graphics::Resource resource, graphics::ShaderType stage, size_t slot) {
+	void setResource(control::ResourceView resource, graphics::ShaderType stage, size_t slot) {
 		resource_(stage, slot) = std::move(resource);
 	}
 
@@ -58,7 +59,7 @@ private:
 
 	std::array<control::Sampler, STAGE_COUNT * graphics::SAMPLER_SLOT_COUNT_PER_SHADER> samplers_;
 
-	std::array<graphics::Resource, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
+	std::array<control::ResourceView, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
 
 	graphics::Buffer vertexBuffer_;
 
@@ -78,13 +79,13 @@ private:
 		return const_cast<DrawCommand&>(*this).sampler_(stage, slot);
 	}
 
-	graphics::Resource resource_(graphics::ShaderType stage, size_t slot) {
+	control::ResourceView resource_(graphics::ShaderType stage, size_t slot) {
 		assert(static_cast<size_t>(stage) < 5u);
 		assert(slot < graphics::RESOURCE_SLOT_COUNT_PER_SHADER);
 		return resources_[static_cast<size_t>(stage) * graphics::RESOURCE_SLOT_COUNT_PER_SHADER + slot];
 	}
 
-	graphics::Resource resource_(graphics::ShaderType stage, size_t slot) const {
+	control::ResourceView resource_(graphics::ShaderType stage, size_t slot) const {
 		return const_cast<DrawCommand&>(*this).resource_(stage, slot);
 	}
 

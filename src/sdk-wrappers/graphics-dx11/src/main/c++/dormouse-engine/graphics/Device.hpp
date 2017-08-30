@@ -9,7 +9,7 @@
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "dormouse-engine/system/windows/types.hpp"
-
+#include "detail/detailfwd.hpp"
 #include "Texture.hpp"
 #include "CommandList.hpp"
 #include "PrimitiveTopology.hpp"
@@ -74,10 +74,6 @@ public:
 		return depthStencil_;
 	}
 
-	ID3D11Device& internalDevice() {
-		return *d3dDevice_;
-	}
-
 private:
 
 	Configuration configuration_;
@@ -93,6 +89,8 @@ private:
 	RenderTargetView backBuffer_;
 
 	DepthStencilView depthStencil_;
+
+	friend struct detail::Internals;
 
 };
 
