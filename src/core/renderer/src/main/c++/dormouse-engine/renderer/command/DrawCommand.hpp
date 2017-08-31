@@ -4,6 +4,7 @@
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
+#include "dormouse-engine/graphics/Shader.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
@@ -34,6 +35,10 @@ public:
 		resource_(stage, slot) = std::move(resource);
 	}
 
+	void setStage(graphics::Shader shader, graphics::ShaderType stage) {
+		stages_[stage] = shader;
+	}
+
 	void setVertexBuffer(graphics::Buffer vertexBuffer) {
 		vertexBuffer_ = std::move(vertexBuffer);
 	}
@@ -60,6 +65,8 @@ private:
 	std::array<control::Sampler, STAGE_COUNT * graphics::SAMPLER_SLOT_COUNT_PER_SHADER> samplers_;
 
 	std::array<control::ResourceView, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
+
+	std::array<graphics::ShaderType, STAGE_COUNT> stages_;
 
 	graphics::Buffer vertexBuffer_;
 
