@@ -10,7 +10,7 @@ using namespace dormouse_engine::renderer::control;
 
 namespace /* anonymous */ {
 
-BOOST_FIXTURE_TEST_SUITE(SamplerFactoryTestSuite, tester::RenderingFixture);
+BOOST_FIXTURE_TEST_SUITE(RendererSamplerTestSuite, tester::RenderingFixture);
 
 BOOST_AUTO_TEST_CASE(ReturnsEqualSamplersForSameConfiguration) {
 	const auto configuration = Sampler::WRAPPED_LINEAR;
@@ -33,6 +33,6 @@ BOOST_AUTO_TEST_CASE(ReturnsUnequalSamplersForDifferentConfiguration) {
 	BOOST_CHECK(samplerL != samplerR);
 }
 
-BOOST_AUTO_TEST_SUITE_END(/* SamplerFactoryTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* RendererSamplerTestSuite */);
 
 } // anonymous namespace

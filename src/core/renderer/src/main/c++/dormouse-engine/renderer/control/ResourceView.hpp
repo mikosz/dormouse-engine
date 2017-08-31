@@ -1,7 +1,8 @@
 #ifndef _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 #define _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 
-#include "dormouse-engine/graphics/Resource.hpp"
+#include "dormouse-engine/graphics/Buffer.hpp"
+#include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/graphics/CommandList.hpp"
 
 namespace dormouse_engine::renderer::control {
@@ -11,7 +12,9 @@ public:
 
 	ResourceView() = default;
 
-	ResourceView(graphics::Resource& resource);
+	ResourceView(const graphics::Buffer& buffer, graphics::PixelFormat elementFormat);
+
+	ResourceView(const graphics::Texture& texture);
 
 	void bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const;
 

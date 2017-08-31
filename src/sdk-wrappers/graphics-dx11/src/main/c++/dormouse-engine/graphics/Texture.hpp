@@ -69,6 +69,8 @@ public:
 		essentials::ConstBufferView initialData = essentials::ConstBufferView()
 		);
 
+	graphics::PixelFormat pixelFormat() const;
+
 private:
 
 	Texture(system::windows::COMWrapper<ID3D11Texture2D> texture) :

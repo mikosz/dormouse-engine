@@ -155,6 +155,30 @@ Texture::Texture(
 {
 }
 
+graphics::PixelFormat Texture::pixelFormat() const {
+	auto dimension = D3D11_RESOURCE_DIMENSION();
+
+	auto& dxResource = detail::Internals::dxResource(*this);
+	dxResource.GetType(&dimension);
+
+	switch (dimension) {
+	case D3D11_RESOURCE_DIMENSION_TEXTURE1D: {
+			auto desc = D3D11_TEXTURE1D_DESC();
+			static_cast<ID3D11Texture1D&>(dxResource).GetDesc(&desc);
+			return PixelFormat(static_cast<PixelFormatId>(desc.Format));
+		}
+		break;
+	case D3D11_RESOURCE_DIMENSION_TEXTURE2D: {
+			auto desc = D3D11_TEXTURE2D_DESC();
+			static_cast<ID3D11Texture2D&>(dxResource).GetDesc(&desc);
+			return PixelFormat(static_cast<PixelFormatId>(desc.Format));
+		}
+		break;
+	default:
+		throw exceptions::LogicError("Invalid resource dimension");
+	}
+}
+
 RenderTargetView::RenderTargetView(const Texture& texture) {
 	checkDirectXCall(
 		detail::Internals::dxDevice(texture).CreateRenderTargetView(
