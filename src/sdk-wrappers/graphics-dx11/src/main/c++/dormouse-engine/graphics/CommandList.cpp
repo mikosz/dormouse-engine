@@ -81,38 +81,24 @@ void CommandList::setInputLayout(const InputLayout* inputLayout) noexcept {
 	deviceContext_->IASetInputLayout(&detail::Internals::dxInputLayout(*inputLayout));
 }
 
-void CommandList::setVertexShader(VertexShader* vertexShader) noexcept {
-	deviceContext_->VSSetShader(&vertexShader->internalShader(), nullptr, 0);
+void CommandList::setShader(const VertexShader& vertexShader) noexcept {
+	deviceContext_->VSSetShader(detail::Internals::dxVertexShaderPtr(vertexShader), nullptr, 0);
 }
 
-void CommandList::setGeometryShader(GeometryShader* geometryShader) noexcept {
-	if (geometryShader != nullptr) {
-		deviceContext_->GSSetShader(&geometryShader->internalShader(), nullptr, 0);
-	} else {
-		deviceContext_->GSSetShader(nullptr, nullptr, 0);
-	}
+void CommandList::setShader(const GeometryShader& geometryShader) noexcept {
+	deviceContext_->GSSetShader(detail::Internals::dxGeometryShaderPtr(geometryShader), nullptr, 0);
 }
 
-void CommandList::setHullShader(HullShader* hullShader) noexcept {
-	if (hullShader != nullptr) {
-		deviceContext_->HSSetShader(&hullShader->internalShader(), nullptr, 0);
-	}
-	else {
-		deviceContext_->HSSetShader(nullptr, nullptr, 0);
-	}
+void CommandList::setShader(const HullShader& hullShader) noexcept {
+	deviceContext_->HSSetShader(detail::Internals::dxHullShaderPtr(hullShader), nullptr, 0);
 }
 
-void CommandList::setDomainShader(DomainShader* domainShader) noexcept {
-	if (domainShader != nullptr) {
-		deviceContext_->DSSetShader(&domainShader->internalShader(), nullptr, 0);
-	}
-	else {
-		deviceContext_->DSSetShader(nullptr, nullptr, 0);
-	}
+void CommandList::setShader(const DomainShader& domainShader) noexcept {
+	deviceContext_->DSSetShader(detail::Internals::dxDomainShaderPtr(domainShader), nullptr, 0);
 }
 
-void CommandList::setPixelShader(PixelShader* pixelShader) noexcept {
-	deviceContext_->PSSetShader(&pixelShader->internalShader(), nullptr, 0);
+void CommandList::setShader(const PixelShader& pixelShader) noexcept {
+	deviceContext_->PSSetShader(detail::Internals::dxPixelShaderPtr(pixelShader), nullptr, 0);
 }
 
 void CommandList::setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot) {

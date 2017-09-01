@@ -12,6 +12,7 @@
 #include "../InputLayout.hpp"
 #include "../Sampler.hpp"
 #include "../RenderState.hpp"
+#include "../Shader.hpp"
 
 namespace dormouse_engine::graphics::detail {
 
@@ -69,6 +70,26 @@ struct Internals {
 
 	static ID3D11BlendState& dxBlendState(const RenderState& renderState) {
 		return *renderState.blendState_;
+	}
+
+	static ID3D11VertexShader* dxVertexShaderPtr(const VertexShader& vertexShader) {
+		return vertexShader.shader_.get();
+	}
+
+	static ID3D11GeometryShader* dxGeometryShaderPtr(const GeometryShader& geometryShader) {
+		return geometryShader.shader_.get();
+	}
+
+	static ID3D11DomainShader* dxDomainShaderPtr(const DomainShader& domainShader) {
+		return domainShader.shader_.get();
+	}
+
+	static ID3D11HullShader* dxHullShaderPtr(const HullShader& hullShader) {
+		return hullShader.shader_.get();
+	}
+
+	static ID3D11PixelShader* dxPixelShaderPtr(const PixelShader& pixelShader) {
+		return pixelShader.shader_.get();
 	}
 
 };

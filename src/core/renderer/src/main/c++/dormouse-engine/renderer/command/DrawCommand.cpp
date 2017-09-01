@@ -33,6 +33,10 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 		}
 	}
 
+	if (!previous || (previous->technique_ != technique_)) {
+		technique_.bind(commandList);
+	}
+
 	commandList.setVertexBuffer(vertexBuffer_, 0u);
 	commandList.setIndexBuffer(indexBuffer_, 0u);
 

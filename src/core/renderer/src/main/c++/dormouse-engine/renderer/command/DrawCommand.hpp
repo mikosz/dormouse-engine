@@ -4,10 +4,10 @@
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
-#include "dormouse-engine/graphics/Shader.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
+#include "../shader/Technique.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
@@ -25,8 +25,6 @@ public:
 		renderState_ = std::move(renderState);
 	}
 
-	// TODO: graphics::shadertype is called stage here. Should rename graphics::shader to graphics::shaderstage
-	// which would avoid having two names denoting different things
 	void setSampler(control::Sampler sampler, graphics::ShaderType stage, size_t slot) {		
 		sampler_(stage, slot) = std::move(sampler);
 	}
@@ -35,8 +33,8 @@ public:
 		resource_(stage, slot) = std::move(resource);
 	}
 
-	void setStage(graphics::Shader shader, graphics::ShaderType stage) {
-		stages_[stage] = shader;
+	void setTechnique(shader::Technique technique) {
+		technique_ = std::move(technique);
 	}
 
 	void setVertexBuffer(graphics::Buffer vertexBuffer) {
@@ -66,7 +64,7 @@ private:
 
 	std::array<control::ResourceView, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
 
-	std::array<graphics::ShaderType, STAGE_COUNT> stages_;
+	shader::Technique technique_;
 
 	graphics::Buffer vertexBuffer_;
 

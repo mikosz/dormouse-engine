@@ -1,14 +1,17 @@
 #ifndef _DORMOUSEENGINE_RENDERER_DRAW_SPRITE_HPP_
 #define _DORMOUSEENGINE_RENDERER_DRAW_SPRITE_HPP_
 
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "../control/ResourceView.hpp"
 #include "../command/CommandBuffer.hpp"
 
 namespace dormouse_engine::renderer::draw {
 
-class Sprite {
+class Sprite final {
 public:
+
+	static void initialiseSystem(graphics::Device& device);
 
 	Sprite(const graphics::Texture& texture);
 

@@ -61,15 +61,15 @@ public:
 
 	void setInputLayout(const InputLayout* inputLayout) noexcept;
 
-	void setVertexShader(VertexShader* vertexShader) noexcept;
+	void setShader(const VertexShader& vertexShader) noexcept;
 
-	void setGeometryShader(GeometryShader* geometryShader) noexcept;
+	void setShader(const GeometryShader& geometryShader) noexcept;
 
-	void setHullShader(HullShader* hullShader) noexcept;
+	void setShader(const HullShader& hullShader) noexcept;
 
-	void setDomainShader(DomainShader* domainShader) noexcept;
+	void setShader(const DomainShader& domainShader) noexcept;
 
-	void setPixelShader(PixelShader* pixelShader) noexcept;
+	void setShader(const PixelShader& pixelShader) noexcept;
 
 	void setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot);
 
