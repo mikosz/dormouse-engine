@@ -1,4 +1,5 @@
 structure.set_group "core"
+	include "reflection"
 	include "math"
 	include "renderer"
 	include "tester"
