@@ -12,7 +12,7 @@
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
-using namespace dormouse_engine::renderer::draw;
+using namespace dormouse_engine::renderer::d2;
 
 namespace /* anonymous */ {
 
@@ -26,9 +26,16 @@ public:
 	{
 	}
 
-	void bind(command::DrawCommand& cmd) const {
-		cmd.setVertexBuffer(vertexBuffer_);
-		cmd.setTechnique(technique_);
+	void render(command::DrawCommand& cmd, const Sprite& sprite) const {
+		auto properties = shader::Properties();
+
+		properties.addChild("sprite", essentials::make_observer(&properties_));
+
+		technique_.render(cmd, properties);
+
+		cmd.setVertexBuffer(vertexBuffer_, 4u);
+		cmd.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_STRIP);
+		cmd.setTechnique(essentials::make_observer(&technique_));
 	}
 
 private:
@@ -36,6 +43,8 @@ private:
 	graphics::Buffer vertexBuffer_;
 
 	shader::Technique technique_;
+
+	shader::Properties properties_;
 
 	static graphics::Buffer createVertexBuffer(graphics::Device& device) {
 		auto configuration = graphics::Buffer::Configuration();
@@ -47,9 +56,14 @@ private:
 		configuration.size = 4u;
 		configuration.stride = 0u;
 
-		auto initialData = std::vector<math::Vec3>(4u);
+		auto initialData = std::vector<math::Vec2>(
+			{ -1.0f, -1.0f },
+			{ +1.0f, +1.0f },
+			{ -1.0f, +1.0f },
+			{ +1.0f, +1.0f }
+			);
 
-		return graphics::Buffer(device, configuration, initialData);
+		return graphics::Buffer(device, std::move(configuration), essentials::viewBuffer(initialData));
 	}
 
 };
@@ -60,19 +74,11 @@ void Sprite::initialiseSystem(graphics::Device& device) {
 	SpriteData::setInstance(std::make_unique<SpriteData>(device));
 }
 
-Sprite::Sprite(const graphics::Texture& texture) :
-	textureView_(texture)
+Sprite::Sprite(const graphics::Texture& texture)
 {
 }
 
 void Sprite::render(command::CommandBuffer& commandBuffer) const {
-	auto cmd = command::DrawCommand();
-
-	auto technique = Technique();
-	technique.setShader(vertexShader_);
-	technique.setShader(std::move)
-		
-	SpriteData::instance()->bind(cmd);
-
-	commandBuffer.add(std::move(cmd));
+	SpriteData::instance()->bind(cmd_, *this);
+	commandBuffer.add(essentials::make_observer(&cmd_));
 }

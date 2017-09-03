@@ -4,9 +4,12 @@
 #include <array>
 
 #include "dormouse-engine/graphics/CommandList.hpp"
+#include "../command/commandfwd.hpp"
 #include "Shader.hpp"
 
 namespace dormouse_engine::renderer::shader {
+
+class Properties;
 
 class Technique {
 public:
@@ -14,6 +17,8 @@ public:
 	Technique() = default;
 
 	void bind(graphics::CommandList& commandList) const;
+
+	void render(command::DrawCommand& cmd, const Properties& properties) const;
 
 	void setShader(VertexShader shader) {
 		vertexShader_ = std::move(shader);

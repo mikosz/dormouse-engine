@@ -26,7 +26,7 @@ public:
 	static InstancePtr instance() {
 		if (!instance_) {
 			Creator creator;
-			instance_.reset(creator.create());
+			instance_ = creator.create();
 			std::atexit(&Singleton::destroy);
 		}
 

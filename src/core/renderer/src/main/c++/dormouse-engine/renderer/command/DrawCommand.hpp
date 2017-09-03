@@ -4,6 +4,7 @@
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
@@ -21,6 +22,10 @@ public:
 
 	void submit(graphics::CommandList& commandList, const DrawCommand* previous) const;
 
+	void setTechnique(essentials::observer_ptr<const shader::Technique> technique) {
+		technique_ = std::move(technique);
+	}
+
 	void setRenderState(control::RenderState renderState) {
 		renderState_ = std::move(renderState);
 	}
@@ -33,17 +38,18 @@ public:
 		resource_(stage, slot) = std::move(resource);
 	}
 
-	void setTechnique(shader::Technique technique) {
-		technique_ = std::move(technique);
-	}
-
-	void setVertexBuffer(graphics::Buffer vertexBuffer) {
+	void setVertexBuffer(graphics::Buffer vertexBuffer, size_t vertexCount) {
 		vertexBuffer_ = std::move(vertexBuffer);
+		vertexCount_ = vertexCount;
 	}
 
 	void setIndexBuffer(graphics::Buffer indexBuffer, size_t indexCount) {
 		indexBuffer_ = std::move(indexBuffer);
 		indexCount_ = indexCount;
+	}
+
+	void setPrimitiveTopology(graphics::PrimitiveTopology primitiveTopology) {
+		primitiveTopology_ = primitiveTopology;
 	}
 
 private:
@@ -58,19 +64,21 @@ private:
 
 	CommandKey key_;
 
+	essentials::observer_ptr<const shader::Technique> technique_;
+
 	control::RenderState renderState_;
 
 	std::array<control::Sampler, STAGE_COUNT * graphics::SAMPLER_SLOT_COUNT_PER_SHADER> samplers_;
 
 	std::array<control::ResourceView, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
 
-	shader::Technique technique_;
-
 	graphics::Buffer vertexBuffer_;
+
+	size_t vertexCount_ = 0u;
 
 	graphics::Buffer indexBuffer_;
 
-	size_t indexCount_;
+	size_t indexCount_ = 0u;
 
 	graphics::PrimitiveTopology primitiveTopology_;
 

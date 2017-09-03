@@ -5,17 +5,15 @@
 using namespace dormouse_engine::renderer::command;
 
 void CommandBuffer::submit(dormouse_engine::graphics::CommandList& commandList) {
-	std::sort(index_.begin(), index_.end(), [](const auto lhs, const auto rhs) {
-			return std::get<CommandKey>(lhs).hash < std::get<CommandKey>(rhs).hash;
+	std::sort(commands_.begin(), commands_.end(), [](const auto lhs, const auto rhs) {
+			return lhs->key().hash < rhs->key().hash;
 		});
 
 	auto* previousCommand = static_cast<Command*>(nullptr);
 
-	for (const auto& entry : index_) {
-		const auto commandIndex = std::get<size_t>(entry);
-
-		commands_[commandIndex].submit(commandList, previousCommand);
-		previousCommand = &commands_[commandIndex];
+	for (const auto& command : commands_) {
+		command->submit(commandList, previousCommand);
+		previousCommand = command.get();
 	}
 
 	commands_.clear();

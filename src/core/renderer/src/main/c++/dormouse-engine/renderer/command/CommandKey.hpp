@@ -30,10 +30,8 @@ constexpr auto VIEWPORT_LAYER_BITS = 2u;
 enum class TranslucencyType {
 	OPAQUE,
 	TRANSLUCENT,
-	TRANSLUCENT_ADDITIVE,
-	TRANSLUCENT_SUBTRACTIVE,
 };
-constexpr auto TRANSLUCENCY_TYPE_BITS = 2u;
+constexpr auto TRANSLUCENCY_TYPE_BITS = 1u;
 
 using Depth = std::int32_t;
 constexpr auto DEPTH_BITS = 24u;

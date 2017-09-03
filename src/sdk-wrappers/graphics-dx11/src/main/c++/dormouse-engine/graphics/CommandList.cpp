@@ -32,6 +32,11 @@ void CommandList::initialise(system::windows::COMWrapper<ID3D11DeviceContext> in
 	deviceContext_ = internalDeviceContext;
 }
 
+void CommandList::draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) {
+	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
+	deviceContext_->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startingIndex));
+}
+
 void CommandList::drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology) {
 	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	deviceContext_->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startingIndex), 0);

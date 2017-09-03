@@ -54,7 +54,7 @@ private:
 		}
 
 		void submit(graphics::CommandList& commandList, const Concept* previous) const override {
-			const auto* previousModel = dynamic_cast<const Model>(previous);
+			const auto* previousModel = dynamic_cast<const Model*>(previous);
 			object_.submit(commandList, previousModel ? &previousModel->object_ : nullptr);
 		}
 

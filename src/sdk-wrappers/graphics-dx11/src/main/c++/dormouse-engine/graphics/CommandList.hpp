@@ -48,6 +48,8 @@ public:
 
 	void initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
 
+	void draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology);
+
 	void drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology);
 
 	void drawIndexedInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t startingIndex,

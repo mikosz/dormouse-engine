@@ -33,12 +33,16 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 		}
 	}
 
-	if (!previous || (previous->technique_ != technique_)) {
-		technique_.bind(commandList);
-	}
+	assert(static_cast<bool>(technique_));
+	technique_->bind(commandList);
+
 
 	commandList.setVertexBuffer(vertexBuffer_, 0u);
 	commandList.setIndexBuffer(indexBuffer_, 0u);
 
-	commandList.drawIndexed(0u, indexCount_, primitiveTopology_);
+	if (indexCount_ > 0u) {
+		commandList.drawIndexed(0u, indexCount_, primitiveTopology_);
+	} else {
+		commandList.draw(0u, vertexCount_, primitiveTopology_);
+	}
 }
