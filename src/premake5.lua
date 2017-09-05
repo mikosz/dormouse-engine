@@ -62,6 +62,8 @@ workspace "dormouse-engine"
 		defines { "GTEST_LANG_CXX11=1" } -- otherwise gmock fails to compile with c++latest
 	filter {}
 
+	defines { "PONDER_STATIC" }
+	
 	include "foundation"
 	include "sdk-wrappers"
 	include "core"

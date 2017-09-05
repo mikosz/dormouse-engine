@@ -5,6 +5,7 @@
 
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Shader.hpp"
+#include "dormouse-engine/reflection/Object.hpp"
 #include "../command/commandfwd.hpp"
 #include "Properties.hpp"
 #include "PropertyId.hpp"
@@ -16,7 +17,11 @@ namespace detail {
 class ShaderBase {
 protected:
 
-	void doRender(command::DrawCommand& cmd, const Properties& properties, graphics::ShaderType shaderType) const;
+	void doRender(
+		command::DrawCommand& cmd,
+		const Properties& properties,
+		graphics::ShaderType shaderType
+		) const;
 
 private:
 
@@ -31,6 +36,13 @@ private:
 	using Resources = std::vector<Resource>;
 
 	Resources resources_;
+
+	void bindResource_(
+		command::DrawCommand& cmd,
+		const Properties& properties,
+		graphics::ShaderType stage,
+		const Resource& resource
+		) const;
 
 };
 

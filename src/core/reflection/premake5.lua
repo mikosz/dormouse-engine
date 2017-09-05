@@ -1,5 +1,4 @@
-structure.library_project("reflection", function()
-		print("including "..ponder_include_dir())
+structure.header_project("reflection", function()
 		includedirs(ponder_include_dir())
 		link_ponder_libs()
 	end

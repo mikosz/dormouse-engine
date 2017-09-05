@@ -156,14 +156,18 @@ function m.set_group(name)
 	m.current_group = name
 end
 
-function m.header_project(name)
+function m.header_project(name, common_settings)
 	create_main_project(name)
 
 	project(name)
 		kind "Utility"
+		
+		if common_settings then
+			common_settings()
+		end
 	project "*"
 	
-	create_test_projects(name, false)
+	create_test_projects(name, false, common_settings)
 end
 
 function m.library_project(name, common_settings)

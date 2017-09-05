@@ -4,9 +4,6 @@
 #include <unordered_map>
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
-#include "dormouse-engine/essentials/observer_ptr.hpp"
-#include "dormouse-engine/graphics/ShaderType.hpp"
-#include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
 #include "Property.hpp"
 
@@ -25,31 +22,17 @@ public:
 class Properties {
 public:
 
-	void addChild(essentials::StringId id, essentials::observer_ptr<Properties> child) {
-		children_[std::move(id)] = std::move(child);
+	void add(essentials::StringId id, Property child) {
+		properties_[std::move(id)] = std::move(child);
 	}
 
-	void registerResource(essentials::StringId id, ResourceProperty property) {
-		resourceProperties_[std::move(id)] = std::move(property);
-	}
-
-	void bindResource(
-		command::DrawCommand& cmd,
-		const PropertyId& id,
-		void* object,
-		graphics::ShaderType stage,
-		size_t slot
-		) const;
+	const Property& get(essentials::StringId id) const;
 
 private:
 
-	using Children = std::unordered_map<essentials::StringId, essentials::observer_ptr<Properties>>;
+	using Children = std::unordered_map<essentials::StringId, Property>;
 
-	using ResourceProperties = std::unordered_map<essentials::StringId, ResourceProperty>;
-
-	Children children_;
-
-	ResourceProperties resourceProperties_;
+	Children properties_;
 
 };
 

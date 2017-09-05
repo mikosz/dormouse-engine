@@ -9,20 +9,21 @@
 
 namespace dormouse_engine::renderer::shader {
 
-class ResourceProperty {
+class Properties;
+
+class Property {
 public:
 
-	ResourceProperty() = default;
+	Property() = default;
 
 	template <class T>
-	ResourceProperty(T model) :
+	Property(T model) :
 		object_(std::make_shared<Model<T>>(std::move(model)))
 	{
 	}
 
-	void bind(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const {
-		assert(static_cast<bool>(object_));
-		object_->bind(cmd, stage, slot);
+	const Properties& properties() const {
+		object_->properties();
 	}
 
 private:
@@ -32,7 +33,7 @@ private:
 
 		virtual ~Concept() = default;
 
-		virtual void bind(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const = 0;
+		virtual const Properties& properties() const = 0;
 
 	};
 
@@ -40,8 +41,8 @@ private:
 	class Model : public Concept {
 	public:
 
-		void bind(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
-			assert(!"unimplemented");
+		virtual const Properties& properties() const override {
+			return shaderObjectProperties(model_);
 		}
 
 	private:

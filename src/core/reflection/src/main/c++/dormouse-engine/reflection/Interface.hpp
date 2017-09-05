@@ -5,6 +5,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
+#include "dormouse-engine/essentials/StringId.hpp"
 
 namespace dormouse_engine::reflection {
 
@@ -21,31 +22,15 @@ public:
 class Interface {
 public:
 
-	void addChild(essentials::StringId id, essentials::observer_ptr<Properties> child) {
+	void addChild(essentials::StringId id, essentials::observer_ptr<Interface> child) {
 		children_[std::move(id)] = std::move(child);
 	}
 
-	void registerResource(essentials::StringId id, ResourceProperty property) {
-		resourceProperties_[std::move(id)] = std::move(property);
-	}
-
-	void bindResource(
-		command::DrawCommand& cmd,
-		const PropertyId& id,
-		void* object,
-		graphics::ShaderType stage,
-		size_t slot
-		) const;
-
 private:
 
-	using Children = std::unordered_map<essentials::StringId, essentials::observer_ptr<Properties>>;
-
-	using ResourceProperties = std::unordered_map<essentials::StringId, ResourceProperty>;
+	using Children = std::unordered_map<essentials::StringId, essentials::observer_ptr<Interface>>;
 
 	Children children_;
-
-	ResourceProperties resourceProperties_;
 
 };
 
