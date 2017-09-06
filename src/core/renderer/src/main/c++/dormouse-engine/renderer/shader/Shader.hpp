@@ -7,10 +7,11 @@
 #include "dormouse-engine/graphics/Shader.hpp"
 #include "dormouse-engine/reflection/Object.hpp"
 #include "../command/commandfwd.hpp"
-#include "Properties.hpp"
 #include "PropertyId.hpp"
 
 namespace dormouse_engine::renderer::shader {
+
+class PropertyObject;
 
 namespace detail {
 
@@ -19,7 +20,7 @@ protected:
 
 	void doRender(
 		command::DrawCommand& cmd,
-		const Properties& properties,
+		const PropertyObject& root,
 		graphics::ShaderType shaderType
 		) const;
 
@@ -39,7 +40,7 @@ private:
 
 	void bindResource_(
 		command::DrawCommand& cmd,
-		const Properties& properties,
+		const PropertyObject& root,
 		graphics::ShaderType stage,
 		const Resource& resource
 		) const;
@@ -54,8 +55,8 @@ public:
 		commandList.setShader(shader_);
 	}
 
-	void render(command::DrawCommand& cmd, const Properties& properties) const {
-		doRender(cmd, properties, GraphicsShaderType::SHADER_TYPE);
+	void render(command::DrawCommand& cmd, const PropertyObject& root) const {
+		doRender(cmd, root, GraphicsShaderType::SHADER_TYPE);
 	}
 
 private:

@@ -1,11 +1,8 @@
 #ifndef _DORMOUSEENGINE_RENDERER_SHADER_PROPERTIES_HPP_
 #define _DORMOUSEENGINE_RENDERER_SHADER_PROPERTIES_HPP_
 
-#include <unordered_map>
-
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
-#include "PropertyId.hpp"
-#include "Property.hpp"
+#include "dormouse-engine/essentials/StringId.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
@@ -19,20 +16,49 @@ public:
 
 };
 
+class PropertyObject;
+
 class Properties {
 public:
 
-	void add(essentials::StringId id, Property child) {
-		properties_[std::move(id)] = std::move(child);
+	Properties() = default;
+
+	template <class T>
+	Properties(T model) :
+		object_(std::make_shared<Model<T>>(std::move(model)))
+	{
 	}
 
-	const Property& get(essentials::StringId id) const;
+	const PropertyObject& get(essentials::StringId id) const {
+		return object_->get(std::move(id));
+	}
 
 private:
 
-	using Children = std::unordered_map<essentials::StringId, Property>;
+	class Concept {
+	public:
 
-	Children properties_;
+		virtual ~Concept() = default;
+
+		virtual const Properties& get(essentials::StringId id) const = 0;
+
+	};
+
+	template <class T>
+	class Model : public Concept {
+	public:
+
+		//virtual const Properties& get(essentials::StringId id) const override {
+		//	return shaderObjectProperty(std::move(id));
+		//}
+
+	private:
+
+		T model_;
+
+	};
+
+	std::shared_ptr<const Concept> object_;
 
 };
 

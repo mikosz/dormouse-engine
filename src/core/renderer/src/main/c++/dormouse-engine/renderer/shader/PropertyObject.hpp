@@ -4,26 +4,31 @@
 #include <memory>
 #include <cassert>
 
+#include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
-#include "../command/commandfwd.hpp"
+#include "../control/ResourceView.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
 class Properties;
 
-class Property {
+class PropertyObject {
 public:
 
-	Property() = default;
+	PropertyObject() = default;
 
 	template <class T>
-	Property(T model) :
+	PropertyObject(T model) :
 		object_(std::make_shared<Model<T>>(std::move(model)))
 	{
 	}
 
+	control::ResourceView resource(essentials::StringId id) const {
+		return object_->resource(id);
+	}
+
 	const Properties& properties() const {
-		object_->properties();
+		return object_->properties();
 	}
 
 private:
@@ -33,6 +38,8 @@ private:
 
 		virtual ~Concept() = default;
 
+		virtual control::ResourceView resource(essentials::StringId id) const = 0;
+			
 		virtual const Properties& properties() const = 0;
 
 	};
@@ -41,9 +48,13 @@ private:
 	class Model : public Concept {
 	public:
 
-		virtual const Properties& properties() const override {
-			return shaderObjectProperties(model_);
-		}
+		//virtual control::ResourceView resource(essentials::StringId id) const override {
+		//	return shaderObjectResource(std::move(id));
+		//}
+
+		//virtual const Properties& properties() const override {
+		//	return shaderObjectProperties(model_);
+		//}
 
 	private:
 

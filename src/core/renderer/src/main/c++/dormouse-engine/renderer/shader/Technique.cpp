@@ -12,11 +12,11 @@ void Technique::bind(graphics::CommandList& commandList) const {
 	pixelShader_.bind(commandList);
 }
 
-void Technique::render(command::DrawCommand& cmd, const Properties& properties) const
+void Technique::render(command::DrawCommand& cmd, const PropertyObject& root) const
 {
-	vertexShader_.render(cmd, properties);
-	geometryShader_.render(cmd, properties);
-	domainShader_.render(cmd, properties);
-	hullShader_.render(cmd, properties);
-	pixelShader_.render(cmd, properties);
+	vertexShader_.render(cmd, root);
+	geometryShader_.render(cmd, root);
+	domainShader_.render(cmd, root);
+	hullShader_.render(cmd, root);
+	pixelShader_.render(cmd, root);
 }

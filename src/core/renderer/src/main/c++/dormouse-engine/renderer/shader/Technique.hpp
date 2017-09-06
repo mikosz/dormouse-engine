@@ -9,7 +9,7 @@
 
 namespace dormouse_engine::renderer::shader {
 
-class Properties;
+class PropertyObject;
 
 class Technique {
 public:
@@ -18,7 +18,7 @@ public:
 
 	void bind(graphics::CommandList& commandList) const;
 
-	void render(command::DrawCommand& cmd, const Properties& properties) const;
+	void render(command::DrawCommand& cmd, const PropertyObject& root) const;
 
 	void setShader(VertexShader shader) {
 		vertexShader_ = std::move(shader);
