@@ -81,5 +81,5 @@ Sprite::Sprite(const graphics::Texture& /*texture*/)
 
 void Sprite::render(command::CommandBuffer& commandBuffer) const {
 	//SpriteData::instance()->bind(cmd_, *this);
-	commandBuffer.add(essentials::make_observer(&cmd_));
+	commandBuffer.add(&cmd_);
 }

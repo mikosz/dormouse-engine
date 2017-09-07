@@ -48,13 +48,13 @@ private:
 	class Model : public Concept {
 	public:
 
-		//virtual control::ResourceView resource(essentials::StringId id) const override {
-		//	return shaderObjectResource(std::move(id));
-		//}
+		virtual control::ResourceView resource(essentials::StringId id) const override {
+			return shaderObjectResource(model_, std::move(id));
+		}
 
-		//virtual const Properties& properties() const override {
-		//	return shaderObjectProperties(model_);
-		//}
+		virtual const Properties& properties() const override {
+			return shaderObjectProperties(model_);
+		}
 
 	private:
 

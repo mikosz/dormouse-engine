@@ -48,9 +48,9 @@ private:
 	class Model : public Concept {
 	public:
 
-		//virtual const Properties& get(essentials::StringId id) const override {
-		//	return shaderObjectProperty(std::move(id));
-		//}
+		virtual const Properties& get(essentials::StringId id) const override {
+			return shaderObjectProperty(model_, std::move(id));
+		}
 
 	private:
 

@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "dormouse-engine/graphics/CommandList.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
+#include "dormouse-engine/essentials/types.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
@@ -11,11 +13,9 @@ namespace dormouse_engine::renderer::command {
 class Command final {
 public:
 
-	// TODO: we want to have commands allocated from some reusable pool - there should be always
-	// a similar number of commands submitted every frame
 	template <class T>
-	Command(T model) :
-		self_(std::make_shared<Model<T>>(std::move(model)))
+	Command(essentials::observer_ptr<T> model) :
+		self_(std::move(model))
 	{
 	}
 	
@@ -55,12 +55,15 @@ private:
 
 		void submit(graphics::CommandList& commandList, const Concept* previous) const override {
 			const auto* previousModel = dynamic_cast<const Model*>(previous);
-			object_.submit(commandList, previousModel ? &previousModel->object_ : nullptr);
+			essentials::dereference(object_).submit(
+				commandList,
+				previousModel ? &previousModel->object_ : nullptr
+				);
 		}
 
 	private:
 
-		T object_;
+		essentials::observer_ptr<T> object_;
 
 	};
 
