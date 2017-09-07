@@ -3,6 +3,7 @@
 
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
+#include "dormouse-engine/math/Vector.hpp"
 #include "../control/ResourceView.hpp"
 #include "../command/CommandBuffer.hpp"
 #include "../command/DrawCommand.hpp"
@@ -14,13 +15,20 @@ public:
 
 	static void initialiseSystem(graphics::Device& device);
 
-	Sprite(const graphics::Texture& texture);
+	Sprite(const graphics::Texture& texture) :
+		textureView_(texture)
+	{
+	}
 
 	void render(command::CommandBuffer& commandBuffer) const;
 
 private:	
 
 	mutable command::DrawCommand cmd_;
+
+	control::ResourceView textureView_;
+
+	math::Vec2 position_;
 
 };
 

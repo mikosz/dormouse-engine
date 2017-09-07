@@ -8,8 +8,10 @@ using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::command;
 
-void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* previous) const {
-	if (!previous || (previous->renderState_ != renderState_)) {
+void DrawCommand::submit(graphics::CommandList& commandList, const Command* previous) const {
+	const auto* previousCommand = dynamic_cast<const DrawCommand*>(previous);
+
+	if (!previousCommand || (previousCommand->renderState_ != renderState_)) {
 		renderState_.bind(commandList);
 	}
 
@@ -17,7 +19,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 		for (const auto slotIdx : range<size_t>(0u, graphics::SAMPLER_SLOT_COUNT_PER_SHADER)) {
 			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
 			const auto sampler = sampler_(stage, slotIdx);
-			if (!previous || (previous->sampler_(stage, slotIdx) != sampler)) {
+			if (!previousCommand || (previousCommand->sampler_(stage, slotIdx) != sampler)) {
 				sampler.bind(commandList, stage, slotIdx);
 			}
 		}
@@ -27,7 +29,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 		for (const auto slotIdx : range<size_t>(0u, graphics::RESOURCE_SLOT_COUNT_PER_SHADER)) {
 			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
 			const auto resource = resource_(stage, slotIdx);
-			if (!previous || (previous->resource_(stage, slotIdx) != resource)) {
+			if (!previousCommand || (previousCommand->resource_(stage, slotIdx) != resource)) {
 				resource.bind(commandList, stage, slotIdx);
 			}
 		}
@@ -35,7 +37,6 @@ void DrawCommand::submit(graphics::CommandList& commandList, const DrawCommand* 
 
 	assert(static_cast<bool>(technique_));
 	technique_->bind(commandList);
-
 
 	commandList.setVertexBuffer(vertexBuffer_, 0u);
 	commandList.setIndexBuffer(indexBuffer_, 0u);

@@ -3,9 +3,11 @@
 
 namespace dormouse_engine::renderer::command {
 
-class Command;
-class CommandBuffer;
 union CommandKey;
+
+class CommandBuffer;
+
+class Command;
 class DrawCommand;
 
 } // namespace dormouse_engine::renderer::command

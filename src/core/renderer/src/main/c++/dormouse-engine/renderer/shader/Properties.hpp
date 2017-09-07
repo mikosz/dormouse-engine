@@ -3,6 +3,7 @@
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "dormouse-engine/essentials/StringId.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
@@ -29,7 +30,7 @@ public:
 	{
 	}
 
-	const PropertyObject& get(essentials::StringId id) const {
+	PropertyObject get(essentials::StringId id) const {
 		return object_->get(std::move(id));
 	}
 
@@ -40,7 +41,7 @@ private:
 
 		virtual ~Concept() = default;
 
-		virtual const Properties& get(essentials::StringId id) const = 0;
+		virtual PropertyObject get(essentials::StringId id) const = 0;
 
 	};
 
@@ -48,8 +49,13 @@ private:
 	class Model : public Concept {
 	public:
 
-		virtual const Properties& get(essentials::StringId id) const override {
-			return shaderObjectProperty(model_, std::move(id));
+		Model(T model) :
+			model_(std::move(model_))
+		{
+		}
+
+		PropertyObject get(essentials::StringId id) const override {
+			return getShaderProperty(model_, std::move(id));
 		}
 
 	private:
@@ -61,6 +67,16 @@ private:
 	std::shared_ptr<const Concept> object_;
 
 };
+
+template <class T>
+PropertyObject getShaderProperty(const T& model, essentials::StringId id) {
+	return model.get(std::move(id));
+}
+
+template <class T>
+PropertyObject getShaderProperty(essentials::observer_ptr<const T> model, essentials::StringId id) {
+	return getShaderProperty(*model, std::move(id));
+}
 
 } // namespace dormouse_engine::renderer::shader
 

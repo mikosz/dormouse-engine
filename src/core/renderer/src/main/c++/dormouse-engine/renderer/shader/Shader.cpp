@@ -33,7 +33,7 @@ void detail::ShaderBase::bindResource_(
 	const auto* object = &root;
 
 	while (!id.tail().empty()) {
-		object = &object->properties().get(id.head().name);
+		object = &object->properties().property(id.head().name);
 	}
 
 	const auto resourceView = object->resource(id.head().name);

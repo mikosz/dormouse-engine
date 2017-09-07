@@ -12,7 +12,7 @@ namespace dormouse_engine::renderer::command {
 class CommandBuffer final {
 public:
 
-	void add(Command command) {
+	void add(essentials::observer_ptr<Command> command) {
 		commands_.emplace_back(std::move(command));
 	}
 
@@ -20,7 +20,7 @@ public:
 
 private:
 
-	using Commands = std::vector<Command>;
+	using Commands = std::vector<essentials::observer_ptr<Command>>;
 
 	Commands commands_;
 

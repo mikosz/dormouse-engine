@@ -9,18 +9,19 @@
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
 #include "../shader/Technique.hpp"
+#include "Command.hpp"
 #include "CommandKey.hpp"
 
 namespace dormouse_engine::renderer::command {
 
-class DrawCommand final {
+class DrawCommand final : public Command {
 public:
 
-	CommandKey key() const {
+	CommandKey key() const override {
 		return key_;
 	}
 
-	void submit(graphics::CommandList& commandList, const DrawCommand* previous) const;
+	void submit(graphics::CommandList& commandList, const Command* previous) const override;
 
 	void setTechnique(essentials::observer_ptr<const shader::Technique> technique) {
 		technique_ = std::move(technique);

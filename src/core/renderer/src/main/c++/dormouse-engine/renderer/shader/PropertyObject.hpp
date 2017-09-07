@@ -1,10 +1,11 @@
-#ifndef _DORMOUSEENGINE_RENDERER_SHADER_PROPERTY_HPP_
-#define _DORMOUSEENGINE_RENDERER_SHADER_PROPERTY_HPP_
+#ifndef _DORMOUSEENGINE_RENDERER_SHADER_PROPERTYOBJECT_HPP_
+#define _DORMOUSEENGINE_RENDERER_SHADER_PROPERTYOBJECT_HPP_
 
 #include <memory>
 #include <cassert>
 
 #include "dormouse-engine/essentials/StringId.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "../control/ResourceView.hpp"
 
@@ -39,7 +40,7 @@ private:
 		virtual ~Concept() = default;
 
 		virtual control::ResourceView resource(essentials::StringId id) const = 0;
-			
+		
 		virtual const Properties& properties() const = 0;
 
 	};
@@ -47,6 +48,11 @@ private:
 	template <class T>
 	class Model : public Concept {
 	public:
+
+		Model(T model) :
+			model_(std::move(model))
+		{
+		}
 
 		virtual control::ResourceView resource(essentials::StringId id) const override {
 			return shaderObjectResource(model_, std::move(id));
@@ -66,6 +72,16 @@ private:
 
 };
 
+template <class T>
+PropertyObject shaderObjectProperties(const T& model) {
+	return model.properties();
+}
+
+template <class T>
+PropertyObject shaderObjectProperties(essentials::observer_ptr<const T> model) {
+	return shaderObjectProperties(*model);
+}
+
 } // namespace dormouse_engine::renderer::shader
 
-#endif /* _DORMOUSEENGINE_RENDERER_SHADER_PROPERTY_HPP_ */
+#endif /* _DORMOUSEENGINE_RENDERER_SHADER_PROPERTYOBJECT_HPP_ */
