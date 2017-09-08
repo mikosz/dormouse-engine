@@ -9,6 +9,7 @@
 #include "dormouse-engine/math/Vector.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Technique.hpp"
+#include "../shader/CompoundProperty.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;

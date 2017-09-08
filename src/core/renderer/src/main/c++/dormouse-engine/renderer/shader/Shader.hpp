@@ -11,7 +11,7 @@
 
 namespace dormouse_engine::renderer::shader {
 
-class PropertyObject;
+class Property;
 
 namespace detail {
 
@@ -20,7 +20,7 @@ protected:
 
 	void doRender(
 		command::DrawCommand& cmd,
-		const PropertyObject& root,
+		const Property& root,
 		graphics::ShaderType shaderType
 		) const;
 
@@ -40,7 +40,7 @@ private:
 
 	void bindResource_(
 		command::DrawCommand& cmd,
-		const PropertyObject& root,
+		const Property& root,
 		graphics::ShaderType stage,
 		const Resource& resource
 		) const;
@@ -55,7 +55,7 @@ public:
 		commandList.setShader(shader_);
 	}
 
-	void render(command::DrawCommand& cmd, const PropertyObject& root) const {
+	void render(command::DrawCommand& cmd, const Property& root) const {
 		doRender(cmd, root, GraphicsShaderType::SHADER_TYPE);
 	}
 

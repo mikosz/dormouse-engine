@@ -12,7 +12,7 @@ void Technique::bind(graphics::CommandList& commandList) const {
 	pixelShader_.bind(commandList);
 }
 
-void Technique::render(command::DrawCommand& cmd, const PropertyObject& root) const
+void Technique::render(command::DrawCommand& cmd, const Property& root) const
 {
 	vertexShader_.render(cmd, root);
 	geometryShader_.render(cmd, root);

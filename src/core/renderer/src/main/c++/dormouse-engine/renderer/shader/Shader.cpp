@@ -1,8 +1,7 @@
 #include "Shader.hpp"
 
 #include "../command/DrawCommand.hpp"
-#include "PropertyObject.hpp"
-#include "Properties.hpp"
+#include "Property.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -10,7 +9,7 @@ using namespace dormouse_engine::renderer::shader;
 
 void detail::ShaderBase::doRender(
 	command::DrawCommand& cmd,
-	const PropertyObject& root,
+	const Property& root,
 	graphics::ShaderType shaderType
 	) const
 {
@@ -21,7 +20,7 @@ void detail::ShaderBase::doRender(
 
 void detail::ShaderBase::bindResource_(
 	command::DrawCommand& cmd,
-	const PropertyObject& root,
+	const Property& root,
 	graphics::ShaderType stage,
 	const Resource& resource
 	) const
@@ -30,12 +29,12 @@ void detail::ShaderBase::bindResource_(
 
 	assert(!id.empty());
 
-	const auto* object = &root;
+	auto property = root;
 
 	while (!id.tail().empty()) {
-		object = &object->properties().property(id.head().name);
+		property = property.get(id.head().name);
 	}
 
-	const auto resourceView = object->resource(id.head().name);
+	const auto resourceView = property.as<control::ResourceView>();
 	cmd.setResource(resourceView, stage, resource.slot);
 }
