@@ -5,6 +5,7 @@
 #include "dormouse-engine/essentials/Range.hpp"
 #include "detail/Internals.hpp"
 #include "Device.hpp"
+#include "Image.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
@@ -135,6 +136,21 @@ system::windows::COMWrapper<ID3D11Resource> createTexture2dResource(
 	return texture;
 }
 
+system::windows::COMWrapper<ID3D11Resource> createImageResource(Device& device, const Image& image) {
+	auto configuration = Texture::Configuration2d();
+	configuration.allowCPURead = false;
+	configuration.allowGPUWrite = false;
+	configuration.allowModifications = false;
+	configuration.arraySize = image.arraySize();
+	configuration.width = image.size().first;
+	configuration.height = image.size().second;
+	configuration.mipLevels = image.mipLevels();
+	configuration.pixelFormat = image.pixelFormat();
+	configuration.purposeFlags = Texture::CreationPurpose::SHADER_RESOURCE;
+	
+	return createTexture2dResource(device, configuration, image.pixels());
+}
+
 } // anonymous namespace
 
 Texture::Texture(
@@ -152,6 +168,14 @@ Texture::Texture(
 	essentials::ConstBufferView initialData
 	) :
 	Resource(createTexture2dResource(device, configuration, initialData))
+{
+}
+
+Texture::Texture(
+	Device& device,
+	const Image& image
+	) :
+	Resource(createImageResource(device, image))
 {
 }
 

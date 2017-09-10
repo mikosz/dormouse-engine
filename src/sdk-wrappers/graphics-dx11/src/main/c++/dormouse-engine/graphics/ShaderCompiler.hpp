@@ -23,8 +23,7 @@ namespace dormouse_engine::graphics {
 class ShaderCompiler {
 public:
 
-    using ShaderData = const std::vector<std::uint8_t>;
-    using IncludeHandler = std::function<std::shared_ptr<ShaderData>(const std::string&)>;
+    using IncludeHandler = std::function<std::shared_ptr<essentials::ByteVector>(const std::string&)>;
 
     DE_MEMBER_FLAG_VALUES(
         CompilerFlag,
@@ -39,7 +38,7 @@ public:
     {
     }
 
-    ShaderData compile(
+	essentials::ByteVector compile(
 		essentials::ConstBufferView code,
 		const std::string& name,
 	    const std::string& entrypoint,

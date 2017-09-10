@@ -8,6 +8,7 @@
 #include <boost/filesystem.hpp>
 
 #include "dormouse-engine/system/tmp-file.hpp"
+#include "../memory.hpp"
 
 namespace dormouse_engine::essentials::test_utils {
 
@@ -24,6 +25,16 @@ inline std::string readFile(const boost::filesystem::path& path) {
 	std::ostringstream oss;
 	oss << ifs.rdbuf();
 	return oss.str();
+}
+
+inline essentials::ByteVector readBinaryFile(const boost::filesystem::path& path) {
+	const auto size = boost::filesystem::file_size(path);
+	auto result =  essentials::ByteVector(size);
+	std::ifstream ifs(path.string().c_str(), std::ios::binary);
+	BOOST_ASSERT(ifs.good());
+	ifs.read(reinterpret_cast<char*>(result.data()), result.size());
+	BOOST_ASSERT(ifs.good());
+	return result;
 }
 
 class ResourcesDirFixture {

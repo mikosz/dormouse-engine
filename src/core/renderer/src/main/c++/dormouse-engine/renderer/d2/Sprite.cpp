@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "dormouse-engine/graphics/Buffer.hpp"
+#include "dormouse-engine/graphics/ShaderCompiler.hpp"
 #include "dormouse-engine/essentials/policy/creation/None.hpp"
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
@@ -10,6 +11,7 @@
 #include "../command/DrawCommand.hpp"
 #include "../shader/Technique.hpp"
 #include "../shader/CompoundProperty.hpp"
+#include "../shader/MergedProperty.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -22,17 +24,20 @@ class SpriteCommon final :
 {
 public:
 
-	SpriteCommon(graphics::Device& device) :
-		vertexBuffer_(createVertexBuffer(device))
+	SpriteCommon(graphics::Device& graphicsDevice, essentials::ConstBufferView shaderCode) :
+		vertexBuffer_(createVertexBuffer_(graphicsDevice)),
+		technique_(createTechnique_(graphicsDevice, std::move(shaderCode)))
 	{
 	}
 
-	void render(command::DrawCommand& cmd, const Sprite& sprite) const {
-		auto properties = shader::Properties();
+	void render(command::DrawCommand& cmd, const Sprite& sprite, const shader::Property& properties) const {
+		auto spriteProperty = shader::Property(essentials::make_observer(&sprite));
+		auto mergedProperty = shader::MergedProperty(
+			essentials::make_observer(&spriteProperty),
+			essentials::make_observer(&properties)
+			);
 
-		properties.set("sprite", essentials::make_observer(&sprite));
-
-		technique_.render(cmd, properties);
+		technique_.render(cmd, mergedProperty);
 
 		cmd.setVertexBuffer(vertexBuffer_, 4u);
 		cmd.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_STRIP);
@@ -41,11 +46,11 @@ public:
 
 private:
 
-	graphics::Buffer vertexBuffer_;
+	const graphics::Buffer vertexBuffer_;
 
-	shader::Technique technique_;
+	const shader::Technique technique_;
 
-	static graphics::Buffer createVertexBuffer(graphics::Device& device) {
+	static graphics::Buffer createVertexBuffer_(graphics::Device& graphicsDevice) {
 		auto configuration = graphics::Buffer::Configuration();
 
 		configuration.allowCPURead = false;
@@ -62,18 +67,42 @@ private:
 			{ +1.0f, +1.0f }
 			};
 
-		return graphics::Buffer(device, std::move(configuration), essentials::viewBuffer(initialData));
+		return graphics::Buffer(graphicsDevice, std::move(configuration), essentials::viewBuffer(initialData));
+	}
+
+	static shader::Technique createTechnique_(
+		graphics::Device& graphicsDevice, essentials::ConstBufferView shaderCode)
+	{
+		auto technique = shader::Technique();
+
+		auto shaderCompiler = graphics::ShaderCompiler();
+
+		{
+			auto compiledVertexShader =
+				shaderCompiler.compile(shaderCode, "sprite", "vs", graphics::ShaderType::VERTEX);
+			technique.setShader(
+				shader::VertexShader(graphicsDevice, essentials::viewBuffer(compiledVertexShader)));
+		}
+
+		{
+			auto compiledPixelShader =
+				shaderCompiler.compile(shaderCode, "sprite", "ps", graphics::ShaderType::PIXEL);
+			technique.setShader(
+				shader::PixelShader(graphicsDevice, essentials::viewBuffer(compiledPixelShader)));
+		}
+
+		return technique;
 	}
 
 };
 
 } // anonymous namespace
 
-void Sprite::initialiseSystem(graphics::Device& device) {
-	SpriteCommon::setInstance(std::make_unique<SpriteCommon>(device));
+void Sprite::initialiseSystem(graphics::Device& device, essentials::ConstBufferView shaderCode) {
+	SpriteCommon::setInstance(std::make_unique<SpriteCommon>(device, std::move(shaderCode)));
 }
 
-void Sprite::render(command::CommandBuffer& commandBuffer) const {
-	SpriteCommon::instance()->render(cmd_, *this);
+void Sprite::render(command::CommandBuffer& commandBuffer, const shader::Property& properties) const {
+	SpriteCommon::instance()->render(cmd_, *this, properties);
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }

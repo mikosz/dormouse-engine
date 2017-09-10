@@ -1,7 +1,10 @@
-structure.library_project("renderer")
+structure.library_project("renderer", function()
+		links { "essentials", "graphics" }
+	end
+	)
 
 project "renderer-unit-test"
 	kind "WindowedApp"
 	flags { "WinMain" }
-	links { "wm", "graphics", "tester" }
+	links { "wm", "tester" }
 project "*"

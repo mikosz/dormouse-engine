@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "detail/detailfwd.hpp"
@@ -24,7 +25,7 @@ public:
 
 	Shader() = default;
 
-	Shader(Device& device, const void* data, size_t size);
+	Shader(Device& device, essentials::ConstBufferView shaderData);
 
 private:
 

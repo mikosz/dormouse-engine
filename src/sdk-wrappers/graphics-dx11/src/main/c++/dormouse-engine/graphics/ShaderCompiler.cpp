@@ -71,13 +71,13 @@ private:
 
 	ShaderCompiler::IncludeHandler handler_;
 
-	std::vector<std::shared_ptr<ShaderCompiler::ShaderData>> data_;
+	std::vector<std::shared_ptr<essentials::ByteVector>> data_;
 
 };
 
 } // anonymous namespace
 
-ShaderCompiler::ShaderData ShaderCompiler::compile(
+essentials::ByteVector ShaderCompiler::compile(
 	essentials::ConstBufferView code,
     const std::string& name,
 	const std::string& entrypoint,
@@ -123,7 +123,7 @@ ShaderCompiler::ShaderData ShaderCompiler::compile(
 		throw DirectXError(result, "Failed to compile a shader");
 	}
 
-	std::vector<std::uint8_t> data;
+	auto data = essentials::ByteVector();
 	data.reserve(codeBlob->GetBufferSize());
 	std::copy(
 		reinterpret_cast<const std::uint8_t*>(codeBlob->GetBufferPointer()),

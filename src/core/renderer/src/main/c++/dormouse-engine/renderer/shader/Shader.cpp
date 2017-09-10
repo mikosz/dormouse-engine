@@ -1,11 +1,21 @@
 #include "Shader.hpp"
 
+#include "dormouse-engine/logger.hpp"
 #include "../command/DrawCommand.hpp"
 #include "Property.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::shader;
+
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.RENDERER.SHADER");
+
+detail::ShaderBase::ShaderBase(essentials::ConstBufferView compiledShaderObjectData) {
+	const auto reflectionData =
+		graphics::ShaderReflection(compiledShaderObjectData.data(), compiledShaderObjectData.size());
+	
+	resources_ = createResources_(reflectionData);
+}
 
 void detail::ShaderBase::doRender(
 	command::DrawCommand& cmd,
@@ -14,8 +24,25 @@ void detail::ShaderBase::doRender(
 	) const
 {
 	for (const auto& resource : resources_) {
+		DE_LOG_DEBUG << "Binding resource " << resource.descriptor;
 		bindResource_(cmd, root, shaderType, resource);
 	}
+}
+
+auto detail::ShaderBase::createResources_(const graphics::ShaderReflection& reflectionData) -> Resources
+{
+	auto resources = Resources();
+	resources.reserve(reflectionData.resources().size());
+
+	for (const auto& resourceReflection : reflectionData.resources()) {
+		auto resource = Resource();
+		resource.descriptor = PropertyDescriptor({ PropertyDescriptor::Object(resourceReflection.name) });
+		resource.slot = resourceReflection.slot;
+
+		resources.emplace_back(std::move(resource));
+	}
+
+	return resources;
 }
 
 void detail::ShaderBase::bindResource_(
@@ -35,6 +62,5 @@ void detail::ShaderBase::bindResource_(
 		property = property.get(id.head().name);
 	}
 
-	const auto resourceView = property.as<control::ResourceView>();
-	cmd.setResource(resourceView, stage, resource.slot);
+	property.bindResource(cmd, stage, resource.slot);
 }

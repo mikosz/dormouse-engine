@@ -10,7 +10,6 @@
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
-#include "../control/ResourceView.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
@@ -24,11 +23,11 @@ public:
 
 };
 
-class InvalidTargetType : public exceptions::RuntimeError {
+class NotAResourceProperty : public exceptions::RuntimeError {
 public:
 
-	InvalidTargetType(const std::string& type_name) :
-		exceptions::RuntimeError("Can't cast property to " + type_name)
+	NotAResourceProperty() :
+		exceptions::RuntimeError("Accessed property is not a resource property")
 	{
 	}
 
@@ -40,8 +39,11 @@ public:
 	Property() = default;
 
 	template <class T>
-	Property(T model) :
+	Property(T model)
 	{
+		static_assert(sizeof(Model<T>) <= STORAGE_SIZE);
+		static_assert(alignof(Model<T>) <= STORAGE_ALIGNMENT);
+		static_assert(std::is_trivially_copyable_v<T>);
 		new(&object_) Model<T>(std::move(model));
 	}
 
@@ -49,20 +51,16 @@ public:
 		reinterpret_cast<Concept*>(&object_)->~Concept();
 	}
 
+	bool has(essentials::StringId id) const {
+		return reinterpret_cast<const Concept*>(&object_)->has(std::move(id));
+	}
+
 	Property get(essentials::StringId id) const {
 		return reinterpret_cast<const Concept*>(&object_)->get(std::move(id));
 	}
 
-	template <class T>
-	const T& as() const {
-		const auto* concept = reinterpret_cast<const Concept*>(&object_);
-		const auto* object = reinterpret_cast<const Model<T>*>(concept);
-		
-		if (object == nullptr) {
-			throw InvalidTargetType(typeid(T).name());
-		}
-		
-		return object->model();
+	void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const {
+		reinterpret_cast<const Concept*>(&object_)->bindResource(cmd, stage, slot);
 	}
 
 private:
@@ -72,7 +70,11 @@ private:
 
 		virtual ~Concept() = default;
 
+		virtual bool has(essentials::StringId id) const = 0;
+
 		virtual Property get(essentials::StringId id) const = 0;
+
+		virtual void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const = 0;
 
 	};
 
@@ -80,19 +82,21 @@ private:
 	class Model : public Concept {
 	public:
 
-		T may only be a fundamental type or pointer, enforce this
-
 		Model(T model) :
 			model_(std::move(model))
 		{
+		}
+
+		bool has(essentials::StringId id) const override {
+			return hasShaderProperty(model_, std::move(id));
 		}
 
 		Property get(essentials::StringId id) const override {
 			return getShaderProperty(model_, std::move(id));
 		}
 
-		const T& model() const {
-			return model_;
+		void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
+			bindShaderResource(model_, cmd, stage, slot);
 		}
 
 	private:
@@ -101,12 +105,30 @@ private:
 
 	};
 
-	std::aligned_storage_t<sizeof(Model<void*>), alignof(Model<void*>)> object_;
+	static constexpr auto STORAGE_SIZE = 3 * sizeof(void*);
+
+	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
+
+	std::aligned_storage_t<STORAGE_SIZE, STORAGE_ALIGNMENT> object_;
 
 };
 
 template <class T>
-Property getShaderProperty(const T& model, essentials::StringId id);
+inline bool hasShaderProperty(const T& /*model*/, essentials::StringId /*id*/) {
+	return false;
+}
+
+template <class T>
+inline Property getShaderProperty(const T& /*model*/, essentials::StringId id) {
+	throw PropertyNotBound(std::move(id));
+}
+
+template <class T>
+inline void bindShaderResource(
+	const T& /*model*/, command::DrawCommand& /*cmd*/, graphics::ShaderType /*stage*/, size_t /*slot*/)
+{
+	throw NotAResourceProperty();
+}
 
 } // namespace dormouse_engine::renderer::shader
 

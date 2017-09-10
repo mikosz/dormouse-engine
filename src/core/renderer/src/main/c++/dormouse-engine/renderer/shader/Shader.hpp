@@ -3,8 +3,10 @@
 
 #include <vector>
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Shader.hpp"
+#include "dormouse-engine/graphics/ShaderReflection.hpp"
 #include "dormouse-engine/reflection/Object.hpp"
 #include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
@@ -17,6 +19,10 @@ namespace detail {
 
 class ShaderBase {
 protected:
+
+	ShaderBase() = default;
+
+	ShaderBase(essentials::ConstBufferView compiledShaderObjectData);
 
 	void doRender(
 		command::DrawCommand& cmd,
@@ -38,6 +44,8 @@ private:
 
 	Resources resources_;
 
+	Resources createResources_(const graphics::ShaderReflection& reflectionData);
+
 	void bindResource_(
 		command::DrawCommand& cmd,
 		const Property& root,
@@ -50,6 +58,17 @@ private:
 template <class GraphicsShaderType>
 class Shader : public ShaderBase {
 public:
+
+	Shader() = default;
+
+	Shader(
+		graphics::Device& graphicsDevice,
+		essentials::ConstBufferView compiledShaderObjectData
+		) :
+		ShaderBase(compiledShaderObjectData),
+		shader_(graphicsDevice, std::move(compiledShaderObjectData))
+	{
+	}
 
 	void bind(graphics::CommandList& commandList) const {
 		commandList.setShader(shader_);

@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "dormouse-engine/essentials/StringId.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "Property.hpp"
 
 namespace dormouse_engine::renderer::shader {
@@ -13,14 +14,14 @@ public:
 
 	using Properties = std::unordered_map<essentials::StringId, Property>;
 
-	CompoundProperty(Properties properties) :
-		properties_(std::move(property))
+	CompoundProperty(essentials::observer_ptr<Properties> properties) :
+		properties_(std::move(properties))
 	{
 	}
 
 	Property get(essentials::StringId id) const {
-		auto it = properties_.find(std::move(id));
-		if (it == properties_.end()) {
+		auto it = properties_->find(std::move(id));
+		if (it == properties_->end()) {
 			throw PropertyNotBound(id);
 		}
 		return it->second;
@@ -28,7 +29,7 @@ public:
 
 private:
 
-	Properties properties_;
+	essentials::observer_ptr<Properties> properties_;
 
 };
 

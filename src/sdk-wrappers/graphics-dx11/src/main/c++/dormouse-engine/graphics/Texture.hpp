@@ -16,6 +16,7 @@
 namespace dormouse_engine::graphics {
 
 class Device;
+class Image;
 
 class Texture : public Resource {
 public:
@@ -68,6 +69,8 @@ public:
 		const Configuration2d& configuration,
 		essentials::ConstBufferView initialData = essentials::ConstBufferView()
 		);
+
+	Texture(Device& device, const Image& image);
 
 	graphics::PixelFormat pixelFormat() const;
 

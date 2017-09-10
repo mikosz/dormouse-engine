@@ -31,6 +31,8 @@ public:
 
 	using Objects = std::vector<Object>;
 
+	PropertyDescriptor() noexcept = default;
+
 	PropertyDescriptor(Objects objects) noexcept :
 		objects_(std::move(objects))
 	{

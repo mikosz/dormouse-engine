@@ -35,15 +35,15 @@ private:
 
 };
 
-class Image { // TODO: extract to a separate file
+class Image {
 public:
 
 	using Dimensions = std::pair<size_t, size_t>; // TODO: find a better type
 
 	static Image load(essentials::ConstBufferView data, const std::string& path);
 
-	const std::uint8_t* pixels() const {
-		return pixels_.data();
+	essentials::ConstBufferView pixels() const {
+		return essentials::viewBuffer(pixels_);
 	}
 
 	Dimensions size() const {
@@ -88,8 +88,6 @@ private:
 	size_t mipLevels_;
 
 	PixelFormat pixelFormat_;
-
-	friend class ImageLoader;
 
 };
 
