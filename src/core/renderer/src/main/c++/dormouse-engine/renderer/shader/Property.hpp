@@ -36,11 +36,12 @@ public:
 class Property {
 public:
 
-	Property() = default;
+	Property() {
+		new(&object_) Default;
+	}
 
 	template <class T>
-	Property(T model)
-	{
+	Property(T model) {
 		static_assert(sizeof(Model<T>) <= STORAGE_SIZE);
 		static_assert(alignof(Model<T>) <= STORAGE_ALIGNMENT);
 		static_assert(std::is_trivially_copyable_v<T>);
@@ -52,14 +53,17 @@ public:
 	}
 
 	bool has(essentials::StringId id) const {
+		assert(&object_ != nullptr);
 		return reinterpret_cast<const Concept*>(&object_)->has(std::move(id));
 	}
 
 	Property get(essentials::StringId id) const {
+		assert(&object_ != nullptr);
 		return reinterpret_cast<const Concept*>(&object_)->get(std::move(id));
 	}
 
 	void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const {
+		assert(&object_ != nullptr);
 		reinterpret_cast<const Concept*>(&object_)->bindResource(cmd, stage, slot);
 	}
 
@@ -75,6 +79,24 @@ private:
 		virtual Property get(essentials::StringId id) const = 0;
 
 		virtual void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const = 0;
+
+	};
+
+	class Default : public Concept {
+
+		bool has(essentials::StringId /*id*/) const override {
+			return false;
+		}
+
+		Property get(essentials::StringId id) const override {
+			throw PropertyNotBound(std::move(id));
+		}
+
+		void bindResource(
+			command::DrawCommand& /*cmd*/, graphics::ShaderType /*stage*/, size_t /*slot*/) const override
+		{
+			throw NotAResourceProperty();
+		}
 
 	};
 

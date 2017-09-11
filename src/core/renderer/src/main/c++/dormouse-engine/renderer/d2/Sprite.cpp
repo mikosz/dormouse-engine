@@ -10,8 +10,8 @@
 #include "dormouse-engine/math/Vector.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Technique.hpp"
-#include "../shader/CompoundProperty.hpp"
 #include "../shader/MergedProperty.hpp"
+#include "../shader/NamedProperty.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -32,8 +32,10 @@ public:
 
 	void render(command::DrawCommand& cmd, const Sprite& sprite, const shader::Property& properties) const {
 		auto spriteProperty = shader::Property(essentials::make_observer(&sprite));
+		auto spriteEntry = shader::Property(shader::NamedProperty("sprite", essentials::make_observer(&spriteProperty)));
+
 		auto mergedProperty = shader::MergedProperty(
-			essentials::make_observer(&spriteProperty),
+			essentials::make_observer(&spriteEntry),
 			essentials::make_observer(&properties)
 			);
 
@@ -105,4 +107,22 @@ void Sprite::initialiseSystem(graphics::Device& device, essentials::ConstBufferV
 void Sprite::render(command::CommandBuffer& commandBuffer, const shader::Property& properties) const {
 	SpriteCommon::instance()->render(cmd_, *this, properties);
 	commandBuffer.add(essentials::make_observer(&cmd_));
+}
+
+bool d2::hasShaderProperty(const Sprite& /*model*/, essentials::StringId id)
+{
+	if (id == essentials::StringId("texture")) {
+		return true;
+	}
+
+	return false;
+}
+
+shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId id)
+{
+	if (id == essentials::StringId("texture")) {
+		return model.texture();
+	}
+
+	throw shader::PropertyNotBound(id);
 }

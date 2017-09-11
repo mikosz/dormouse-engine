@@ -24,6 +24,10 @@ public:
 
 	void render(command::CommandBuffer& commandBuffer, const shader::Property& properties) const;
 
+	control::ResourceView texture() const {
+		return textureView_;
+	}
+
 private:	
 
 	mutable command::DrawCommand cmd_;
@@ -33,6 +37,9 @@ private:
 	math::Vec2 position_;
 
 };
+
+bool hasShaderProperty(const Sprite& model, essentials::StringId id);
+shader::Property getShaderProperty(const Sprite& model, essentials::StringId id);
 
 } // namespace dormouse_engine::renderer::d2
 

@@ -19,7 +19,7 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
-DE_LOGGER_CATEGORY("COCONUT.MILK.GRAPHICS.COMPILE_SHADER");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.GRAPHICS.COMPILE_SHADER");
 
 std::string featureLevel(ShaderType shaderType) {
 	switch (shaderType) {

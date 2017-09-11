@@ -13,7 +13,7 @@
 #include "dormouse-engine/system/windows/Error.hpp"
 #include "PixelFormat.hpp"
 
-DE_LOGGER_CATEGORY("COCONUT.MILK.GRAPHICS");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.GRAPHICS");
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;

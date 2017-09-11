@@ -23,7 +23,7 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
-DE_LOGGER_CATEGORY("COCONUT.MILK.GRAPHICS.SHADER_REFLECTION");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.GRAPHICS.SHADER_REFLECTION");
 
 ShaderReflection::InputParameterInfos buildInputParameterInfos(
 	system::windows::COMWrapper<ID3D11ShaderReflection> reflectionData, const D3D11_SHADER_DESC& shaderDescription
