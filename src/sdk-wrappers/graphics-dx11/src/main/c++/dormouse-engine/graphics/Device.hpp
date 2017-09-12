@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
@@ -27,6 +28,8 @@ public:
 	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = true;
 
 	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = false;
+
+	using DeviceDestroyedHandler = std::function<void()>;
 
 	using LockedData = std::unique_ptr<void, std::function<void(void*)>>;
 
@@ -53,6 +56,12 @@ public:
 	};
 
 	Device(system::windows::WindowHandle windowHandle, const Configuration& configuration);
+
+	~Device();
+
+	void addDeviceDestroyedHandler(DeviceDestroyedHandler handler) {
+		deviceDestroyedHandlers_.emplace_back(std::move(handler));
+	}
 
 	CommandList& getImmediateCommandList();
 
@@ -81,6 +90,8 @@ private:
 	system::windows::COMWrapper<IDXGIAdapter> adapter_;
 
 	system::windows::COMWrapper<ID3D11Device> d3dDevice_;
+
+	std::vector<DeviceDestroyedHandler> deviceDestroyedHandlers_;
 
 	CommandList immediateCommandList_;
 

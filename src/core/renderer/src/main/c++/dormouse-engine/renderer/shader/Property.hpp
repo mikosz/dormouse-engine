@@ -4,6 +4,9 @@
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
+#include <cassert>
+
+#include <boost/lexical_cast.hpp>
 
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "dormouse-engine/essentials/StringId.hpp"
@@ -12,14 +15,16 @@
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "../control/controlfwd.hpp"
 #include "../command/commandfwd.hpp"
+#include "PropertyId.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
 class PropertyNotBound final : public exceptions::RuntimeError {
 public:
 
-	PropertyNotBound(essentials::StringId id) :
-		exceptions::RuntimeError("Required property \"" + id.string() + "\" is not bound")
+	PropertyNotBound(const PropertyId& fullId) :
+		exceptions::RuntimeError(
+			"Required property \"" + boost::lexical_cast<std::string>(fullId) + "\" is not bound")
 	{
 	}
 
@@ -86,16 +91,20 @@ private:
 
 	class Default : public Concept {
 
-		bool has(essentials::StringId /*id*/) const override {
+		bool has([[maybe_unused]] essentials::StringId id) const override {
 			return false;
 		}
 
-		Property get(essentials::StringId id) const override {
-			throw PropertyNotBound(std::move(id));
+		Property get([[maybe_unused]] essentials::StringId id) const override {
+			assert(!"Property not bound");
+			return Property();
 		}
 
 		void bindResource(
-			command::DrawCommand& /*cmd*/, graphics::ShaderType /*stage*/, size_t /*slot*/) const override
+			[[maybe_unused]] command::DrawCommand& cmd,
+			[[maybe_unused]] graphics::ShaderType stage,
+			[[maybe_unused]] size_t slot
+			) const override
 		{
 			throw NotAResourceProperty();
 		}
@@ -138,24 +147,51 @@ private:
 };
 
 template <class T>
-inline bool hasShaderProperty(const T& /*model*/, essentials::StringId /*id*/) {
-	return false;
+inline bool hasShaderProperty(
+	[[maybe_unused]] const T& model,
+	[[maybe_unused]] essentials::StringId id
+	)
+{
+	if constexpr (essentials::IsAnyPointer_v<T>) {
+		return hasShaderProperty(*model, std::move(id));
+	} else {
+		return false;
+	}
 }
 
 template <class T>
-inline Property getShaderProperty(const T& /*model*/, essentials::StringId id) {
-	throw PropertyNotBound(std::move(id));
+inline Property getShaderProperty(
+	[[maybe_unused]] const T& model,
+	[[maybe_unused]] essentials::StringId id
+	)
+{
+	if constexpr (essentials::IsAnyPointer_v<T>) {
+		return getShaderProperty(*model, std::move(id));
+	} else {
+		assert(!"Property not bound");
+		return Property();
+	}
 }
 
 template <class T>
 inline void bindShaderResource(
-	const T& /*model*/, command::DrawCommand& /*cmd*/, graphics::ShaderType /*stage*/, size_t /*slot*/)
+	[[maybe_unused]] const T& model,
+	[[maybe_unused]] command::DrawCommand& cmd,
+	[[maybe_unused]] graphics::ShaderType stage,
+	[[maybe_unused]] size_t slot
+	)
 {
-	throw NotAResourceProperty();
+	if constexpr (essentials::IsAnyPointer_v<T>) {
+		bindShaderResource(*model, cmd, stage, slot);
+	} else {
+		throw NotAResourceProperty();
+	}
 }
 
 void bindShaderResource(
 	control::ResourceView resourceView, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
+void bindShaderResource(
+	control::Sampler sampler, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
 
 } // namespace dormouse_engine::renderer::shader
 

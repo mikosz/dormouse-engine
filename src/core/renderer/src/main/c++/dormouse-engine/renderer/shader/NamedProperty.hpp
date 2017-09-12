@@ -1,6 +1,8 @@
 #ifndef _DORMOUSEENGINE_RENDERER_SHADER_NAMEDPROPERTY_HPP_
 #define _DORMOUSEENGINE_RENDERER_SHADER_NAMEDPROPERTY_HPP_
 
+#include <cassert>
+
 #include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "Property.hpp"
@@ -22,7 +24,7 @@ public:
 
 	Property get(essentials::StringId id) const {
 		if (id != id_) {
-			throw PropertyNotBound(id);
+			assert(!"Property not bound");
 		}
 		return *property_;
 	}

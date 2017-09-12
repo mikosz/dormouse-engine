@@ -28,6 +28,9 @@ public:
 		if (it == index_.end()) {
 			it = index_.emplace_hint(it, configuration, instances_.size());
 			instances_.emplace_back(graphicsDevice, configuration);
+			// TODO: don't need to register every time, implement generic listener pattern,
+			// add returning registry id, check if registered
+			graphicsDevice.addDeviceDestroyedHandler([this]() { instances_.clear(); });
 		}
 
 		return it->second;

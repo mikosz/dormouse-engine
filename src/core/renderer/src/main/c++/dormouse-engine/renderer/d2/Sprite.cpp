@@ -8,6 +8,8 @@
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/math/Vector.hpp"
+#include "../control/Sampler.hpp"
+#include "../control/RenderState.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Technique.hpp"
 #include "../shader/MergedProperty.hpp"
@@ -26,7 +28,9 @@ public:
 
 	SpriteCommon(graphics::Device& graphicsDevice, essentials::ConstBufferView shaderCode) :
 		vertexBuffer_(createVertexBuffer_(graphicsDevice)),
-		technique_(createTechnique_(graphicsDevice, std::move(shaderCode)))
+		technique_(createTechnique_(graphicsDevice, std::move(shaderCode))),
+		sampler_(graphicsDevice, control::Sampler::CLAMPED_LINEAR),
+		renderState_(graphicsDevice, control::RenderState::OPAQUE)
 	{
 	}
 
@@ -41,9 +45,14 @@ public:
 
 		technique_.render(cmd, mergedProperty);
 
+		cmd.setRenderState(renderState_);
 		cmd.setVertexBuffer(vertexBuffer_, 4u);
 		cmd.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_STRIP);
 		cmd.setTechnique(essentials::make_observer(&technique_));
+	}
+
+	const control::Sampler& sampler() const {
+		return sampler_;
 	}
 
 private:
@@ -51,6 +60,10 @@ private:
 	const graphics::Buffer vertexBuffer_;
 
 	const shader::Technique technique_;
+
+	const control::Sampler sampler_;
+
+	const control::RenderState renderState_;
 
 	static graphics::Buffer createVertexBuffer_(graphics::Device& graphicsDevice) {
 		auto configuration = graphics::Buffer::Configuration();
@@ -113,6 +126,8 @@ bool d2::hasShaderProperty(const Sprite& /*model*/, essentials::StringId id)
 {
 	if (id == essentials::StringId("texture")) {
 		return true;
+	} else if (id == essentials::StringId("sampler")) {
+		return true;
 	}
 
 	return false;
@@ -122,7 +137,10 @@ shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId
 {
 	if (id == essentials::StringId("texture")) {
 		return model.texture();
+	} else if (id == essentials::StringId("sampler")) {
+		return SpriteCommon::instance()->sampler();
 	}
 
-	throw shader::PropertyNotBound(id);
+	assert(!"Property not bound");
+	return shader::Property();
 }

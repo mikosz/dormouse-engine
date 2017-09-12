@@ -217,6 +217,12 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	depthStencil_ = DepthStencilView(*this, depthStencilTexture);
 }
 
+Device::~Device() {
+	for (const auto& handler : deviceDestroyedHandlers_) {
+		handler();
+	}
+}
+
 CommandList& Device::getImmediateCommandList() {
 	return immediateCommandList_;
 }

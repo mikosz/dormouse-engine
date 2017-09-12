@@ -85,7 +85,10 @@ void detail::ShaderBase::bindResource_(
 
 	auto property = root;
 
-	while (!id.tail().empty()) {
+	while (!id.empty()) {
+		if (!property.has(id.head().name)) {
+			throw PropertyNotBound(resource.descriptor);
+		}
 		property = property.get(id.head().name);
 		id = id.tail();
 	}

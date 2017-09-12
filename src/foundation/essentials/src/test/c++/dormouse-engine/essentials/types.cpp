@@ -24,6 +24,18 @@ BOOST_AUTO_TEST_CASE(MakeArrayCreatesArrayOfCommonType) {
 	static_assert(a.size() == 4u);
 }
 
+BOOST_AUTO_TEST_CASE(IsAnyPointerIsTrueForAllPointers) {
+	static_assert(IsAnyPointer_v<int*>);
+	static_assert(IsAnyPointer_v<const int*>);
+	static_assert(IsAnyPointer_v<const volatile int* const>);
+
+	static_assert(IsAnyPointer_v<std::unique_ptr<int>>);
+	static_assert(IsAnyPointer_v<const std::unique_ptr<int>>);
+	static_assert(IsAnyPointer_v<volatile std::shared_ptr<int>>);
+
+	static_assert(IsAnyPointer_v<const observer_ptr<const int>>);
+}
+
 BOOST_AUTO_TEST_SUITE_END(/* TypesTestSuite */);
 
 } // anonymous namespace

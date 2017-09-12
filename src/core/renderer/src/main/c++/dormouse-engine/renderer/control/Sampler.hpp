@@ -16,6 +16,13 @@ public:
 		graphics::Sampler::Filter::MIN_MAG_MIP_LINEAR
 		};
 
+	static constexpr graphics::Sampler::Configuration CLAMPED_LINEAR = {
+		graphics::Sampler::AddressMode::CLAMP,
+		graphics::Sampler::AddressMode::CLAMP,
+		graphics::Sampler::AddressMode::CLAMP,
+		graphics::Sampler::Filter::MIN_MAG_MIP_LINEAR
+		};
+
 	Sampler() = default;
 
 	Sampler(graphics::Device& graphicsDevice, graphics::Sampler::Configuration configuration);
