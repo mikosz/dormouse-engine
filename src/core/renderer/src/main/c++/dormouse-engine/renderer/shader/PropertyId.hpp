@@ -90,9 +90,9 @@ public:
 
 private:
 
-	const PropertyDescriptor::Objects::const_iterator objectsIt_;
+	PropertyDescriptor::Objects::const_iterator objectsIt_;
 
-	const PropertyDescriptor::Objects::const_iterator objectsEnd_;
+	PropertyDescriptor::Objects::const_iterator objectsEnd_;
 
 	PropertyId(
 		PropertyDescriptor::Objects::const_iterator objectsIt,

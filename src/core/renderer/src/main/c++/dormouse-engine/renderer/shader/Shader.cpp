@@ -87,6 +87,7 @@ void detail::ShaderBase::bindResource_(
 
 	while (!id.tail().empty()) {
 		property = property.get(id.head().name);
+		id = id.tail();
 	}
 
 	property.bindResource(cmd, stage, resource.slot);

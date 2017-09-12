@@ -10,10 +10,12 @@
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
+#include "../control/controlfwd.hpp"
+#include "../command/commandfwd.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
-class PropertyNotBound : public exceptions::RuntimeError {
+class PropertyNotBound final : public exceptions::RuntimeError {
 public:
 
 	PropertyNotBound(essentials::StringId id) :
@@ -23,7 +25,7 @@ public:
 
 };
 
-class NotAResourceProperty : public exceptions::RuntimeError {
+class NotAResourceProperty final : public exceptions::RuntimeError {
 public:
 
 	NotAResourceProperty() :
@@ -33,7 +35,7 @@ public:
 
 };
 
-class Property {
+class Property final {
 public:
 
 	Property() {
@@ -151,6 +153,9 @@ inline void bindShaderResource(
 {
 	throw NotAResourceProperty();
 }
+
+void bindShaderResource(
+	control::ResourceView resourceView, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
 
 } // namespace dormouse_engine::renderer::shader
 
