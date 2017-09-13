@@ -23,6 +23,8 @@ public:
 		graphics::Sampler::Filter::MIN_MAG_MIP_LINEAR
 		};
 
+	static void initialiseSystem(graphics::Device& graphicsDevice);
+
 	Sampler() = default;
 
 	Sampler(graphics::Device& graphicsDevice, graphics::Sampler::Configuration configuration);

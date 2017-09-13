@@ -182,7 +182,7 @@ Texture::Texture(
 graphics::PixelFormat Texture::pixelFormat() const {
 	auto dimension = D3D11_RESOURCE_DIMENSION();
 
-	auto& dxResource = detail::Internals::dxResource(*this);
+	auto& dxResource = *detail::Internals::dxResourcePtr(*this);
 	dxResource.GetType(&dimension);
 
 	switch (dimension) {
@@ -206,7 +206,7 @@ graphics::PixelFormat Texture::pixelFormat() const {
 RenderTargetView::RenderTargetView(const Texture& texture) {
 	checkDirectXCall(
 		detail::Internals::dxDevice(texture).CreateRenderTargetView(
-			&detail::Internals::dxResource(texture), nullptr, &renderTargetView_.get()),
+			detail::Internals::dxResourcePtr(texture), nullptr, &renderTargetView_.get()),
 		"Failed to create a render target view of texture"
 		);
 }
@@ -214,7 +214,7 @@ RenderTargetView::RenderTargetView(const Texture& texture) {
 DepthStencilView::DepthStencilView(Device& device, const Texture& texture) {
 	checkDirectXCall(
 		detail::Internals::dxDevice(device).CreateDepthStencilView(
-			&detail::Internals::dxResource(texture), nullptr, &depthStencilView_.get()),
+			detail::Internals::dxResourcePtr(texture), nullptr, &depthStencilView_.get()),
 		"Failed to create a depth stencil view of texture"
 		);
 }

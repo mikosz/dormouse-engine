@@ -36,12 +36,12 @@ struct Internals {
 		return *commandList.deviceContext_;
 	}
 
-	static ID3D11Resource& dxResource(const Resource& resource) {
-		return *resource.resource_;
+	static ID3D11Resource* dxResourcePtr(const Resource& resource) {
+		return resource.resource_.get();
 	}
 
-	static ID3D11ShaderResourceView& dxResourceView(const ResourceView& resourceView) {
-		return *resourceView.resourceView_;
+	static ID3D11ShaderResourceView* dxResourceViewPtr(const ResourceView& resourceView) {
+		return resourceView.resourceView_.get();
 	}
 
 	static ID3D11RenderTargetView& dxRenderTargetView(const RenderTargetView& rtv) {
@@ -60,8 +60,8 @@ struct Internals {
 		return *inputLayout.inputLayout_;
 	}
 
-	static ID3D11SamplerState& dxSamplerState(const Sampler& sampler) {
-		return *sampler.samplerState_;
+	static ID3D11SamplerState* dxSamplerStatePtr(const Sampler& sampler) {
+		return sampler.samplerState_.get();
 	}
 
 	static ID3D11RasterizerState& dxRasteriserState(const RenderState& renderState) {

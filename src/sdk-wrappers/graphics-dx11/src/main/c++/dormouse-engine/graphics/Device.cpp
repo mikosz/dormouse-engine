@@ -258,7 +258,7 @@ void Device::endScene() {
 
 Device::LockedData Device::lock(Resource& data, LockPurpose lockPurpose) {
 	auto& dxDeviceContext = detail::Internals::dxDeviceContext(immediateCommandList_);
-	auto& dxResource = detail::Internals::dxResource(data);
+	auto& dxResource = *detail::Internals::dxResourcePtr(data);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	checkDirectXCall(

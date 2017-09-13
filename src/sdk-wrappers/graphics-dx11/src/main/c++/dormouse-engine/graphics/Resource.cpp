@@ -13,13 +13,13 @@ using namespace dormouse_engine::graphics;
 ResourceView::ResourceView(const Texture& texture) {
 	checkDirectXCall(
 		detail::Internals::dxDevice(texture).CreateShaderResourceView(
-			&detail::Internals::dxResource(texture), nullptr, &resourceView_.get()),
+			detail::Internals::dxResourcePtr(texture), nullptr, &resourceView_.get()),
 		"Failed to create a resource view"
 		);
 }
 
 ResourceView::ResourceView(const Buffer& buffer, PixelFormat elementFormat) {
-	auto& dxBuffer = static_cast<ID3D11Buffer&>(detail::Internals::dxResource(buffer));
+	auto& dxBuffer = static_cast<ID3D11Buffer&>(*detail::Internals::dxResourcePtr(buffer));
 
 	auto bufferDesc = D3D11_BUFFER_DESC();
 	dxBuffer.GetDesc(&bufferDesc);

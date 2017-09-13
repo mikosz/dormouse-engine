@@ -29,9 +29,6 @@ public:
 		if (it == index_.end()) {
 			it = index_.emplace_hint(it, configuration, instances_.size());
 			instances_.emplace_back(graphicsDevice, configuration);
-			// TODO: don't need to register every time, implement generic listener pattern,
-			// add returning registry id, check if registered
-			graphicsDevice.addDeviceDestroyedHandler([this]() { instances_.clear(); });
 		}
 
 		return it->second;
@@ -40,6 +37,11 @@ public:
 	graphics::Sampler get(size_t id) const {
 		assert(id < instances_.size());
 		return instances_[id];
+	}
+
+	void clear() {
+		instances_.clear();
+		index_.clear();
 	}
 
 private:
@@ -88,6 +90,10 @@ private:
 };
 
 } // anonymous namespace
+
+void Sampler::initialiseSystem(graphics::Device& graphicsDevice) {
+	graphicsDevice.addDeviceDestroyedHandler([]() { SamplerFactory::instance()->clear(); });
+}
 
 Sampler::Sampler(
 	graphics::Device& graphicsDevice,

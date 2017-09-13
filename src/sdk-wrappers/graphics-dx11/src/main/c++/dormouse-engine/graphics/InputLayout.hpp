@@ -50,6 +50,8 @@ public:
 
 	using Elements = std::vector<Element>;
 
+	InputLayout() = default;
+
 	InputLayout(
 		Device& renderer,
 		const Elements& elements

@@ -4,6 +4,7 @@
 #include <array>
 
 #include "dormouse-engine/graphics/CommandList.hpp"
+#include "dormouse-engine/graphics/InputLayout.hpp"
 #include "../command/commandfwd.hpp"
 #include "Shader.hpp"
 
@@ -19,6 +20,10 @@ public:
 	void bind(graphics::CommandList& commandList) const;
 
 	void render(command::DrawCommand& cmd, const Property& root) const;
+
+	void setInputLayout(graphics::InputLayout inputLayout) {
+		inputLayout_ = std::move(inputLayout);
+	}
 
 	void setShader(VertexShader shader) {
 		vertexShader_ = std::move(shader);
@@ -41,6 +46,8 @@ public:
 	}
 
 private:
+
+	graphics::InputLayout inputLayout_;
 
 	VertexShader vertexShader_;
 

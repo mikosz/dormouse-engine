@@ -1,6 +1,7 @@
 #ifndef _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 #define _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/graphics/CommandList.hpp"
@@ -9,6 +10,8 @@ namespace dormouse_engine::renderer::control {
 
 class ResourceView final {
 public:
+
+	static void initialiseSystem(graphics::Device& graphicsDevice);
 
 	ResourceView() = default;
 

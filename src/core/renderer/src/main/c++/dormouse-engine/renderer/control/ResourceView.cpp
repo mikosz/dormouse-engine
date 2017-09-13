@@ -50,6 +50,11 @@ public:
 		return instances_[id];
 	}
 
+	void clear() {
+		instances_.clear();
+		index_.clear();
+	}
+
 private:
 
 	using IndexKey = std::tuple<graphics::Resource::Id, graphics::PixelFormat>;
@@ -80,6 +85,10 @@ private:
 };
 
 } // anonymous namespace
+
+void ResourceView::initialiseSystem(graphics::Device& graphicsDevice) {
+	graphicsDevice.addDeviceDestroyedHandler([]() { ResourceViewFactory::instance()->clear(); });
+}
 
 ResourceView::ResourceView(const graphics::Buffer& buffer, graphics::PixelFormat elementFormat) :
 	resourceViewId_(ResourceViewFactory::instance()->create(buffer, elementFormat))

@@ -56,18 +56,18 @@ void CommandList::drawIndexedInstanced(size_t vertexCountPerInstance, size_t ins
 }
 
 CommandList::LockedData CommandList::lock(Resource& data, LockPurpose lockPurpose) {
-	auto& dxResource = detail::Internals::dxResource(data);
+	auto* dxResource = detail::Internals::dxResourcePtr(data);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	checkDirectXCall(
-		deviceContext_->Map(&dxResource, 0, static_cast<D3D11_MAP>(lockPurpose), 0, &mappedResource),
+		deviceContext_->Map(dxResource, 0, static_cast<D3D11_MAP>(lockPurpose), 0, &mappedResource),
 		"Failed to map the provided resource"
 		);
 
 	return LockedData(
 		reinterpret_cast<std::uint8_t*>(mappedResource.pData),
 		[deviceContext = deviceContext_, &dxResource](std::uint8_t*) {
-			deviceContext->Unmap(&dxResource, 0);
+			deviceContext->Unmap(dxResource, 0);
 		}
 		);
 }
@@ -107,7 +107,7 @@ void CommandList::setShader(const PixelShader& pixelShader) noexcept {
 }
 
 void CommandList::setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot) {
-	auto* buf = static_cast<ID3D11Buffer*>(&detail::Internals::dxResource(buffer));
+	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
 	switch (stage) {
 	case ShaderType::VERTEX:
@@ -131,26 +131,29 @@ void CommandList::setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slo
 }
 
 void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset) {
-	auto* buf = static_cast<ID3D11Buffer*>(&detail::Internals::dxResource(buffer));
-
-	auto desc = D3D11_BUFFER_DESC();
-	buf->GetDesc(&desc);
+	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
 	auto format = DXGI_FORMAT();
-	if (desc.StructureByteStride == 2) {
-		format = DXGI_FORMAT_R16_UINT;
-	} else if (desc.StructureByteStride == 4) {
-		format = DXGI_FORMAT_R32_UINT;
-	} else {
-		throw dormouse_engine::exceptions::LogicError(
-			"Unexpected byte stride for index buffer: " + std::to_string(desc.StructureByteStride));
+	
+	if (buf != nullptr) {
+		auto desc = D3D11_BUFFER_DESC();
+		buf->GetDesc(&desc);
+
+		if (desc.StructureByteStride == 2) {
+			format = DXGI_FORMAT_R16_UINT;
+		} else if (desc.StructureByteStride == 4) {
+			format = DXGI_FORMAT_R32_UINT;
+		} else {
+			throw dormouse_engine::exceptions::LogicError(
+				"Unexpected byte stride for index buffer: " + std::to_string(desc.StructureByteStride));
+		}
 	}
 
 	deviceContext_->IASetIndexBuffer(buf, format, static_cast<UINT>(offset));
 }
 
 void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot) {
-	auto* buf = static_cast<ID3D11Buffer*>(&detail::Internals::dxResource(buffer));
+	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
 	auto desc = D3D11_BUFFER_DESC();
 	buf->GetDesc(&desc);
@@ -162,7 +165,7 @@ void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot) {
 }
 
 void CommandList::setResource(const ResourceView& resourceView, ShaderType stage, size_t slot) {
-	auto* srv = &detail::Internals::dxResourceView(resourceView);
+	auto* srv = detail::Internals::dxResourceViewPtr(resourceView);
 
 	switch (stage) {
 	case ShaderType::VERTEX:
@@ -186,7 +189,7 @@ void CommandList::setResource(const ResourceView& resourceView, ShaderType stage
 }
 
 void CommandList::setSampler(const Sampler& sampler, ShaderType stage, size_t slot) {
-	auto ss = &detail::Internals::dxSamplerState(sampler);
+	auto* ss = detail::Internals::dxSamplerStatePtr(sampler);
 
 	switch (stage) {
 	case ShaderType::VERTEX:

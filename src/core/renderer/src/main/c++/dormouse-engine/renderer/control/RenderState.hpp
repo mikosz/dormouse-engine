@@ -17,6 +17,8 @@ public:
 		false
 		};
 
+	static void initialiseSystem(graphics::Device& graphicsDevice);
+
 	RenderState() = default;
 
 	RenderState(graphics::Device& graphicsDevice, graphics::RenderState::Configuration configuration);

@@ -17,11 +17,6 @@ namespace /* anonymous */ {
 BOOST_FIXTURE_TEST_SUITE(RendererSpriteTestSuite, tester::RenderingFixture);
 
 BOOST_AUTO_TEST_CASE(RendersSprites) {
-	Sprite::initialiseSystem(
-		graphicsDevice(),
-		essentials::viewBuffer(essentials::test_utils::readFile("sprite.hlsl"))
-		);
-
 	auto texturePath = "test/renderer/sprite-texture.png"s;
 	auto textureData = essentials::test_utils::readBinaryFile(texturePath);
 	auto textureImage = graphics::Image::load(essentials::viewBuffer(textureData), texturePath);
