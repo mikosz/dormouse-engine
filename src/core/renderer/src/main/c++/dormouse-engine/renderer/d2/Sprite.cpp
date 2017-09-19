@@ -34,7 +34,17 @@ public:
 	{
 	}
 
-	void render(command::DrawCommand& cmd, const Sprite& sprite, const shader::Property& properties) const {
+	void render(
+		command::DrawCommand& cmd,
+		const Sprite& sprite,
+		const shader::Property& properties,
+		control::RenderTargetView renderTarget,
+		control::DepthStencilView depthStencil
+		) const
+	{
+		cmd.setRenderTarget(std::move(renderTarget));
+		cmd.setDepthStencil(std::move(depthStencil));
+
 		auto spriteProperty = shader::Property(essentials::make_observer(&sprite));
 		auto spriteEntry = shader::Property(shader::NamedProperty("sprite", essentials::make_observer(&spriteProperty)));
 
@@ -68,19 +78,19 @@ private:
 	static graphics::Buffer createVertexBuffer_(graphics::Device& graphicsDevice) {
 		auto configuration = graphics::Buffer::Configuration();
 
-		configuration.allowCPURead = false;
-		configuration.allowGPUWrite = false;
-		configuration.allowModifications = false;
-		configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
-		configuration.size = 4u;
-		configuration.stride = 0u;
-
 		auto initialData = std::vector<math::Vec2> {
 			{ -1.0f, -1.0f },
 			{ +1.0f, +1.0f },
 			{ -1.0f, +1.0f },
 			{ +1.0f, +1.0f }
 			};
+
+		configuration.allowCPURead = false;
+		configuration.allowGPUWrite = false;
+		configuration.allowModifications = false;
+		configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
+		configuration.size = initialData.size() * sizeof(initialData.front());
+		configuration.stride = sizeof(initialData.front());
 
 		return graphics::Buffer(graphicsDevice, std::move(configuration), essentials::viewBuffer(initialData));
 	}
@@ -97,6 +107,9 @@ private:
 				shaderCompiler.compile(shaderCode, "sprite", "vs", graphics::ShaderType::VERTEX);
 			technique.setShader(
 				shader::VertexShader(graphicsDevice, essentials::viewBuffer(compiledVertexShader)));
+
+			auto inputLayout = shader::InputLayout(graphicsDevice, essentials::viewBuffer(compiledVertexShader));
+			technique.setInputLayout(std::move(inputLayout));
 		}
 
 		{
@@ -117,8 +130,14 @@ void Sprite::initialiseSystem(graphics::Device& device, essentials::ConstBufferV
 	SpriteCommon::setInstance(std::make_unique<SpriteCommon>(device, std::move(shaderCode)));
 }
 
-void Sprite::render(command::CommandBuffer& commandBuffer, const shader::Property& properties) const {
-	SpriteCommon::instance()->render(cmd_, *this, properties);
+void Sprite::render(
+	command::CommandBuffer& commandBuffer,
+	const shader::Property& properties,
+	control::RenderTargetView renderTarget,
+	control::DepthStencilView depthStencil
+	) const
+{
+	SpriteCommon::instance()->render(cmd_, *this, properties, std::move(renderTarget), std::move(depthStencil));
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 

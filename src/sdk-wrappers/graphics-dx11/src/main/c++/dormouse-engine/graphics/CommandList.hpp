@@ -61,7 +61,7 @@ public:
 
 	void setViewport(Viewport& viewport);
 
-	void setInputLayout(const InputLayout* inputLayout) noexcept;
+	void setInputLayout(const InputLayout& inputLayout) noexcept;
 
 	void setShader(const VertexShader& vertexShader) noexcept;
 

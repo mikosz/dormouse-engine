@@ -5,7 +5,7 @@ using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::shader;
 
 void Technique::bind(graphics::CommandList& commandList) const {
-	commandList.setInputLayout(&inputLayout_);
+	inputLayout_.bind(commandList);
 	vertexShader_.bind(commandList);
 	geometryShader_.bind(commandList);
 	domainShader_.bind(commandList);

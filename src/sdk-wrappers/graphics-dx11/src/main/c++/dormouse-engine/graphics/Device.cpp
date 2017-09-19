@@ -162,7 +162,7 @@ void createD3DDevice(
 		);
 }
 
-RenderTargetView extractBackBuffer(IDXGISwapChain* swapChain) {
+Texture extractBackBuffer(IDXGISwapChain* swapChain) {
 	auto texture = system::windows::COMWrapper<ID3D11Texture2D>();
 
 	checkDirectXCall(
@@ -170,7 +170,7 @@ RenderTargetView extractBackBuffer(IDXGISwapChain* swapChain) {
 		"Failed to extract the back buffer texture"
 		);
 
-	return RenderTargetView(detail::Internals::createTextureFromDX11Texture(std::move(texture)));
+	return detail::Internals::createTextureFromDX11Texture(std::move(texture));
 }
 
 } // anonymous namespace
@@ -212,9 +212,7 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	depthStencilConfig.sampleCount = swapChainDesc.SampleDesc.Count;
 	depthStencilConfig.sampleQuality = swapChainDesc.SampleDesc.Quality;
 
-	auto depthStencilTexture = Texture(*this, depthStencilConfig);
-
-	depthStencil_ = DepthStencilView(*this, depthStencilTexture);
+	depthStencil_ = Texture(*this, depthStencilConfig);
 }
 
 Device::~Device() {

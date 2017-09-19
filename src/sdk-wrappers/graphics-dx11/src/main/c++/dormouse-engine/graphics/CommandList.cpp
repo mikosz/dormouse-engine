@@ -82,8 +82,8 @@ void CommandList::setViewport(Viewport& viewport) {
 	deviceContext_->RSSetViewports(1, &detail::Internals::dxViewport(viewport));
 }
 
-void CommandList::setInputLayout(const InputLayout* inputLayout) noexcept {
-	deviceContext_->IASetInputLayout(&detail::Internals::dxInputLayout(*inputLayout));
+void CommandList::setInputLayout(const InputLayout& inputLayout) noexcept {
+	deviceContext_->IASetInputLayout(detail::Internals::dxInputLayoutPtr(inputLayout));
 }
 
 void CommandList::setShader(const VertexShader& vertexShader) noexcept {

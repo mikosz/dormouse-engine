@@ -6,6 +6,8 @@
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 #include "../control/ResourceView.hpp"
+#include "../control/RenderTargetView.hpp"
+#include "../control/DepthStencilView.hpp"
 #include "../command/CommandBuffer.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Property.hpp"
@@ -22,7 +24,12 @@ public:
 	{
 	}
 
-	void render(command::CommandBuffer& commandBuffer, const shader::Property& properties) const;
+	void render(
+		command::CommandBuffer& commandBuffer,
+		const shader::Property& properties,
+		control::RenderTargetView renderTarget,
+		control::DepthStencilView depthStencil
+		) const;
 
 	control::ResourceView texture() const {
 		return textureView_;

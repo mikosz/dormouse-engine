@@ -58,6 +58,8 @@ public:
 
 	};
 
+	Texture() = default;
+
 	Texture(
 		Device& device,
 		const Configuration1d& configuration,
@@ -92,6 +94,8 @@ public:
 
 	RenderTargetView(const Texture& texture);
 
+	Resource::Id resourceId() const;
+
 private:
 
 	system::windows::COMWrapper<ID3D11RenderTargetView> renderTargetView_;
@@ -105,7 +109,9 @@ public:
 
 	DepthStencilView() = default;
 
-	DepthStencilView(Device& device, const Texture& texture);
+	DepthStencilView(const Texture& texture);
+
+	Resource::Id resourceId() const;
 
 private:
 

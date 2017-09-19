@@ -56,8 +56,8 @@ struct Internals {
 		return viewport.viewport_;
 	}
 
-	static ID3D11InputLayout& dxInputLayout(const InputLayout& inputLayout) {
-		return *inputLayout.inputLayout_;
+	static ID3D11InputLayout* dxInputLayoutPtr(const InputLayout& inputLayout) {
+		return inputLayout.inputLayout_.get();
 	}
 
 	static ID3D11SamplerState* dxSamplerStatePtr(const Sampler& sampler) {

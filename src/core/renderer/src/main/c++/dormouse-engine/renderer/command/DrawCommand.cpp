@@ -11,6 +11,14 @@ using namespace dormouse_engine::renderer::command;
 void DrawCommand::submit(graphics::CommandList& commandList, const Command* previous) const {
 	const auto* previousCommand = dynamic_cast<const DrawCommand*>(previous);
 
+	if (!previousCommand ||
+		(previousCommand->renderTarget_ != renderTarget_) ||
+		(previousCommand->depthStencil_ != depthStencil_)
+		)
+	{
+		commandList.setRenderTarget(renderTarget_.get(), depthStencil_.get());
+	}
+
 	if (!previousCommand || (previousCommand->renderState_ != renderState_)) {
 		renderState_.bind(commandList);
 	}

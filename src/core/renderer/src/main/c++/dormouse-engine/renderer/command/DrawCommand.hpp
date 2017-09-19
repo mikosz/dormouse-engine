@@ -8,6 +8,8 @@
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
+#include "../control/RenderTargetView.hpp"
+#include "../control/DepthStencilView.hpp"
 #include "../shader/Technique.hpp"
 #include "Command.hpp"
 #include "CommandKey.hpp"
@@ -22,6 +24,14 @@ public:
 	}
 
 	void submit(graphics::CommandList& commandList, const Command* previous) const override;
+
+	void setRenderTarget(control::RenderTargetView renderTarget) {
+		renderTarget_ = std::move(renderTarget);
+	}
+
+	void setDepthStencil(control::DepthStencilView depthStencil) {
+		depthStencil_ = std::move(depthStencil);
+	}
 
 	void setTechnique(essentials::observer_ptr<const shader::Technique> technique) {
 		technique_ = std::move(technique);
@@ -64,6 +74,10 @@ private:
 	static constexpr auto STAGE_COUNT = 5u; // vs, gs, hs, ds, ps
 
 	CommandKey key_;
+
+	control::RenderTargetView renderTarget_;
+
+	control::DepthStencilView depthStencil_;
 
 	essentials::observer_ptr<const shader::Technique> technique_;
 

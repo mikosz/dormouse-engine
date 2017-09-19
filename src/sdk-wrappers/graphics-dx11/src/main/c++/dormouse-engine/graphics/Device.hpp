@@ -75,11 +75,11 @@ public:
 
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
-	RenderTargetView backBuffer() const {
+	Texture backBuffer() const {
 		return backBuffer_;
 	}
 
-	DepthStencilView depthStencil() const {
+	Texture depthStencil() const {
 		return depthStencil_;
 	}
 
@@ -97,9 +97,9 @@ private:
 
 	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
-	RenderTargetView backBuffer_;
+	Texture backBuffer_;
 
-	DepthStencilView depthStencil_;
+	Texture depthStencil_;
 
 	friend struct detail::Internals;
 

@@ -211,10 +211,22 @@ RenderTargetView::RenderTargetView(const Texture& texture) {
 		);
 }
 
-DepthStencilView::DepthStencilView(Device& device, const Texture& texture) {
+Resource::Id RenderTargetView::resourceId() const {
+	auto* dxResource = static_cast<ID3D11Resource*>(nullptr);
+	renderTargetView_->GetResource(&dxResource);
+	return reinterpret_cast<std::uintptr_t>(dxResource);
+}
+
+DepthStencilView::DepthStencilView(const Texture& texture) {
 	checkDirectXCall(
-		detail::Internals::dxDevice(device).CreateDepthStencilView(
+		detail::Internals::dxDevice(texture).CreateDepthStencilView(
 			detail::Internals::dxResourcePtr(texture), nullptr, &depthStencilView_.get()),
 		"Failed to create a depth stencil view of texture"
 		);
+}
+
+Resource::Id DepthStencilView::resourceId() const {
+	auto* dxResource = static_cast<ID3D11Resource*>(nullptr);
+	depthStencilView_->GetResource(&dxResource);
+	return reinterpret_cast<std::uintptr_t>(dxResource);
 }
