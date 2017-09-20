@@ -28,7 +28,12 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 
 		auto commandBuffer = command::CommandBuffer();
 		sprite.render(
-			commandBuffer, shader::Property(), graphicsDevice().backBuffer(), graphicsDevice().depthStencil());
+			commandBuffer,
+			shader::Property(),
+			fullscreenViewport(),
+			graphicsDevice().backBuffer(),
+			graphicsDevice().depthStencil()
+			);
 
 		commandBuffer.submit(graphicsDevice().getImmediateCommandList());
 

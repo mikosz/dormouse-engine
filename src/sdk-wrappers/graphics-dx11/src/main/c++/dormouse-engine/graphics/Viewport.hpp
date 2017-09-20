@@ -27,6 +27,8 @@ public:
 
 	};
 
+	Viewport() = default;
+
 	Viewport(const Configuration& configuration);
 
 private:

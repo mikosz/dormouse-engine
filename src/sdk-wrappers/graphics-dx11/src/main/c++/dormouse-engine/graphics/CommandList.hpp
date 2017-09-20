@@ -42,7 +42,7 @@ public:
 		WRITE_NO_OVERWRITE = D3D11_MAP_WRITE_NO_OVERWRITE,
 	};
 
-	CommandList();
+	CommandList() = default;
 
 	CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
 
@@ -59,7 +59,7 @@ public:
 
 	void setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil);
 
-	void setViewport(Viewport& viewport);
+	void setViewport(const Viewport& viewport);
 
 	void setInputLayout(const InputLayout& inputLayout) noexcept;
 

@@ -6,6 +6,7 @@
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 #include "../control/ResourceView.hpp"
+#include "../control/Viewport.hpp"
 #include "../control/RenderTargetView.hpp"
 #include "../control/DepthStencilView.hpp"
 #include "../command/CommandBuffer.hpp"
@@ -27,6 +28,7 @@ public:
 	void render(
 		command::CommandBuffer& commandBuffer,
 		const shader::Property& properties,
+		control::Viewport viewport, // TODO: probably shouldn't be passed to render?
 		control::RenderTargetView renderTarget,
 		control::DepthStencilView depthStencil
 		) const;
@@ -35,7 +37,7 @@ public:
 		return textureView_;
 	}
 
-private:	
+private:
 
 	mutable command::DrawCommand cmd_;
 

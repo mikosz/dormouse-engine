@@ -10,6 +10,7 @@
 #include "../control/ResourceView.hpp"
 #include "../control/RenderTargetView.hpp"
 #include "../control/DepthStencilView.hpp"
+#include "../control/Viewport.hpp"
 #include "../shader/Technique.hpp"
 #include "Command.hpp"
 #include "CommandKey.hpp"
@@ -24,6 +25,10 @@ public:
 	}
 
 	void submit(graphics::CommandList& commandList, const Command* previous) const override;
+
+	void setViewport(control::Viewport viewport) {
+		viewport_ = std::move(viewport);
+	}
 
 	void setRenderTarget(control::RenderTargetView renderTarget) {
 		renderTarget_ = std::move(renderTarget);
@@ -74,6 +79,8 @@ private:
 	static constexpr auto STAGE_COUNT = 5u; // vs, gs, hs, ds, ps
 
 	CommandKey key_;
+
+	control::Viewport viewport_;
 
 	control::RenderTargetView renderTarget_;
 

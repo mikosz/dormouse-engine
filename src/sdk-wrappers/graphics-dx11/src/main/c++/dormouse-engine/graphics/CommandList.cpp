@@ -20,9 +20,6 @@
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-CommandList::CommandList() {
-}
-
 CommandList::CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) :
 	deviceContext_(std::move(internalDeviceContext))
 {
@@ -78,7 +75,7 @@ void CommandList::setRenderTarget(const RenderTargetView& renderTarget, const De
 	deviceContext_->OMSetRenderTargets(1, &dxRTV, &dxDSV);
 }
 
-void CommandList::setViewport(Viewport& viewport) {
+void CommandList::setViewport(const Viewport& viewport) {
 	deviceContext_->RSSetViewports(1, &detail::Internals::dxViewport(viewport));
 }
 

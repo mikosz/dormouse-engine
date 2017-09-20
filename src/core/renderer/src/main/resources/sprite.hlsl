@@ -4,7 +4,7 @@ struct VIn {
 };
 
 struct PIn {
-	float2 posH : POSITION;
+	float4 posH : SV_POSITION;
 	float2 tex : TEXCOORD;
 };
 
@@ -19,7 +19,7 @@ PIn vs(VIn vin) {
 	PIn pin;
 	
 	float4 pos = float4(vin.posL, 0.0f, 1.0f);
-	pin.posH = mul(toHomogeneous, pos).xy;
+	pin.posH = mul(toHomogeneous, pos);
 	pin.tex = vin.tex;
 	
 	return pin;

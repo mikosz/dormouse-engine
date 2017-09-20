@@ -6,6 +6,8 @@
 #include "dormouse-engine/renderer/control/RenderState.hpp"
 #include "dormouse-engine/renderer/control/ResourceView.hpp"
 #include "dormouse-engine/renderer/control/Sampler.hpp"
+#include "dormouse-engine/renderer/control/RenderTargetView.hpp"
+#include "dormouse-engine/renderer/control/DepthStencilView.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::tester;
@@ -24,10 +26,22 @@ graphics::Device::Configuration graphicsDeviceConfiguration() {
 	return result;
 }
 
+renderer::control::Viewport createViewport(const wm::Window& window) {
+	auto configuration = graphics::Viewport::Configuration();
+	configuration.height = static_cast<float>(window.clientHeight());
+	configuration.width = static_cast<float>(window.clientWidth());
+	configuration.minDepth = 0.0f;
+	configuration.maxDepth = 1.0f;
+	configuration.topLeftX = 0.0f;
+	configuration.topLeftY = 0.0f;
+	return renderer::control::Viewport(configuration);
+}
+
 } // anonymous namespace
 
 RenderingFixture::RenderingFixture() :
-	graphicsDevice_(window().handle(), graphicsDeviceConfiguration())
+	graphicsDevice_(window().handle(), graphicsDeviceConfiguration()),
+	fullscreenViewport_(createViewport(window()))
 {
 	renderer::d2::Sprite::initialiseSystem(
 		graphicsDevice_,
@@ -37,4 +51,6 @@ RenderingFixture::RenderingFixture() :
 	renderer::control::RenderState::initialiseSystem(graphicsDevice_);
 	renderer::control::ResourceView::initialiseSystem(graphicsDevice_);
 	renderer::control::Sampler::initialiseSystem(graphicsDevice_);
+	renderer::control::RenderTargetView::initialiseSystem(graphicsDevice_);
+	renderer::control::DepthStencilView::initialiseSystem(graphicsDevice_);
 }

@@ -38,10 +38,12 @@ public:
 		command::DrawCommand& cmd,
 		const Sprite& sprite,
 		const shader::Property& properties,
+		control::Viewport viewport,
 		control::RenderTargetView renderTarget,
 		control::DepthStencilView depthStencil
 		) const
 	{
+		cmd.setViewport(std::move(viewport));
 		cmd.setRenderTarget(std::move(renderTarget));
 		cmd.setDepthStencil(std::move(depthStencil));
 
@@ -79,10 +81,10 @@ private:
 		auto configuration = graphics::Buffer::Configuration();
 
 		auto initialData = std::vector<math::Vec2> {
-			{ -1.0f, -1.0f },
-			{ +1.0f, +1.0f },
-			{ -1.0f, +1.0f },
-			{ +1.0f, +1.0f }
+			{ -1.0f, +1.0f }, { 0.0f, 0.0f }, // pos, texcoord
+			{ +1.0f, +1.0f }, { 1.0f, 0.0f },
+			{ -1.0f, -1.0f }, { 0.0f, 1.0f },
+			{ +1.0f, -1.0f }, { 1.0f, 1.0f }
 			};
 
 		configuration.allowCPURead = false;
@@ -133,11 +135,13 @@ void Sprite::initialiseSystem(graphics::Device& device, essentials::ConstBufferV
 void Sprite::render(
 	command::CommandBuffer& commandBuffer,
 	const shader::Property& properties,
+	control::Viewport viewport,
 	control::RenderTargetView renderTarget,
 	control::DepthStencilView depthStencil
 	) const
 {
-	SpriteCommon::instance()->render(cmd_, *this, properties, std::move(renderTarget), std::move(depthStencil));
+	SpriteCommon::instance()->render(
+		cmd_, *this, properties, std::move(viewport), std::move(renderTarget), std::move(depthStencil));
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 

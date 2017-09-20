@@ -2,6 +2,7 @@
 #define _DORMOUSEENGINE_TESTER_RENDERINGFIXTURE_HPP_
 
 #include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/renderer/control/Viewport.hpp"
 #include "WindowedFixture.hpp"
 
 namespace dormouse_engine::tester {
@@ -15,9 +16,15 @@ public:
 		return graphicsDevice_;
 	}
 
+	renderer::control::Viewport& fullscreenViewport() {
+		return fullscreenViewport_;
+	}
+
 private:
 
 	graphics::Device graphicsDevice_;
+
+	renderer::control::Viewport fullscreenViewport_;
 
 };
 

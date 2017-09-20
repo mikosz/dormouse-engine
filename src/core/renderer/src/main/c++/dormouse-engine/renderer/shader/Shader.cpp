@@ -51,7 +51,7 @@ void detail::ShaderBase::doRender(
 	) const
 {
 	for (const auto& resource : resources_) {
-		DE_LOG_DEBUG << "Binding resource " << resource.descriptor;
+		DE_LOG_TRACE << "Binding resource " << resource.descriptor;
 		bindResource_(cmd, root, shaderType, resource);
 	}
 }
