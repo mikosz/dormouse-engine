@@ -54,6 +54,11 @@ void detail::ShaderBase::doRender(
 		DE_LOG_TRACE << "Binding resource " << resource.descriptor;
 		bindResource_(cmd, root, shaderType, resource);
 	}
+
+	for (const auto& cb : constantBuffers_) {
+		DE_LOG_TRACE << "Binding constant buffer " << cb.descriptor;
+		bindConstantBuffer_(cmd, root, shaderType, cb);
+	}
 }
 
 auto detail::ShaderBase::createResources_(const graphics::ShaderReflection& reflectionData) -> Resources
@@ -70,6 +75,22 @@ auto detail::ShaderBase::createResources_(const graphics::ShaderReflection& refl
 	}
 
 	return resources;
+}
+
+auto detail::ShaderBase::createConstantBuffers_(const graphics::ShaderReflection& reflectionData) -> ConstantBuffers
+{
+	auto buffers = ConstantBuffers();
+	buffers.reserve(reflectionData.constantBuffers().size());
+
+	for (const auto& cbReflection : reflectionData.constantBuffers()) {
+		auto cb = ConstantBuffer();
+		cb.descriptor = createPropertyDescriptor(cbReflection.name);
+		cb.slot = cbReflection.slot;
+
+		buffers.emplace_back(std::move(cb));
+	}
+
+	return buffers;
 }
 
 void detail::ShaderBase::bindResource_(

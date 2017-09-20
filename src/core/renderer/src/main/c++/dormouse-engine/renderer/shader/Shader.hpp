@@ -42,9 +42,21 @@ private:
 
 	using Resources = std::vector<Resource>;
 
+	struct ConstantBuffer {
+
+		PropertyDescriptor descriptor;
+
+		size_t slot;
+
+	};
+
+	using ConstantBuffers = std::vector<ConstantBuffer>;
+
 	Resources resources_;
 
 	Resources createResources_(const graphics::ShaderReflection& reflectionData);
+
+	ConstantBuffers createConstantBuffers_(const graphics::ShaderReflection& reflectionData);
 
 	void bindResource_(
 		command::DrawCommand& cmd,
