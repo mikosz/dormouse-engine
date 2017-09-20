@@ -77,6 +77,13 @@ private:
 
 } // anonymous namespace
 
+const ShaderCompiler::CompilerFlags ShaderCompiler::FULL_DEBUG_MASK =
+	CompilerFlags() |
+	CompilerFlag::DEBUG |
+	CompilerFlag::SKIP_OPTIMISATION |
+	CompilerFlag::OPTIMISATION_LEVEL_0
+	;
+
 essentials::ByteVector ShaderCompiler::compile(
 	essentials::ConstBufferView code,
     const std::string& name,

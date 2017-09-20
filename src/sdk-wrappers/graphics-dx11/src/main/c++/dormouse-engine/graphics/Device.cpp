@@ -65,10 +65,10 @@ void queryAdapterAndRefreshRate(
 }
 
 std::tuple<size_t, size_t> windowDimensions(system::windows::WindowHandle windowHandle) {
-	auto windowRect = RECT();
-	GetWindowRect(windowHandle, &windowRect);
+	auto clientRect = RECT();
+	GetClientRect(windowHandle, &clientRect);
 
-	return std::make_tuple(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+	return std::make_tuple(clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
 }
 
 void createD3DDevice(

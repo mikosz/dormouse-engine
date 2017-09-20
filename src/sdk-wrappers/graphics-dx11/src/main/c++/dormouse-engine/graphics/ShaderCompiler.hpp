@@ -29,9 +29,15 @@ public:
         CompilerFlag,
         (DEBUG)(D3DCOMPILE_DEBUG)
         (SKIP_OPTIMISATION)(D3DCOMPILE_SKIP_OPTIMIZATION)
+		(OPTIMISATION_LEVEL_0)(D3DCOMPILE_OPTIMIZATION_LEVEL0)
+		(OPTIMISATION_LEVEL_1)(D3DCOMPILE_OPTIMIZATION_LEVEL1)
+		(OPTIMISATION_LEVEL_2)(D3DCOMPILE_OPTIMIZATION_LEVEL2)
+		(OPTIMISATION_LEVEL_3)(D3DCOMPILE_OPTIMIZATION_LEVEL3)
         );
 
     using CompilerFlags = dormouse_engine::Mask<CompilerFlag>;
+
+	static const CompilerFlags FULL_DEBUG_MASK;
 
     ShaderCompiler(CompilerFlags globalFlags = CompilerFlags()) :
         globalCompilerFlags_(globalFlags)

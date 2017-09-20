@@ -26,7 +26,6 @@ system::windows::COMWrapper<ID3D11Resource> createBufferResource(
 
 	desc.ByteWidth = static_cast<UINT>(configuration.size);
 	desc.BindFlags = static_cast<UINT>(configuration.purpose);
-	desc.StructureByteStride = static_cast<UINT>(configuration.stride);
 
 	if (configuration.allowModifications) {
 		if (configuration.allowCPURead) {
@@ -60,7 +59,7 @@ system::windows::COMWrapper<ID3D11Resource> createBufferResource(
 	auto buffer = system::windows::COMWrapper<ID3D11Buffer>();
 	checkDirectXCall(detail::Internals::dxDevice(device).CreateBuffer(&desc, dataPtr, &buffer.get()),
 		"Failed to create a buffer");
-	
+
 	return buffer;
 }
 

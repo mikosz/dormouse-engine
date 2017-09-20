@@ -18,6 +18,7 @@ namespace dormouse_engine::renderer::d2 {
 class Sprite final {
 public:
 
+	// TODO: temp - don't pass shader code here
 	static void initialiseSystem(graphics::Device& device, essentials::ConstBufferView shaderCode);
 
 	Sprite(const graphics::Texture& texture) :
@@ -28,7 +29,7 @@ public:
 	void render(
 		command::CommandBuffer& commandBuffer,
 		const shader::Property& properties,
-		control::Viewport viewport, // TODO: probably shouldn't be passed to render?
+		control::Viewport viewport, // TODO: probably shouldn't be passed to render like that?
 		control::RenderTargetView renderTarget,
 		control::DepthStencilView depthStencil
 		) const;

@@ -7,6 +7,7 @@
 #include "dormouse-engine/essentials/policy/creation/None.hpp"
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/essentials/debug.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/RenderState.hpp"
@@ -58,7 +59,7 @@ public:
 		technique_.render(cmd, mergedProperty);
 
 		cmd.setRenderState(renderState_);
-		cmd.setVertexBuffer(vertexBuffer_, 4u);
+		cmd.setVertexBuffer(vertexBuffer_, 4u, 2 * sizeof(math::Vec2));
 		cmd.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_STRIP);
 		cmd.setTechnique(essentials::make_observer(&technique_));
 	}
@@ -102,7 +103,13 @@ private:
 	{
 		auto technique = shader::Technique();
 
-		auto shaderCompiler = graphics::ShaderCompiler();
+		auto flags = graphics::ShaderCompiler::CompilerFlags();
+
+		if (essentials::IS_DEBUG) {
+			flags = graphics::ShaderCompiler::FULL_DEBUG_MASK;
+		}
+
+		auto shaderCompiler = graphics::ShaderCompiler(flags);
 
 		{
 			auto compiledVertexShader =

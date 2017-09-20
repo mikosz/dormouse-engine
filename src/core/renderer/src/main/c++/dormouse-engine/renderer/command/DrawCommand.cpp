@@ -50,7 +50,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	assert(static_cast<bool>(technique_));
 	technique_->bind(commandList);
 
-	commandList.setVertexBuffer(vertexBuffer_, 0u);
+	commandList.setVertexBuffer(vertexBuffer_, 0u, vertexStride_);
 	commandList.setIndexBuffer(indexBuffer_, 0u);
 
 	if (indexCount_ > 0u) {

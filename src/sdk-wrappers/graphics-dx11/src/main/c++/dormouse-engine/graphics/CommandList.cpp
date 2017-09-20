@@ -149,13 +149,10 @@ void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset) {
 	deviceContext_->IASetIndexBuffer(buf, format, static_cast<UINT>(offset));
 }
 
-void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot) {
+void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot, size_t stride) {
 	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
-
-	auto desc = D3D11_BUFFER_DESC();
-	buf->GetDesc(&desc);
-
-	auto strideParam = desc.StructureByteStride;
+	
+	auto strideParam = static_cast<UINT>(stride);
 	auto offsetParam = 0u;
 
 	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);

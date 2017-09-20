@@ -54,9 +54,10 @@ public:
 		resource_(stage, slot) = std::move(resource);
 	}
 
-	void setVertexBuffer(graphics::Buffer vertexBuffer, size_t vertexCount) {
+	void setVertexBuffer(graphics::Buffer vertexBuffer, size_t vertexCount, size_t vertexStride) {
 		vertexBuffer_ = std::move(vertexBuffer);
 		vertexCount_ = vertexCount;
+		vertexStride_ = vertexStride;
 	}
 
 	void setIndexBuffer(graphics::Buffer indexBuffer, size_t indexCount) {
@@ -98,6 +99,8 @@ private:
 
 	size_t vertexCount_ = 0u;
 
+	size_t vertexStride_ = 0u;
+
 	graphics::Buffer indexBuffer_;
 
 	size_t indexCount_ = 0u;
@@ -110,17 +113,17 @@ private:
 		return samplers_[static_cast<size_t>(stage) * graphics::SAMPLER_SLOT_COUNT_PER_SHADER + slot];
 	}
 
-	control::Sampler sampler_(graphics::ShaderType stage, size_t slot) const {
+	const control::Sampler sampler_(graphics::ShaderType stage, size_t slot) const {
 		return const_cast<DrawCommand&>(*this).sampler_(stage, slot);
 	}
 
-	control::ResourceView resource_(graphics::ShaderType stage, size_t slot) {
+	control::ResourceView& resource_(graphics::ShaderType stage, size_t slot) {
 		assert(static_cast<size_t>(stage) < 5u);
 		assert(slot < graphics::RESOURCE_SLOT_COUNT_PER_SHADER);
 		return resources_[static_cast<size_t>(stage) * graphics::RESOURCE_SLOT_COUNT_PER_SHADER + slot];
 	}
 
-	control::ResourceView resource_(graphics::ShaderType stage, size_t slot) const {
+	const control::ResourceView resource_(graphics::ShaderType stage, size_t slot) const {
 		return const_cast<DrawCommand&>(*this).resource_(stage, slot);
 	}
 
