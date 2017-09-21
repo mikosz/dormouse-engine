@@ -142,6 +142,7 @@ private:
 
 	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
 
+	// TODO: replace with custom class for this usage
 	std::aligned_storage_t<STORAGE_SIZE, STORAGE_ALIGNMENT> object_;
 
 };
