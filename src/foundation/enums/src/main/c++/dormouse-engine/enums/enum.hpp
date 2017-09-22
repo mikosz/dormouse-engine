@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <type_traits>
+#include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 /**
  * Usage example with incremental values starting at 0:
