@@ -13,6 +13,7 @@
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
+#include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "../control/controlfwd.hpp"
 #include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
@@ -40,6 +41,10 @@ public:
 
 };
 
+class PropertyNotWriteable final : public exceptions::RuntimeError {
+	pu
+};
+
 class Property final {
 public:
 
@@ -59,19 +64,24 @@ public:
 		reinterpret_cast<Concept*>(&object_)->~Concept();
 	}
 
-	bool has(essentials::StringId id) const {
+	bool has(essentials::StringId id, size_t arrayIdx = 0u) const {
 		assert(&object_ != nullptr);
-		return reinterpret_cast<const Concept*>(&object_)->has(std::move(id));
+		return reinterpret_cast<const Concept*>(&object_)->has(std::move(id), arrayIdx);
 	}
 
-	Property get(essentials::StringId id) const {
+	Property get(essentials::StringId id, size_t arrayIdx = 0u) const {
 		assert(&object_ != nullptr);
-		return reinterpret_cast<const Concept*>(&object_)->get(std::move(id));
+		return reinterpret_cast<const Concept*>(&object_)->get(std::move(id), arrayIdx);
 	}
 
 	void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const {
 		assert(&object_ != nullptr);
 		reinterpret_cast<const Concept*>(&object_)->bindResource(cmd, stage, slot);
+	}
+
+	void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) {
+		assert(&object_ != nullptr);
+		reinterpret_cast<const Concept*>(&object_)->write(buffer, dataType);
 	}
 
 private:
@@ -81,21 +91,23 @@ private:
 
 		virtual ~Concept() = default;
 
-		virtual bool has(essentials::StringId id) const = 0;
+		virtual bool has(essentials::StringId id, size_t arrayIdx) const = 0;
 
-		virtual Property get(essentials::StringId id) const = 0;
+		virtual Property get(essentials::StringId id, size_t arrayIdx) const = 0;
 
 		virtual void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const = 0;
+
+		virtual void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) = 0;
 
 	};
 
 	class Default : public Concept {
 
-		bool has([[maybe_unused]] essentials::StringId id) const override {
+		bool has([[maybe_unused]] essentials::StringId id, [[maybe_unused]] size_t arrayIdx) const override {
 			return false;
 		}
 
-		Property get([[maybe_unused]] essentials::StringId id) const override {
+		Property get([[maybe_unused]] essentials::StringId id, [[maybe_unused]] size_t arrayIdx) const override {
 			assert(!"Property not bound");
 			return Property();
 		}
@@ -109,6 +121,10 @@ private:
 			throw NotAResourceProperty();
 		}
 
+		void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) override {
+			throw 
+		}
+
 	};
 
 	template <class T>
@@ -120,12 +136,12 @@ private:
 		{
 		}
 
-		bool has(essentials::StringId id) const override {
-			return hasShaderProperty(model_, std::move(id));
+		bool has(essentials::StringId id, size_t arrayIdx) const override {
+			return hasShaderProperty(model_, std::move(id), arrayIdx);
 		}
 
-		Property get(essentials::StringId id) const override {
-			return getShaderProperty(model_, std::move(id));
+		Property get(essentials::StringId id, size_t arrayIdx) const override {
+			return getShaderProperty(model_, std::move(id), arrayIdx);
 		}
 
 		void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
@@ -150,11 +166,12 @@ private:
 template <class T>
 inline bool hasShaderProperty(
 	[[maybe_unused]] const T& model,
-	[[maybe_unused]] essentials::StringId id
+	[[maybe_unused]] essentials::StringId id,
+	[[maybe_unused]] size_t arrayIdx
 	)
 {
 	if constexpr (essentials::IsAnyPointer_v<T>) {
-		return hasShaderProperty(*model, std::move(id));
+		return hasShaderProperty(*model, std::move(id), arrayIdx);
 	} else {
 		return false;
 	}
@@ -163,11 +180,12 @@ inline bool hasShaderProperty(
 template <class T>
 inline Property getShaderProperty(
 	[[maybe_unused]] const T& model,
-	[[maybe_unused]] essentials::StringId id
+	[[maybe_unused]] essentials::StringId id,
+	[[maybe_unused]] size_t arrayIdx
 	)
 {
 	if constexpr (essentials::IsAnyPointer_v<T>) {
-		return getShaderProperty(*model, std::move(id));
+		return getShaderProperty(*model, std::move(id), arrayIdx);
 	} else {
 		assert(!"Property not bound");
 		return Property();

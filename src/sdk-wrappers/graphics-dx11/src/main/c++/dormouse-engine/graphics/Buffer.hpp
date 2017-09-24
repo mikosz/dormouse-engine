@@ -16,6 +16,8 @@ namespace dormouse_engine::graphics {
 
 class Device;
 
+const auto CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+
 class Buffer : public Resource {
 public:
 

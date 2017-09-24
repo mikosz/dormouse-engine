@@ -1,6 +1,7 @@
 #ifndef DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
 #define DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
 
+#include <cassert>
 #include <array>
 #include <vector>
 #include <string>
@@ -43,6 +44,16 @@ public:
 
 	size_t size() const {
 		return size_ * sizeof(ByteType);
+	}
+
+	BufferView& operator+=(size_t offset) {
+		assert(offset <= size_);
+		data_ += offset;
+	}
+
+	BufferView operator+(size_t offset) {
+		auto result = BufferView(*this);
+		return result += offset;
 	}
 
 private:

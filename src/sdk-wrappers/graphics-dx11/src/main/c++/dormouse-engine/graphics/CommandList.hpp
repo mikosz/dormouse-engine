@@ -19,9 +19,6 @@ namespace dormouse_engine::graphics {
 class Buffer;
 class Resource;
 class Device;
-class ConstantBuffer;
-class IndexBuffer;
-class VertexBuffer;
 class Texture;
 class Sampler;
 class RenderState;
@@ -55,7 +52,7 @@ public:
 	void drawIndexedInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t startingIndex,
 		PrimitiveTopology primitiveTopology);
 
-	LockedData lock(Resource& data, LockPurpose lockPurpose);
+	LockedData lock(const Resource& data, LockPurpose lockPurpose);
 
 	void setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil);
 
@@ -73,7 +70,7 @@ public:
 
 	void setShader(const PixelShader& pixelShader) noexcept;
 
-	void setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot);
+	void setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot);
 
 	void setIndexBuffer(const Buffer& buffer, size_t offset);
 

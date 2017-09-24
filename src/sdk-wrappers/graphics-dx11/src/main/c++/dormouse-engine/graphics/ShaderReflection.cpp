@@ -66,12 +66,12 @@ ShaderReflection::Type buildTypeInfo(ID3D11ShaderReflectionType& typeInfo, size_
 
 	DE_LOG_DEBUG << "Shader variable type: " << (desc.Name ? desc.Name : "<NULL>");
 
-	ShaderReflection::Type type;
+	auto type = ShaderReflection::Type();
 	type.name = (desc.Name ? desc.Name : "");
-	fromIntegral(type.klass, static_cast<std::underlying_type_t<decltype(desc.Class)>>(desc.Class));
-	fromIntegral(type.scalarType, static_cast<std::underlying_type_t<decltype(desc.Type)>>(desc.Type));
-	type.columns = desc.Columns;
-	type.rows = desc.Rows;
+	fromIntegral(type.dataType.klass, static_cast<std::underlying_type_t<decltype(desc.Class)>>(desc.Class));
+	fromIntegral(type.dataType.scalarType, static_cast<std::underlying_type_t<decltype(desc.Type)>>(desc.Type));
+	type.dataType.columns = desc.Columns;
+	type.dataType.rows = desc.Rows;
 	type.offset = desc.Offset;
 	type.elements = desc.Elements;
 

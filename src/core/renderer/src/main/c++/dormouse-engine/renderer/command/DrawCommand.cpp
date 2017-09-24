@@ -28,22 +28,34 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	}
 
 	for (const auto stageIdx : range<size_t>(0u, STAGE_COUNT)) {
-		for (const auto slotIdx : range<size_t>(0u, graphics::SAMPLER_SLOT_COUNT_PER_SHADER)) {
-			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
-			const auto sampler = sampler_(stage, slotIdx);
-			if (!previousCommand || (previousCommand->sampler_(stage, slotIdx) != sampler)) {
-				sampler.bind(commandList, stage, slotIdx);
+		const auto stage = static_cast<graphics::ShaderType>(stageIdx);
+		
+		for (const auto samplerSlotIdx : range<size_t>(0u, graphics::SAMPLER_SLOT_COUNT_PER_SHADER)) {
+			const auto sampler = sampler_(stage, samplerSlotIdx);
+			if (!previousCommand || (previousCommand->sampler_(stage, samplerSlotIdx) != sampler)) {
+				sampler.bind(commandList, stage, samplerSlotIdx);
 			}
 		}
-	}
 
-	for (const auto stageIdx : range<size_t>(0u, STAGE_COUNT)) {
-		for (const auto slotIdx : range<size_t>(0u, graphics::RESOURCE_SLOT_COUNT_PER_SHADER)) {
-			const auto stage = static_cast<graphics::ShaderType>(stageIdx);
-			const auto resource = resource_(stage, slotIdx);
-			if (!previousCommand || (previousCommand->resource_(stage, slotIdx) != resource)) {
-				resource.bind(commandList, stage, slotIdx);
+		for (const auto resourceSlotIdx : range<size_t>(0u, graphics::RESOURCE_SLOT_COUNT_PER_SHADER)) {
+			const auto resource = resource_(stage, resourceSlotIdx);
+			if (!previousCommand || (previousCommand->resource_(stage, resourceSlotIdx) != resource)) {
+				resource.bind(commandList, stage, resourceSlotIdx);
 			}
+		}
+
+		for (const auto constantBufferSlotIdx : range<size_t>(0u, graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER)) {
+			const auto constantBuffer = constantBuffer_(stage, constantBufferSlotIdx);
+			const auto data = constantBufferData(stage, constantBufferSlotIdx);
+
+			{
+				// TODO: lock should return a std::unique_ptr<BufferView, ...> instead of uint8_t. size is retrievable
+				// from resource anyway
+				auto outPtr = commandList.lock(constantBuffer, graphics::CommandList::LockPurpose::WRITE_DISCARD);
+				std::memcpy(outPtr.get(), data.data(), data.size());
+			}
+
+			commandList.setConstantBuffer(constantBuffer, stage, constantBufferSlotIdx);
 		}
 	}
 

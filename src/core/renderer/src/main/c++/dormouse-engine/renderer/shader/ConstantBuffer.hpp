@@ -4,20 +4,30 @@
 #include <vector>
 
 #include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "../command/commandfwd.hpp"
 #include "Parameter.hpp"
-#include "Property.hpp"
 
 namespace dormouse_engine::renderer::shader {
+
+class Property;
 
 class ConstantBuffer {
 public:
 
 	using Parameters = std::vector<Parameter>;
 
-	void bind(command::DrawCommand& drawCommand, const Property& root);
+	ConstantBuffer(
+		graphics::Device& graphicsDevice,
+		graphics::ShaderType stage,
+		size_t slot,
+		size_t size,
+		Parameters parameters
+		);
+
+	void bind(command::DrawCommand& drawCommand, const Property& root) const;
 
 private:
 
@@ -26,6 +36,8 @@ private:
 	graphics::ShaderType stage_;
 
 	size_t slot_;
+
+	size_t size_;
 
 	Parameters parameters_;
 

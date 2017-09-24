@@ -10,6 +10,7 @@
 #include "dormouse-engine/reflection/Object.hpp"
 #include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
+#include "ConstantBuffer.hpp"
 
 namespace dormouse_engine::renderer::shader {
 
@@ -22,7 +23,11 @@ protected:
 
 	ShaderBase() = default;
 
-	ShaderBase(essentials::ConstBufferView compiledShaderObjectData);
+	ShaderBase(
+		graphics::Device& graphicsDevice,
+		graphics::ShaderType shaderType,
+		essentials::ConstBufferView compiledShaderObjectData
+		);
 
 	void doRender(
 		command::DrawCommand& cmd,
@@ -42,21 +47,19 @@ private:
 
 	using Resources = std::vector<Resource>;
 
-	struct ConstantBuffer {
-
-		PropertyDescriptor descriptor;
-
-		size_t slot;
-
-	};
-
 	using ConstantBuffers = std::vector<ConstantBuffer>;
 
 	Resources resources_;
 
+	ConstantBuffers constantBuffers_;
+
 	Resources createResources_(const graphics::ShaderReflection& reflectionData);
 
-	ConstantBuffers createConstantBuffers_(const graphics::ShaderReflection& reflectionData);
+	ConstantBuffers createConstantBuffers_(
+		graphics::Device& graphicsDevice,
+		graphics::ShaderType shaderType,
+		const graphics::ShaderReflection& reflectionData
+		);
 
 	void bindResource_(
 		command::DrawCommand& cmd,
@@ -77,11 +80,12 @@ public:
 		graphics::Device& graphicsDevice,
 		essentials::ConstBufferView compiledShaderObjectData
 		) :
-		ShaderBase(compiledShaderObjectData),
+		ShaderBase(graphicsDevice, GraphicsShaderType::SHADER_TYPE, compiledShaderObjectData),
 		shader_(graphicsDevice, std::move(compiledShaderObjectData))
 	{
 	}
 
+	// TODO: bind, render, bind* in ShaderBase - these are very misleading
 	void bind(graphics::CommandList& commandList) const {
 		commandList.setShader(shader_);
 	}

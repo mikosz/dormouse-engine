@@ -52,7 +52,7 @@ void CommandList::drawIndexedInstanced(size_t vertexCountPerInstance, size_t ins
 		);
 }
 
-CommandList::LockedData CommandList::lock(Resource& data, LockPurpose lockPurpose) {
+CommandList::LockedData CommandList::lock(const Resource& data, LockPurpose lockPurpose) {
 	auto* dxResource = detail::Internals::dxResourcePtr(data);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -103,7 +103,7 @@ void CommandList::setShader(const PixelShader& pixelShader) noexcept {
 	deviceContext_->PSSetShader(detail::Internals::dxPixelShaderPtr(pixelShader), nullptr, 0);
 }
 
-void CommandList::setConstantBuffer(Buffer& buffer, ShaderType stage, size_t slot) {
+void CommandList::setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot) {
 	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
 	switch (stage) {

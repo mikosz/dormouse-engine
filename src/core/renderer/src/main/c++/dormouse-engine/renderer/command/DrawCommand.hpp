@@ -5,6 +5,7 @@
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
+#include "dormouse-engine/essentials/memory.hpp"
 #include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
@@ -69,6 +70,22 @@ public:
 		primitiveTopology_ = primitiveTopology;
 	}
 
+	void setConstantBuffer(graphics::Buffer buffer, graphics::ShaderType stage, size_t slot) {
+		constantBuffer_(stage, slot) = std::move(buffer);
+	}
+
+	essentials::ConstBufferView constantBufferData(graphics::ShaderType stage, size_t slot) const {
+		assert(static_cast<size_t>(stage) < STAGE_COUNT);
+		assert(slot < graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER);
+		const auto idx = static_cast<size_t>(stage) * graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER + slot;
+		return essentials::viewBuffer(constantBufferData_[idx]);
+	}
+
+	essentials::BufferView constantBufferData(graphics::ShaderType stage, size_t slot) {
+		auto view = const_cast<const DrawCommand&>(*this).constantBufferData(stage, slot);
+		return essentials::viewBuffer(const_cast<essentials::Byte*>(view.data()), view.size());
+	}
+
 private:
 
 	static_assert(static_cast<size_t>(graphics::ShaderType::VERTEX) == 0u);
@@ -91,9 +108,20 @@ private:
 
 	control::RenderState renderState_;
 
+	// TODO: consider a different way of storing samplers, resources etc. Arrays are great, because they
+	// store data locally, but most of these control objects are null, so they're a waste of space.
 	std::array<control::Sampler, STAGE_COUNT * graphics::SAMPLER_SLOT_COUNT_PER_SHADER> samplers_;
 
 	std::array<control::ResourceView, STAGE_COUNT * graphics::RESOURCE_SLOT_COUNT_PER_SHADER> resources_;
+
+	// TODO: keeping graphics::Buffer here disallows updating constant buffer data only when it changes,
+	// i.e. if you have a constant buffer keeping per-frame data and you render multiple objects with it
+	// it will always be updated. Create control::Buffer that's capable of checking whether buffer data
+	// has changed and ensure that it is shared between objects by other moving it to shader::Shader or
+	// by allowing some extra kind of identification.
+	std::array<graphics::Buffer, STAGE_COUNT * graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER> constantBuffers_;
+
+	std::array<essentials::ByteVector, STAGE_COUNT * graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER> constantBufferData_;
 
 	graphics::Buffer vertexBuffer_;
 
@@ -107,24 +135,34 @@ private:
 
 	graphics::PrimitiveTopology primitiveTopology_;
 
-	control::Sampler& sampler_(graphics::ShaderType stage, size_t slot) {
-		assert(static_cast<size_t>(stage) < 5u);
+	const control::Sampler& sampler_(graphics::ShaderType stage, size_t slot) const {
+		assert(static_cast<size_t>(stage) < STAGE_COUNT);
 		assert(slot < graphics::SAMPLER_SLOT_COUNT_PER_SHADER);
 		return samplers_[static_cast<size_t>(stage) * graphics::SAMPLER_SLOT_COUNT_PER_SHADER + slot];
 	}
 
-	const control::Sampler sampler_(graphics::ShaderType stage, size_t slot) const {
-		return const_cast<DrawCommand&>(*this).sampler_(stage, slot);
+	control::Sampler& sampler_(graphics::ShaderType stage, size_t slot) {
+		return const_cast<control::Sampler&>(const_cast<const DrawCommand&>(*this).sampler_(stage, slot));
 	}
 
-	control::ResourceView& resource_(graphics::ShaderType stage, size_t slot) {
-		assert(static_cast<size_t>(stage) < 5u);
+	const control::ResourceView& resource_(graphics::ShaderType stage, size_t slot) const {
+		assert(static_cast<size_t>(stage) < STAGE_COUNT);
 		assert(slot < graphics::RESOURCE_SLOT_COUNT_PER_SHADER);
 		return resources_[static_cast<size_t>(stage) * graphics::RESOURCE_SLOT_COUNT_PER_SHADER + slot];
 	}
 
-	const control::ResourceView resource_(graphics::ShaderType stage, size_t slot) const {
-		return const_cast<DrawCommand&>(*this).resource_(stage, slot);
+	control::ResourceView& resource_(graphics::ShaderType stage, size_t slot) {
+		return const_cast<control::ResourceView&>(const_cast<const DrawCommand&>(*this).resource_(stage, slot));
+	}
+
+	const graphics::Buffer& constantBuffer_(graphics::ShaderType stage, size_t slot) const {
+		assert(static_cast<size_t>(stage) < STAGE_COUNT);
+		assert(slot < graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER);
+		return constantBuffers_[static_cast<size_t>(stage) * graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER + slot];
+	}
+
+	graphics::Buffer& constantBuffer_(graphics::ShaderType stage, size_t slot) {
+		return const_cast<graphics::Buffer&>(const_cast<const DrawCommand&>(*this).constantBuffer_(stage, slot));
 	}
 
 };
