@@ -63,7 +63,7 @@ CommandList::LockedData CommandList::lock(const Resource& data, LockPurpose lock
 
 	return LockedData(
 		reinterpret_cast<std::uint8_t*>(mappedResource.pData),
-		[deviceContext = deviceContext_, &dxResource](std::uint8_t*) {
+		[deviceContext = deviceContext_, dxResource](std::uint8_t*) {
 			deviceContext->Unmap(dxResource, 0);
 		}
 		);

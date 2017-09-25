@@ -8,7 +8,7 @@ struct PIn {
 	float2 tex : TEXCOORD;
 };
 
-cbuffer Transform {
+cbuffer sprite {
 	matrix toHomogeneous;
 };
 

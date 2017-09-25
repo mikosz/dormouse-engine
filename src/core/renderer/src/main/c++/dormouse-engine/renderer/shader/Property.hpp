@@ -14,6 +14,7 @@
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/graphics/ShaderDataType.hpp"
+#include "dormouse-engine/math/Matrix.hpp"
 #include "../control/controlfwd.hpp"
 #include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
@@ -42,7 +43,23 @@ public:
 };
 
 class PropertyNotWriteable final : public exceptions::RuntimeError {
-	pu
+public:
+
+	PropertyNotWriteable() :
+		exceptions::RuntimeError("Accessed property is not writeable")
+	{
+	}
+
+};
+
+class IncompatibleDataType final : public exceptions::RuntimeError {
+public:
+
+	IncompatibleDataType(const std::string& message) :
+		exceptions::RuntimeError(message)
+	{
+	}
+
 };
 
 class Property final {
@@ -79,7 +96,7 @@ public:
 		reinterpret_cast<const Concept*>(&object_)->bindResource(cmd, stage, slot);
 	}
 
-	void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) {
+	void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
 		assert(&object_ != nullptr);
 		reinterpret_cast<const Concept*>(&object_)->write(buffer, dataType);
 	}
@@ -97,7 +114,7 @@ private:
 
 		virtual void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const = 0;
 
-		virtual void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) = 0;
+		virtual void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const = 0;
 
 	};
 
@@ -121,8 +138,12 @@ private:
 			throw NotAResourceProperty();
 		}
 
-		void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) override {
-			throw 
+		void write(
+			[[maybe_unused]] essentials::BufferView buffer,
+			[[maybe_unused]] graphics::ShaderDataType dataType
+			) const override
+		{
+			throw PropertyNotWriteable();
 		}
 
 	};
@@ -146,6 +167,10 @@ private:
 
 		void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
 			bindShaderResource(model_, cmd, stage, slot);
+		}
+
+		void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
+			writeShaderData(model_, buffer, dataType);
 		}
 
 	private:
@@ -207,10 +232,27 @@ inline void bindShaderResource(
 	}
 }
 
+template <class T>
+inline void writeShaderData(
+	[[maybe_unused]] const T& model,
+	[[maybe_unused]] essentials::BufferView buffer,
+	[[maybe_unused]] graphics::ShaderDataType dataType
+	)
+{
+	if constexpr (essentials::IsAnyPointer_v<T>) {
+		writeShaderData(*model, buffer, dataType);
+	} else {
+		throw PropertyNotWriteable();
+	}
+}
+
 void bindShaderResource(
 	control::ResourceView resourceView, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
 void bindShaderResource(
 	control::Sampler sampler, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
+
+void writeShaderData(
+	const math::Matrix4x4& matrix, essentials::BufferView buffer, graphics::ShaderDataType dataType);
 
 } // namespace dormouse_engine::renderer::shader
 

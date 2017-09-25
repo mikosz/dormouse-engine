@@ -49,6 +49,7 @@ public:
 	BufferView& operator+=(size_t offset) {
 		assert(offset <= size_);
 		data_ += offset;
+		return *this;
 	}
 
 	BufferView operator+(size_t offset) {
@@ -58,7 +59,7 @@ public:
 
 private:
 
-	ByteType* const data_ = nullptr;
+	ByteType* data_ = nullptr;
 
 	const size_t size_ = 0u;
 

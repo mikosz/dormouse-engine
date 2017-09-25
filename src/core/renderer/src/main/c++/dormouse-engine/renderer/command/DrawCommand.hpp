@@ -81,9 +81,11 @@ public:
 		return essentials::viewBuffer(constantBufferData_[idx]);
 	}
 
-	essentials::BufferView constantBufferData(graphics::ShaderType stage, size_t slot) {
-		auto view = const_cast<const DrawCommand&>(*this).constantBufferData(stage, slot);
-		return essentials::viewBuffer(const_cast<essentials::Byte*>(view.data()), view.size());
+	essentials::ByteVector& constantBufferData(graphics::ShaderType stage, size_t slot) {
+		assert(static_cast<size_t>(stage) < STAGE_COUNT);
+		assert(slot < graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER);
+		const auto idx = static_cast<size_t>(stage) * graphics::CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER + slot;
+		return constantBufferData_[idx];
 	}
 
 private:

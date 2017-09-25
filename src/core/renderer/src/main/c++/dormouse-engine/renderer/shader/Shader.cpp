@@ -78,11 +78,7 @@ ConstantBuffer::Parameters createParameters(
 		DE_LOG_DEBUG << "Creating parameter at offset " << (type.offset + offset)
 			<< " reading property " << PropertyDescriptor(descriptor);
 
-		parameters.emplace_back(
-			PropertyDescriptor(std::move(descriptor)),
-			Parameter::DataType(type.klass, type.scalarType, type.columns, type.rows),
-			type.offset + offset
-			);
+		parameters.emplace_back(PropertyDescriptor(std::move(descriptor)), type.dataType, type.offset + offset);
 	}
 
 	return parameters;

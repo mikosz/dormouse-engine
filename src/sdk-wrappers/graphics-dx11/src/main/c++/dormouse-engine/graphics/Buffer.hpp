@@ -48,7 +48,7 @@ public:
 
 	Buffer(
 		Device& renderer,
-		Configuration configuration,
+		const Configuration& configuration,
 		essentials::ConstBufferView initialData = essentials::ConstBufferView()
 		);
 

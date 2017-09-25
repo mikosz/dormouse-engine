@@ -19,15 +19,15 @@ public:
 	{
 	}
 
-	bool has(essentials::StringId id) const {
-		return added_->has(id) || original_->has(id);
+	bool has(essentials::StringId id, size_t arrayIdx) const {
+		return added_->has(id, arrayIdx) || original_->has(id, arrayIdx);
 	}
 
-	Property get(essentials::StringId id) const {
+	Property get(essentials::StringId id, size_t arrayIdx) const {
 		if (added_->has(id)) {
-			return added_->get(std::move(id));
+			return added_->get(std::move(id), arrayIdx);
 		}
-		return original_->get(std::move(id));
+		return original_->get(std::move(id), arrayIdx);
 	}
 
 private:
@@ -38,12 +38,12 @@ private:
 
 };
 
-bool hasShaderProperty(const MergedProperty& mergedProperty, essentials::StringId id) {
-	return mergedProperty.has(std::move(id));
+bool hasShaderProperty(const MergedProperty& mergedProperty, essentials::StringId id, size_t arrayIdx) {
+	return mergedProperty.has(std::move(id), arrayIdx);
 }
 
-Property getShaderProperty(const MergedProperty& mergedProperty, essentials::StringId id) {
-	return mergedProperty.get(std::move(id));
+Property getShaderProperty(const MergedProperty& mergedProperty, essentials::StringId id, size_t arrayIdx) {
+	return mergedProperty.get(std::move(id), arrayIdx);
 }
 
 } // namespace dormouse_engine::renderer::shader

@@ -5,6 +5,7 @@
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/math/Vector.hpp"
+#include "dormouse-engine/math/Matrix.hpp"
 #include "../control/ResourceView.hpp"
 #include "../control/Viewport.hpp"
 #include "../control/RenderTargetView.hpp"
@@ -38,18 +39,22 @@ public:
 		return textureView_;
 	}
 
+	const math::Matrix4x4& toHomogeneous() const { // TODO: temp
+		return toHomogeneous_;
+	}
+
 private:
 
 	mutable command::DrawCommand cmd_;
 
 	control::ResourceView textureView_;
 
-	math::Vec2 position_;
+	math::Matrix4x4 toHomogeneous_;
 
 };
 
-bool hasShaderProperty(const Sprite& model, essentials::StringId id);
-shader::Property getShaderProperty(const Sprite& model, essentials::StringId id);
+bool hasShaderProperty(const Sprite& model, essentials::StringId id, size_t arrayIdx);
+shader::Property getShaderProperty(const Sprite& model, essentials::StringId id, size_t arrayIdx);
 
 } // namespace dormouse_engine::renderer::d2
 

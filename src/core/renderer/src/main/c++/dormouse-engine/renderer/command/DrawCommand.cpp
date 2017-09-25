@@ -48,7 +48,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 			const auto constantBuffer = constantBuffer_(stage, constantBufferSlotIdx);
 			const auto data = constantBufferData(stage, constantBufferSlotIdx);
 
-			{
+			if (data.size() > 0u) {
 				// TODO: lock should return a std::unique_ptr<BufferView, ...> instead of uint8_t. size is retrievable
 				// from resource anyway
 				auto outPtr = commandList.lock(constantBuffer, graphics::CommandList::LockPurpose::WRITE_DISCARD);

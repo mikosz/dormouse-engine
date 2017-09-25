@@ -18,11 +18,11 @@ public:
 	{
 	}
 
-	bool has(essentials::StringId id) const {
+	bool has(essentials::StringId id, [[maybe_unused]] size_t arrayIdx) const {
 		return id == id_;
 	}
 
-	Property get(essentials::StringId id) const {
+	Property get(essentials::StringId id, [[maybe_unused]] size_t arrayIdx) const {
 		if (id != id_) {
 			assert(!"Property not bound");
 		}
@@ -37,12 +37,12 @@ private:
 
 };
 
-bool hasShaderProperty(const NamedProperty& namedProperty, essentials::StringId id) {
-	return namedProperty.has(std::move(id));
+bool hasShaderProperty(const NamedProperty& namedProperty, essentials::StringId id, size_t arrayIdx) {
+	return namedProperty.has(std::move(id), arrayIdx);
 }
 
-Property getShaderProperty(const NamedProperty& namedProperty, essentials::StringId id) {
-	return namedProperty.get(std::move(id));
+Property getShaderProperty(const NamedProperty& namedProperty, essentials::StringId id, size_t arrayIdx) {
+	return namedProperty.get(std::move(id), arrayIdx);
 }
 
 } // namespace dormouse_engine::renderer::shader

@@ -8,6 +8,7 @@
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/essentials/debug.hpp"
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/math/Vector.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/RenderState.hpp"
@@ -152,23 +153,27 @@ void Sprite::render(
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 
-bool d2::hasShaderProperty(const Sprite& /*model*/, essentials::StringId id)
+bool d2::hasShaderProperty([[maybe_unused]] const Sprite& model, essentials::StringId id, [[maybe_unused]] size_t arrayIdx)
 {
 	if (id == essentials::StringId("texture")) {
 		return true;
 	} else if (id == essentials::StringId("sampler")) {
+		return true;
+	} else if (id == essentials::StringId("toHomogeneous")) {
 		return true;
 	}
 
 	return false;
 }
 
-shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId id)
+shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId id, [[maybe_unused]] size_t arrayIdx)
 {
 	if (id == essentials::StringId("texture")) {
 		return model.texture();
 	} else if (id == essentials::StringId("sampler")) {
 		return SpriteCommon::instance()->sampler();
+	} else if (id == essentials::StringId("toHomogeneous")) {
+		return essentials::make_observer(&model.toHomogeneous());
 	}
 
 	assert(!"Property not bound");

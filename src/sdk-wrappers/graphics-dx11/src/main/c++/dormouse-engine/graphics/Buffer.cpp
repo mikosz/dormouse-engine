@@ -65,7 +65,7 @@ system::windows::COMWrapper<ID3D11Resource> createBufferResource(
 
 } // anonymous namespace
 
-Buffer::Buffer(Device& renderer, Configuration configuration, essentials::ConstBufferView initialData) :
+Buffer::Buffer(Device& renderer, const Configuration& configuration, essentials::ConstBufferView initialData) :
 	Resource(createBufferResource(renderer, configuration, initialData))
 {
 }
