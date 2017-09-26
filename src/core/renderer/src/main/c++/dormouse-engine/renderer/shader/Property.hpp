@@ -12,6 +12,7 @@
 #include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/essentials/PolymorphicStorage.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "dormouse-engine/math/Matrix.hpp"
@@ -65,45 +66,36 @@ public:
 class Property final {
 public:
 
-	Property() {
-		new(&object_) Default;
+	Property() :
+		storage_(Default())
+	{
 	}
 
 	template <class T>
-	Property(T model) {
-		static_assert(sizeof(Model<T>) <= STORAGE_SIZE);
-		static_assert(alignof(Model<T>) <= STORAGE_ALIGNMENT);
-		static_assert(std::is_trivially_copyable_v<T>);
-		new(&object_) Model<T>(std::move(model));
-	}
-
-	~Property() {
-		reinterpret_cast<Concept*>(&object_)->~Concept();
+	Property(T model) :
+		storage_(std::move(model))
+	{
 	}
 
 	bool has(essentials::StringId id, size_t arrayIdx = 0u) const {
-		assert(&object_ != nullptr);
-		return reinterpret_cast<const Concept*>(&object_)->has(std::move(id), arrayIdx);
+		return storage_->has(std::move(id), arrayIdx);
 	}
 
 	Property get(essentials::StringId id, size_t arrayIdx = 0u) const {
-		assert(&object_ != nullptr);
-		return reinterpret_cast<const Concept*>(&object_)->get(std::move(id), arrayIdx);
+		return storage_->get(std::move(id), arrayIdx);
 	}
 
 	void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const {
-		assert(&object_ != nullptr);
-		reinterpret_cast<const Concept*>(&object_)->bindResource(cmd, stage, slot);
+		storage_->bindResource(cmd, stage, slot);
 	}
 
 	void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
-		assert(&object_ != nullptr);
-		reinterpret_cast<const Concept*>(&object_)->write(buffer, dataType);
+		storage_->write(buffer, dataType);
 	}
 
 private:
 
-	class Concept {
+	class Concept : public essentials::ConceptBase {
 	public:
 
 		virtual ~Concept() = default;
@@ -118,7 +110,40 @@ private:
 
 	};
 
-	class Default : public Concept {
+	template <class T>
+	class Model : public essentials::ModelBase<Concept, Model<T>, T> {
+	public:
+
+		Model(T model) :
+			essentials::ModelBase<Concept, Model<T>, T>(std::move(model))
+		{
+		}
+
+		bool has(essentials::StringId id, size_t arrayIdx) const override {
+			return hasShaderProperty(model_, std::move(id), arrayIdx);
+		}
+
+		Property get(essentials::StringId id, size_t arrayIdx) const override {
+			return getShaderProperty(model_, std::move(id), arrayIdx);
+		}
+
+		void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
+			bindShaderResource(model_, cmd, stage, slot);
+		}
+
+		void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
+			writeShaderData(model_, buffer, dataType);
+		}
+
+	};
+
+	class Default : public Model<nullptr_t> {
+	public:
+
+		Default() :
+			Model<nullptr_t>(nullptr)
+		{
+		}
 
 		bool has([[maybe_unused]] essentials::StringId id, [[maybe_unused]] size_t arrayIdx) const override {
 			return false;
@@ -148,43 +173,10 @@ private:
 
 	};
 
-	template <class T>
-	class Model : public Concept {
-	public:
-
-		Model(T model) :
-			model_(std::move(model))
-		{
-		}
-
-		bool has(essentials::StringId id, size_t arrayIdx) const override {
-			return hasShaderProperty(model_, std::move(id), arrayIdx);
-		}
-
-		Property get(essentials::StringId id, size_t arrayIdx) const override {
-			return getShaderProperty(model_, std::move(id), arrayIdx);
-		}
-
-		void bindResource(command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot) const override {
-			bindShaderResource(model_, cmd, stage, slot);
-		}
-
-		void write(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
-			writeShaderData(model_, buffer, dataType);
-		}
-
-	private:
-
-		T model_;
-
-	};
-
 	static constexpr auto STORAGE_SIZE = 3 * sizeof(void*);
-
 	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
 
-	// TODO: replace with custom class for this usage
-	std::aligned_storage_t<STORAGE_SIZE, STORAGE_ALIGNMENT> object_;
+	essentials::PolymorphicStorage<Concept, Model, STORAGE_SIZE, STORAGE_ALIGNMENT> storage_;
 
 };
 
