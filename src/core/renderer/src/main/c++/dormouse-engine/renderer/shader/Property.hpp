@@ -16,6 +16,7 @@
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "dormouse-engine/math/Matrix.hpp"
+#include "dormouse-engine/math/Transform.hpp"
 #include "../control/controlfwd.hpp"
 #include "../command/commandfwd.hpp"
 #include "PropertyId.hpp"
@@ -173,7 +174,7 @@ private:
 
 	};
 
-	static constexpr auto STORAGE_SIZE = 3 * sizeof(void*);
+	static constexpr auto STORAGE_SIZE = sizeof(void*) + 16 * sizeof(float); // matrix
 	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
 
 	essentials::PolymorphicStorage<Concept, Model, STORAGE_SIZE, STORAGE_ALIGNMENT> storage_;
@@ -245,6 +246,8 @@ void bindShaderResource(
 
 void writeShaderData(
 	const math::Matrix4x4& matrix, essentials::BufferView buffer, graphics::ShaderDataType dataType);
+void writeShaderData(
+	const math::Transform& transform, essentials::BufferView buffer, graphics::ShaderDataType dataType);
 
 } // namespace dormouse_engine::renderer::shader
 

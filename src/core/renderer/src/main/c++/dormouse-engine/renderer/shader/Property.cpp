@@ -49,3 +49,9 @@ void shader::writeShaderData(
 		*target = matrix;
 	}
 }
+
+void shader::writeShaderData(
+	const math::Transform& transform, essentials::BufferView buffer, graphics::ShaderDataType dataType)
+{
+	writeShaderData(transform.matrix(), buffer, dataType);
+}

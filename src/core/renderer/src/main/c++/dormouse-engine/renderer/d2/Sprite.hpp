@@ -4,8 +4,7 @@
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
-#include "dormouse-engine/math/Vector.hpp"
-#include "dormouse-engine/math/Matrix.hpp"
+#include "dormouse-engine/math/Transform.hpp"
 #include "../control/ResourceView.hpp"
 #include "../control/Viewport.hpp"
 #include "../control/RenderTargetView.hpp"
@@ -13,6 +12,7 @@
 #include "../command/CommandBuffer.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Property.hpp"
+#include "Layout.hpp"
 
 namespace dormouse_engine::renderer::d2 {
 
@@ -35,12 +35,16 @@ public:
 		control::DepthStencilView depthStencil
 		) const;
 
-	control::ResourceView texture() const {
+	control::ResourceView texture() const noexcept {
 		return textureView_;
 	}
 
-	const math::Matrix4x4& toHomogeneous() const { // TODO: temp
-		return toHomogeneous_;
+	const Layout& layout() const noexcept {
+		return layout_;
+	}
+
+	Layout& layout() noexcept {
+		return layout_;
 	}
 
 private:
@@ -49,7 +53,7 @@ private:
 
 	control::ResourceView textureView_;
 
-	math::Matrix4x4 toHomogeneous_;
+	Layout layout_;
 
 };
 

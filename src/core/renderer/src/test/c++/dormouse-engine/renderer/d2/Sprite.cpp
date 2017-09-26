@@ -23,6 +23,12 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 	auto texture = graphics::Texture(graphicsDevice(), textureImage);
 	auto sprite = Sprite(texture);
 
+	sprite.layout().width() = Ndc(0.25f);
+	sprite.layout().height() = RatioKeeping(essentials::make_observer(&sprite.layout().width()), 0.5f);
+
+	sprite.layout().positionX() = WindowRelative(0.5f);
+	sprite.layout().positionY() = WindowRelative(0.25f);
+
 	for (;;) {
 		graphicsDevice().beginScene();
 

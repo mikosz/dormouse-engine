@@ -9,7 +9,7 @@ struct PIn {
 };
 
 cbuffer sprite {
-	matrix toHomogeneous;
+	matrix toNDC;
 };
 
 Texture2D sprite_texture : register(t0);
@@ -19,7 +19,7 @@ PIn vs(VIn vin) {
 	PIn pin;
 	
 	float4 pos = float4(vin.posL, 0.0f, 1.0f);
-	pin.posH = mul(toHomogeneous, pos);
+	pin.posH = mul(toNDC, pos);
 	pin.tex = vin.tex;
 	
 	return pin;

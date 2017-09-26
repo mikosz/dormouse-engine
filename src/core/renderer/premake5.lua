@@ -1,5 +1,5 @@
 structure.library_project("renderer", function()
-		links { "essentials", "graphics" }
+		links { "essentials", "graphics", "math" }
 	end
 	)
 

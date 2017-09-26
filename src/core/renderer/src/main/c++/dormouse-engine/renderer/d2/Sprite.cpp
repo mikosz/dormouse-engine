@@ -159,7 +159,7 @@ bool d2::hasShaderProperty([[maybe_unused]] const Sprite& model, essentials::Str
 		return true;
 	} else if (id == essentials::StringId("sampler")) {
 		return true;
-	} else if (id == essentials::StringId("toHomogeneous")) {
+	} else if (id == essentials::StringId("toNDC")) {
 		return true;
 	}
 
@@ -172,8 +172,8 @@ shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId
 		return model.texture();
 	} else if (id == essentials::StringId("sampler")) {
 		return SpriteCommon::instance()->sampler();
-	} else if (id == essentials::StringId("toHomogeneous")) {
-		return essentials::make_observer(&model.toHomogeneous());
+	} else if (id == essentials::StringId("toNDC")) {
+		return model.layout().toNDC();
 	}
 
 	assert(!"Property not bound");
