@@ -1,6 +1,7 @@
 #ifndef _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_
 #define _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_
 
+#include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/PolymorphicStorage.hpp"
 #include "Interface.hpp"
@@ -50,6 +51,25 @@ private:
 	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
 
 	essentials::PolymorphicStorage<Concept, Model, STORAGE_SIZE, STORAGE_ALIGNMENT> storage_;
+
+};
+
+class ReflectiveObject;
+Interface reflectObject(const ReflectiveObject& object);
+
+class ReflectiveObject {
+public:
+
+	ReflectiveObject(essentials::StringId name) :
+		name_(name)
+	{
+	}
+
+private:
+
+	essentials::StringId name_;
+
+	friend Interface reflection::reflectObject(const ReflectiveObject& object);
 
 };
 

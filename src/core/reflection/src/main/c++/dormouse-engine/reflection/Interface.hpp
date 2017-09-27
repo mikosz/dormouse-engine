@@ -2,13 +2,24 @@
 #define _DORMOUSEENGINE_REFLECTION_INTERFACE_HPP_
 
 #include <ponder/class.hpp>
+#include <ponder/pondertype.hpp>
 
+#include "dormouse-engine/enums/enum.hpp"
 #include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 
 namespace dormouse_engine::reflection {
 
+namespace detail { void declareTag(); }
+
 class Object;
+
+DE_ENUM(
+	Tag,
+	(NONE)
+	(SHADER_RESOURCE)
+	(SHADER_PARAMETER)
+	);
 
 class Interface {
 public:
@@ -18,7 +29,9 @@ public:
 	{
 	}
 
-	bool hasProperty(essentials::StringId name) const;
+	essentials::StringId name() const;
+
+	bool hasProperty(essentials::StringId name, Tag withTag = Tag::NONE) const;
 
 private:
 
@@ -27,5 +40,7 @@ private:
 };
 
 } // namespace dormouse_engine::reflection
+
+PONDER_AUTO_TYPE(dormouse_engine::reflection::Tag, &dormouse_engine::reflection::detail::declareTag);
 
 #endif /* _DORMOUSEENGINE_REFLECTION_INTERFACE_HPP_ */

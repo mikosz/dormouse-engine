@@ -14,78 +14,55 @@ using namespace std::string_literals;
 
 namespace test_detail {
 
-struct Complex {
-	std::string s;
-	int* ptr;
+struct SomeObject {
 };
 
-struct ReflectedObject {
+void declareSomeObject() {
+	ponder::Class::declare<SomeObject>("test_detail::SomeObject");
+}
 
-	ReflectedObject(int i, Complex complex) :
-		i_(i),
-		complex_(complex)
+const Interface reflectObject([[maybe_unused]] const SomeObject& object) {
+	return Interface(essentials::make_observer(&ponder::classByType<SomeObject>()));
+}
+
+struct DerivedObject : ReflectiveObject {
+
+	DerivedObject() :
+		ReflectiveObject("test_detail::DerivedObject")
 	{
 	}
 
-	int i() const {
-		return i_;
-	}
-
-	const Complex& complex() const {
-		return complex_;
-	}
-
-private:
-
-	int i_;
-
-	Complex complex_;
-
-	friend void declareReflectedObject();
-
 };
 
-//void declareComplex() {
-//	ponder::Class::declare<Complex>("test_detail::Complex")
-//		.property("s", &Complex::s)
-//		.property("ptr", &Complex::ptr)
-//		;
-//}
-
-void declareReflectedObject() {
-	ponder::Class::declare<ReflectedObject>("test_detail::ReflectedObject")
-		//.constructor<int, Complex>()
-		.function("i", &ReflectedObject::i)
-		//.property("complex", &ReflectedObject::complex)
-		;
-}
-
-const Interface reflectObject([[maybe_unused]] const ReflectedObject& object) {
-	return Interface(essentials::make_observer(&ponder::classByType<ReflectedObject>()));
+void declareDerivedObject() {
+	ponder::Class::declare<DerivedObject>("test_detail::DerivedObject");
 }
 
 } // namespace test_detail
 
-//PONDER_AUTO_TYPE(test_detail::Complex, &test_detail::declareComplex)
-PONDER_AUTO_TYPE(test_detail::ReflectedObject, &test_detail::declareReflectedObject)
+PONDER_AUTO_TYPE(test_detail::SomeObject, &test_detail::declareSomeObject)
+PONDER_AUTO_TYPE(test_detail::DerivedObject, &test_detail::declareDerivedObject)
 
 namespace /* anonymous */ {
 
 BOOST_AUTO_TEST_SUITE(ReflectionInterfaceTestSuite);
 
-BOOST_AUTO_TEST_CASE(CanCallMemberFunctions) {
-	auto i = 666;
-	auto actualObject = test_detail::ReflectedObject(42, test_detail::Complex{ "text"s, &i });
+BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsNonintrusively) {
+	auto actualObject = test_detail::SomeObject();
 	auto reflectionObject = Object(essentials::make_observer(&actualObject));
 	
 	auto iface = reflectionObject.reflect();
 
-	BOOST_CHECK(iface.hasProperty("i"));
+	BOOST_CHECK_EQUAL(iface.name().string(), "test_detail::SomeObject"s);
+}
 
-	BOOST_CHECK(iface.hasProperty("complex"));
+BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsIntrusively) {
+	auto actualObject = test_detail::DerivedObject();
+	auto reflectionObject = Object(essentials::make_observer(&actualObject));
 
-	//BOOST_CHECK_EQUAL(ponder::runtime::call(clazz.function("foo"), obj), 42);
-	//BOOST_CHECK_EQUAL(obj.get("text").to<std::string>(), "To be, or not to be!"s);
+	auto iface = reflectionObject.reflect();
+
+	BOOST_CHECK_EQUAL(iface.name().string(), "test_detail::DerivedObject"s);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* ReflectionInterfaceTestSuite */);
