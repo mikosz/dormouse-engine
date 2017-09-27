@@ -13,12 +13,16 @@ class Dimension;
 class Ndc final {
 public:
 
-	Ndc(float value) noexcept :
+	explicit Ndc(float value) noexcept :
 		value_(value)
 	{
 	}
 
-	float ndc() const noexcept {
+	float ndcPosition() const noexcept {
+		return value_;
+	}
+
+	float ndcDistance() const noexcept {
 		return value_;
 	}
 
@@ -31,13 +35,17 @@ private:
 class WindowRelative final {
 public:
 
-	WindowRelative(float value) noexcept :
+	explicit WindowRelative(float value) noexcept :
 		value_(value)
 	{
 	}
 
-	float ndc() const noexcept {
-		return (value_ * 2.0f) - 1.0f;
+	float ndcPosition() const noexcept {
+		return ndcDistance() - 1.0f;
+	}
+
+	float ndcDistance() const noexcept {
+		return value_ * 2.0f;
 	}
 
 private:
@@ -57,8 +65,12 @@ public:
 	{
 	}
 
-	float ndc() const noexcept {
-		return 2.0f * static_cast<float>(value_) / static_cast<float>(sizeFunc_()) - 1.0f;
+	float ndcPosition() const noexcept {
+		return ndcDistance() - 1.0f;
+	}
+
+	float ndcDistance() const noexcept {
+		return 2.0f * static_cast<float>(value_) / static_cast<float>(sizeFunc_());
 	}
 
 private:
@@ -78,7 +90,9 @@ public:
 	{
 	}
 
-	float ndc() const noexcept;
+	float ndcPosition() const noexcept;
+	
+	float ndcDistance() const noexcept;
 
 private:
 
@@ -97,8 +111,12 @@ public:
 	{
 	}
 
-	float ndc() const noexcept {
-		return storage_->ndc();
+	float ndcPosition() const noexcept {
+		return storage_->ndcPosition();
+	}
+
+	float ndcDistance() const noexcept {
+		return storage_->ndcDistance();
 	}
 
 private:
@@ -106,7 +124,9 @@ private:
 	class Concept : public essentials::ConceptBase {
 	public:
 
-		virtual float ndc() const noexcept = 0;
+		virtual float ndcPosition() const noexcept = 0;
+
+		virtual float ndcDistance() const noexcept = 0;
 
 	};
 
@@ -119,8 +139,12 @@ private:
 		{
 		}
 
-		float ndc() const noexcept override {
-			return model_.ndc();
+		float ndcPosition() const noexcept override {
+			return model_.ndcPosition();
+		}
+
+		float ndcDistance() const noexcept override {
+			return model_.ndcDistance();
 		}
 
 	};
@@ -132,8 +156,12 @@ private:
 
 };
 
-inline float RatioKeeping::ndc() const noexcept {
-	return ratio_ * other_->ndc();
+inline float RatioKeeping::ndcDistance() const noexcept {
+	return ratio_ * other_->ndcDistance();
+}
+
+inline float RatioKeeping::ndcPosition() const noexcept {
+	return ratio_ * other_->ndcPosition();
 }
 
 } // namespace dormouse_engine::renderer::d2

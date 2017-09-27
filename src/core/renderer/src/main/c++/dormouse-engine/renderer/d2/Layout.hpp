@@ -47,10 +47,39 @@ public:
 	}
 
 	const math::Transform toNDC() const noexcept {
-		// TODO: anchor
+		auto centreOffset = math::Vec2();
+
+		switch (std::get<HorizontalAnchor>(anchor_)) {
+		case HorizontalAnchor::LEFT:
+			centreOffset.x() = width_.ndcDistance() * 0.5f;
+			break;
+		case HorizontalAnchor::CENTRE:
+			break;
+		case HorizontalAnchor::RIGHT:
+			centreOffset.x() = -width_.ndcDistance() * 0.5f;
+			break;
+		default:
+			assert(!"Invalid horizontal anchor value");
+		}
+
+		switch (std::get<VerticalAnchor>(anchor_)) {
+		case VerticalAnchor::BOTTOM:
+			centreOffset.y() = height_.ndcDistance() * 0.5f;
+			break;
+		case VerticalAnchor::MIDDLE:
+			break;
+		case VerticalAnchor::TOP:
+			centreOffset.y() = -height_.ndcDistance() * 0.5f;
+			break;
+		default:
+			assert(!"Invalid vertical anchor value");
+		}
+
 		return
-			math::Transform::scale({ width_.ndc(), height_.ndc(), 1.0f }) <<
-			math::Transform::translation({ positionX_.ndc(), positionY_.ndc(), 0.0f })
+			math::Transform::scale({ width_.ndcDistance() * 0.5f, height_.ndcDistance() * 0.5f, 1.0f }) <<
+			math::Transform::translation(
+				{ positionX_.ndcPosition() + centreOffset.x(), positionY_.ndcPosition() + centreOffset.y(), 0.0f }
+				)
 			;
 	}
 
