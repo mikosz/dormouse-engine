@@ -12,57 +12,55 @@ using namespace dormouse_engine;
 using namespace dormouse_engine::reflection;
 using namespace std::string_literals;
 
-namespace test_detail {
+namespace object_test_detail {
 
 struct SomeObject {
+	static constexpr auto CLASS_NAME = "object_test_detail::SomeObject";
 };
 
 void declareSomeObject() {
-	ponder::Class::declare<SomeObject>("test_detail::SomeObject");
+	ponder::Class::declare<SomeObject>(SomeObject::CLASS_NAME);
 }
 
-const Interface reflectObject([[maybe_unused]] const SomeObject& object) {
+const Interface objectInterface([[maybe_unused]] const SomeObject& object) {
 	return Interface(essentials::make_observer(&ponder::classByType<SomeObject>()));
 }
 
-struct DerivedObject : ReflectiveObject {
-
-	DerivedObject() :
-		ReflectiveObject("test_detail::DerivedObject")
-	{
-	}
-
+struct DerivedObject : ReflectiveObject<DerivedObject> {
+	static constexpr auto CLASS_NAME = "object_test_detail::DerivedObject";
 };
 
 void declareDerivedObject() {
-	ponder::Class::declare<DerivedObject>("test_detail::DerivedObject");
+	ponder::Class::declare<DerivedObject>(DerivedObject::CLASS_NAME);
 }
 
-} // namespace test_detail
+static_assert(sizeof(DerivedObject) == sizeof(SomeObject));
 
-PONDER_AUTO_TYPE(test_detail::SomeObject, &test_detail::declareSomeObject)
-PONDER_AUTO_TYPE(test_detail::DerivedObject, &test_detail::declareDerivedObject)
+} // namespace object_test_detail
+
+PONDER_AUTO_TYPE(object_test_detail::SomeObject, &object_test_detail::declareSomeObject)
+PONDER_AUTO_TYPE(object_test_detail::DerivedObject, &object_test_detail::declareDerivedObject)
 
 namespace /* anonymous */ {
 
 BOOST_AUTO_TEST_SUITE(ReflectionInterfaceTestSuite);
 
 BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsNonintrusively) {
-	auto actualObject = test_detail::SomeObject();
+	auto actualObject = object_test_detail::SomeObject();
 	auto reflectionObject = Object(essentials::make_observer(&actualObject));
 	
-	auto iface = reflectionObject.reflect();
+	auto iface = reflectionObject.iface();
 
-	BOOST_CHECK_EQUAL(iface.name().string(), "test_detail::SomeObject"s);
+	BOOST_CHECK_EQUAL(iface.name().string(), object_test_detail::SomeObject::CLASS_NAME);
 }
 
 BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsIntrusively) {
-	auto actualObject = test_detail::DerivedObject();
+	auto actualObject = object_test_detail::DerivedObject();
 	auto reflectionObject = Object(essentials::make_observer(&actualObject));
 
-	auto iface = reflectionObject.reflect();
+	auto iface = reflectionObject.iface();
 
-	BOOST_CHECK_EQUAL(iface.name().string(), "test_detail::DerivedObject"s);
+	BOOST_CHECK_EQUAL(iface.name().string(), object_test_detail::DerivedObject::CLASS_NAME);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* ReflectionInterfaceTestSuite */);

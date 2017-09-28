@@ -19,8 +19,8 @@ public:
 	{
 	}
 
-	const Interface reflect() const {
-		return storage_->reflect();
+	const Interface iface() const {
+		return storage_->iface();
 	}
 
 private:
@@ -28,7 +28,7 @@ private:
 	class Concept : public essentials::ConceptBase {
 	public:
 
-		virtual const Interface reflect() const = 0;
+		virtual const Interface iface() const = 0;
 
 	};
 
@@ -41,8 +41,8 @@ private:
 		{
 		}
 
-		virtual const Interface reflect() const override {
-			return reflectObject(*model_);
+		virtual const Interface iface() const override {
+			return objectInterface(*model_);
 		}
 
 	};
@@ -54,24 +54,15 @@ private:
 
 };
 
-class ReflectiveObject;
-Interface reflectObject(const ReflectiveObject& object);
-
+template <class ObjectType>
 class ReflectiveObject {
-public:
-
-	ReflectiveObject(essentials::StringId name) :
-		name_(name)
-	{
-	}
-
-private:
-
-	essentials::StringId name_;
-
-	friend Interface reflection::reflectObject(const ReflectiveObject& object);
-
 };
+
+template <class ObjectType>
+Interface objectInterface(const ReflectiveObject<ObjectType>& object) {
+	const auto& clazz = ponder::classByObject(static_cast<const ObjectType&>(object));
+	return essentials::make_observer(&clazz);
+}
 
 } // namespace dormouse_engine::reflection
 

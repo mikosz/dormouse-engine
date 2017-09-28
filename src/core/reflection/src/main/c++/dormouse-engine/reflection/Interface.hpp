@@ -33,9 +33,16 @@ public:
 
 	bool hasProperty(essentials::StringId name, Tag withTag = Tag::NONE) const;
 
+	template <class T>
+	T getProperty(const Object& object, essentials::StringId name, Tag withTag = Tag::NONE) const {
+		return getPropertyValue_(object, name, withTag).to<T>();
+	}
+
 private:
 
 	essentials::observer_ptr<const ponder::Class> clazz_;
+
+	ponder::Value Interface::getPropertyValue_(const Object& object, essentials::StringId name, Tag withTag) const;
 
 };
 
