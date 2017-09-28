@@ -24,6 +24,12 @@ DE_ENUM(
 class Interface {
 public:
 
+	/**
+	 * For this to function, the Ponder class must already be declared (PONDER_AUTO_TYPE register function
+	 * won't be called)
+	 */
+	Interface(essentials::StringId className);
+
 	Interface(essentials::observer_ptr<const ponder::Class> clazz) :
 		clazz_(std::move(clazz))
 	{
@@ -33,16 +39,9 @@ public:
 
 	bool hasProperty(essentials::StringId name, Tag withTag = Tag::NONE) const;
 
-	template <class T>
-	T getProperty(const Object& object, essentials::StringId name, Tag withTag = Tag::NONE) const {
-		return getPropertyValue_(object, name, withTag).to<T>();
-	}
-
 private:
 
 	essentials::observer_ptr<const ponder::Class> clazz_;
-
-	ponder::Value Interface::getPropertyValue_(const Object& object, essentials::StringId name, Tag withTag) const;
 
 };
 

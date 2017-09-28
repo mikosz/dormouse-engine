@@ -15,6 +15,11 @@ void detail::declareTag() {
 	}
 }
 
+Interface::Interface(essentials::StringId className) :
+	clazz_(essentials::make_observer(&ponder::classByName(className.string())))
+{
+}
+
 essentials::StringId Interface::name() const {
 	return clazz_->name();
 }
@@ -25,14 +30,4 @@ bool Interface::hasProperty(essentials::StringId name, Tag withTag) const {
 	} else {
 		return withTag == Tag::NONE || clazz_->property(name.string()).hasTag(withTag);
 	}
-}
-
-ponder::Value Interface::getPropertyValue_(
-	const Object& object, essentials::StringId name, [[maybe_unused]] Tag withTag) const
-{
-	const auto& property = clazz_->property(name.string());
-
-	assert(withTag == Tag::NONE || property.hasTag(withTag));
-
-	return property.get(object);
 }

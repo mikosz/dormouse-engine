@@ -66,10 +66,6 @@ void declareReflectedObject() {
 		;
 }
 
-const Interface reflectObject([[maybe_unused]] const ReflectedObject& object) {
-	return Interface(essentials::make_observer(&ponder::classByType<ReflectedObject>()));
-}
-
 } // namespace interface_test_detail
 
 PONDER_AUTO_TYPE(interface_test_detail::Complex, &interface_test_detail::declareComplex);
@@ -77,11 +73,14 @@ PONDER_AUTO_TYPE(interface_test_detail::ReflectedObject, &interface_test_detail:
 
 namespace /* anonymous */ {
 
-BOOST_AUTO_TEST_SUITE(ReflectionInterfaceTestSuite);
+BOOST_AUTO_TEST_SUITE(ReflectionSuite);
+BOOST_AUTO_TEST_SUITE(InterfaceSuite);
 
 BOOST_AUTO_TEST_CASE(HasPropertyTest) {
 	const auto object = interface_test_detail::ReflectedObject(42, interface_test_detail::Complex{ "test"s, 666 });
 	const auto iface = Object(essentials::make_observer(&object)).iface();
+
+	BOOST_CHECK_EQUAL(iface.name(), interface_test_detail::ReflectedObject::CLASS_NAME);
 
 	BOOST_CHECK(iface.hasProperty("i"));
 	BOOST_CHECK(iface.hasProperty("i", Tag::SHADER_PARAMETER));
@@ -91,15 +90,18 @@ BOOST_AUTO_TEST_CASE(HasPropertyTest) {
 	BOOST_CHECK(!iface.hasProperty("complex", Tag::SHADER_PARAMETER));
 }
 
-BOOST_AUTO_TEST_CASE(GetPropertyTest) {
-	const auto actualObject = interface_test_detail::ReflectedObject(42, interface_test_detail::Complex{ "test"s, 666 });
-	const auto object = Object(essentials::make_observer(&actualObject));
-	const auto iface = object.iface();
+BOOST_AUTO_TEST_CASE(ConstructibleByName) {
+	{
+		// ensure Complex Ponder type registered
+		const auto complex = interface_test_detail::Complex();
+		Object(essentials::make_observer(&complex)).iface();
+	}
 
-	BOOST_CHECK_EQUAL(iface.getProperty<int>(object, "i"), 42);
-	BOOST_CHECK_EQUAL(iface.getProperty<int>(object, "i", Tag::SHADER_PARAMETER), 42);
+	const auto iface = Interface(interface_test_detail::Complex::CLASS_NAME);
+	BOOST_CHECK_EQUAL(iface.name(), interface_test_detail::Complex::CLASS_NAME);
 }
 
-BOOST_AUTO_TEST_SUITE_END(/* ReflectionInterfaceTestSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* InterfaceSuite */);
+BOOST_AUTO_TEST_SUITE_END(/* ReflectionSuite */);
 
 } // anonymous namespace
