@@ -39,6 +39,10 @@ public:
 
 	bool hasProperty(essentials::StringId name, Tag withTag = Tag::NONE) const;
 
+	ponder::Value property(ponder::UserObject object, essentials::StringId name) const {
+		return clazz_->property(name.string()).get(object);
+	}
+
 private:
 
 	essentials::observer_ptr<const ponder::Class> clazz_;

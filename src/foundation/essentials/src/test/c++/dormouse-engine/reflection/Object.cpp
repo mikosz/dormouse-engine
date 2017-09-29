@@ -26,9 +26,15 @@ const Interface objectInterface([[maybe_unused]] const SomeObject& object) {
 	return Interface(essentials::make_observer(&ponder::classByType<SomeObject>()));
 }
 
-struct Complex {
+struct Complex : public ReflectiveObject<Complex> {
 
 	static constexpr auto CLASS_NAME = "object_test_detail::Complex";
+
+	Complex(std::string s, int i) :
+		s(std::move(s)),
+		i(i)
+	{
+	}
 
 	std::string s;
 	int i;
@@ -102,12 +108,24 @@ BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsNonintrusively) {
 }
 
 BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsIntrusively) {
-	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex{ "test"s, 666 });
+	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
 	auto reflectionObject = Object(essentials::make_observer(&actualObject));
 
 	auto iface = reflectionObject.iface();
 
 	BOOST_CHECK_EQUAL(iface.name().string(), object_test_detail::ReflectedObject::CLASS_NAME);
+}
+
+BOOST_AUTO_TEST_CASE(CanRetrievePropertyValues) {
+	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
+	auto reflectionObject = Object(essentials::make_observer(&actualObject));
+
+	BOOST_CHECK_EQUAL(reflectionObject.property<int>("i"), 42);
+
+	const auto& complex = reflectionObject.property<object_test_detail::Complex>("complex");
+
+	BOOST_CHECK_EQUAL(complex.i, 666);
+	BOOST_CHECK_EQUAL(&complex, &actualObject.complex());
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* ObjectSuite */);

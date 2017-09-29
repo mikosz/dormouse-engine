@@ -15,9 +15,17 @@ using namespace std::string_literals;
 
 namespace interface_test_detail {
 
-struct Complex {
+struct Complex : public ReflectiveObject<Complex> {
 
 	static constexpr auto CLASS_NAME = "interface_test_detail::Complex";
+
+	Complex() = default;
+
+	Complex(std::string s, int i) :
+		s(std::move(s)),
+		i(i)
+	{
+	}
 
 	std::string s;
 	int i;
@@ -77,7 +85,7 @@ BOOST_AUTO_TEST_SUITE(ReflectionSuite);
 BOOST_AUTO_TEST_SUITE(InterfaceSuite);
 
 BOOST_AUTO_TEST_CASE(HasPropertyTest) {
-	const auto object = interface_test_detail::ReflectedObject(42, interface_test_detail::Complex{ "test"s, 666 });
+	const auto object = interface_test_detail::ReflectedObject(42, interface_test_detail::Complex("test"s, 666));
 	const auto iface = Object(essentials::make_observer(&object)).iface();
 
 	BOOST_CHECK_EQUAL(iface.name(), interface_test_detail::ReflectedObject::CLASS_NAME);

@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <cstdint>
+#include <iosfwd>
 
 #include <boost/operators.hpp>
 
@@ -57,6 +58,10 @@ private:
 	friend struct std::hash<StringId>;
 
 };
+
+inline std::ostream& operator<<(std::ostream& os, StringId stringId) {
+	return os << stringId.string();
+}
 
 class Strings : public essentials::Singleton<Strings> {
 public:

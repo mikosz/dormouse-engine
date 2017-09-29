@@ -23,7 +23,10 @@ public:
 		return storage_->iface();
 	}
 
-
+	template <class T>
+	const T& property(essentials::StringId name) const {
+		return storage_->property(name).cref<T>();
+	}
 
 private:
 
@@ -31,6 +34,8 @@ private:
 	public:
 
 		virtual const Interface iface() const = 0;
+
+		virtual ponder::Value property(essentials::StringId name) const = 0;
 
 	};
 
@@ -45,6 +50,10 @@ private:
 
 		virtual const Interface iface() const override {
 			return objectInterface(*model_);
+		}
+
+		virtual ponder::Value property(essentials::StringId name) const {
+			return iface().property(ponder::UserObject::makeRef(*model_), name);
 		}
 
 	};
