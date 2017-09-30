@@ -50,7 +50,7 @@ struct ReflectedObject : public ReflectiveObject<ReflectedObject> {
 	{
 	}
 
-	int i() const {
+	int& i() {
 		return i_;
 	}
 
@@ -117,15 +117,25 @@ BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsIntrusively) {
 }
 
 BOOST_AUTO_TEST_CASE(CanRetrievePropertyValues) {
-	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
-	auto reflectionObject = Object(essentials::make_observer(&actualObject));
+	const auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
+	const auto constReflectionObject = Object(essentials::make_observer(&actualObject));
 
-	BOOST_CHECK_EQUAL(reflectionObject.property<int>("i"), 42);
+	BOOST_CHECK_EQUAL(constReflectionObject.property<int>("i"), 42);
 
-	const auto& complex = reflectionObject.property<object_test_detail::Complex>("complex");
+	const auto& complex = constReflectionObject.property<const object_test_detail::Complex&>("complex");
 
 	BOOST_CHECK_EQUAL(complex.i, 666);
 	BOOST_CHECK_EQUAL(&complex, &actualObject.complex());
+}
+
+BOOST_AUTO_TEST_CASE(CanChangePropertyValues) {
+	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
+	auto reflectionObject = Object(essentials::make_observer(&actualObject));
+
+	// non-const access to const?
+	reflectionObject.property<object_test_detail::Complex&>("complex").i = 1;
+	reflectionObject.property<int&>("i") = 666;
+	//BOOST_CHECK_EQUAL(reflectionObject.property<int>("i"), 666);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* ObjectSuite */);

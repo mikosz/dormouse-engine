@@ -41,7 +41,7 @@ struct ReflectedObject : public ReflectiveObject<ReflectedObject> {
 	{
 	}
 
-	int i() const {
+	int& i() {
 		return i_;
 	}
 

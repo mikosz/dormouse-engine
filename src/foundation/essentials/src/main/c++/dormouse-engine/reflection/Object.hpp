@@ -1,6 +1,8 @@
 #ifndef _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_
 #define _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_
 
+#include <type_traits>
+
 #include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/PolymorphicStorage.hpp"
@@ -24,8 +26,23 @@ public:
 	}
 
 	template <class T>
-	const T& property(essentials::StringId name) const {
-		return storage_->property(name).cref<T>();
+	T property(essentials::StringId name) const {
+		auto v = storage_->property(name);
+		if constexpr (std::is_reference_v<T>) {
+			return v.cref<ponder::UserObject>().cref<std::remove_reference_t<T>>();
+		} else {
+			return v.to<T>();
+		}
+	}
+
+	template <class T>
+	T property(essentials::StringId name) {
+		auto v = storage_->property(name);
+		if constexpr (std::is_reference_v<T>) {
+			return v.ref<ponder::UserObject>().ref<std::remove_reference_t<T>>();
+		} else {
+			return v.to<T>();
+		}
 	}
 
 private:
