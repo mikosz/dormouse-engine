@@ -3,14 +3,24 @@
 
 #include <type_traits>
 
+#include <ponder/class.hpp>
+#include <ponder/pondertype.hpp>
+
+#include "dormouse-engine/enums/enum.hpp"
 #include "dormouse-engine/essentials/StringId.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/PolymorphicStorage.hpp"
-#include "Interface.hpp"
 
 namespace dormouse_engine::reflection {
 
-class Interface;
+DE_ENUM(
+	Tag,
+	(NONE)
+	(SHADER_RESOURCE)
+	(SHADER_PARAMETER)
+	);
+
+namespace detail { void declareTag(); }
 
 class Object final {
 public:
@@ -21,28 +31,8 @@ public:
 	{
 	}
 
-	const Interface iface() const {
-		return storage_->iface();
-	}
-
-	template <class T>
-	T property(essentials::StringId name) const {
-		auto v = storage_->property(name);
-		if constexpr (std::is_reference_v<T>) {
-			return v.cref<ponder::UserObject>().cref<std::remove_reference_t<T>>();
-		} else {
-			return v.to<T>();
-		}
-	}
-
-	template <class T>
-	T property(essentials::StringId name) {
-		auto v = storage_->property(name);
-		if constexpr (std::is_reference_v<T>) {
-			return v.ref<ponder::UserObject>().ref<std::remove_reference_t<T>>();
-		} else {
-			return v.to<T>();
-		}
+	const ponder::Class& metaclass() const {
+		return storage_->metaclass();
 	}
 
 private:
@@ -50,9 +40,7 @@ private:
 	class Concept : public essentials::ConceptBase {
 	public:
 
-		virtual const Interface iface() const = 0;
-
-		virtual ponder::Value property(essentials::StringId name) const = 0;
+		virtual ponder::Class& metaclass() const = 0;
 
 	};
 
@@ -65,12 +53,8 @@ private:
 		{
 		}
 
-		virtual const Interface iface() const override {
-			return objectInterface(*model_);
-		}
-
-		virtual ponder::Value property(essentials::StringId name) const {
-			return iface().property(ponder::UserObject::makeRef(*model_), name);
+		virtual ponder::Class& metaclass() const override {
+			return ponder::classByObject(*model_);
 		}
 
 	};
@@ -82,16 +66,16 @@ private:
 
 };
 
-template <class ObjectType>
 class ReflectiveObject {
+	PONDER_POLYMORPHIC();
 };
 
-template <class ObjectType>
-Interface objectInterface(const ReflectiveObject<ObjectType>& object) {
-	const auto& clazz = ponder::classByObject(static_cast<const ObjectType&>(object));
-	return essentials::make_observer(&clazz);
-}
+namespace detail { void declareReflectiveObject(); }
 
 } // namespace dormouse_engine::reflection
+
+PONDER_AUTO_TYPE(dormouse_engine::reflection::Tag, &dormouse_engine::reflection::detail::declareTag);
+PONDER_AUTO_TYPE(
+	dormouse_engine::reflection::ReflectiveObject, &dormouse_engine::reflection::detail::declareReflectiveObject);
 
 #endif /* _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_ */
