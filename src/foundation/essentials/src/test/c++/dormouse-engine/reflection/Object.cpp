@@ -4,6 +4,7 @@
 #pragma warning(push, 3)
 #	include <ponder/classbuilder.hpp>
 #	include <ponder/uses/runtime.hpp>
+#	include <ponder/valuevisitor.hpp>
 #pragma warning(pop)
 
 #include "dormouse-engine/reflection/Object.hpp"
@@ -14,128 +15,142 @@ using namespace std::string_literals;
 
 namespace object_test_detail {
 
-struct SomeObject {
-	static constexpr auto CLASS_NAME = "object_test_detail::SomeObject";
-};
-
-void declareSomeObject() {
-	ponder::Class::declare<SomeObject>(SomeObject::CLASS_NAME);
-}
-
-const Interface objectInterface([[maybe_unused]] const SomeObject& object) {
-	return Interface(essentials::make_observer(&ponder::classByType<SomeObject>()));
-}
-
-struct Complex : public ReflectiveObject<Complex> {
-
-	static constexpr auto CLASS_NAME = "object_test_detail::Complex";
-
-	Complex(std::string s, int i) :
-		s(std::move(s)),
-		i(i)
-	{
-	}
-
-	std::string s;
+struct NonintrusivelyReflectiveClass {
 	int i;
 };
 
-struct ReflectedObject : public ReflectiveObject<ReflectedObject> {
+constexpr auto NONINTRUSIVE_CLASS_NAME = "object_test_detail::NonintrusivelyReflectiveClass";
 
-	static constexpr auto CLASS_NAME = "object_test_detail::ReflectedObject";
+void declareNonintrusive() {
+	ponder::Class::declare<NonintrusivelyReflectiveClass>(NONINTRUSIVE_CLASS_NAME)
+		.property("i", &NonintrusivelyReflectiveClass::i)
+		;
+}
 
-	ReflectedObject(int i, Complex complex) :
-		i_(i),
-		complex_(complex)
+// TODO: bad names if ReflectiveObject keeps being removed
+class IntrusivelyReflectiveClass {
+public:
+
+	static constexpr auto CLASS_NAME = "object_test_detail::IntrusivelyReflectiveClass";
+
+	IntrusivelyReflectiveClass(std::string s, int i, int ni) :
+		s_(std::move(s)),
+		i_(i)
 	{
+		nonintrusive_.i = ni;
 	}
 
-	int& i() {
+	const std::string& s() const {
+		return s_;
+	}
+
+	int i() const {
 		return i_;
-	}
-
-	const Complex& complex() const {
-		return complex_;
 	}
 
 private:
 
+	std::string s_;
+
 	int i_;
 
-	Complex complex_;
-
-	friend void declareReflectedObject();
+	NonintrusivelyReflectiveClass nonintrusive_;
 
 };
 
-void declareComplex() {
-	ponder::Class::declare<Complex>(Complex::CLASS_NAME)
-		.property("s", &Complex::s)
-		.property("i", &Complex::i)
+void declareIntrusive() {
+	ponder::Class::declare<IntrusivelyReflectiveClass>(IntrusivelyReflectiveClass::CLASS_NAME)
+		.tag(ClassTag::SERIALISABLE)
+		.property("s", &IntrusivelyReflectiveClass::s).tag(PropertyTag::SHADER_PARAMETER)
+		.property("i", &IntrusivelyReflectiveClass::i)
 		;
 }
 
-void declareReflectedObject() {
-	ponder::Class::declare<ReflectedObject>(ReflectedObject::CLASS_NAME)
-		.constructor<int, Complex>()
-		.property("i", &ReflectedObject::i).tag(Tag::SHADER_PARAMETER)
-		.property("complex", &ReflectedObject::complex)
-		;
-}
-
-const Interface reflectObject([[maybe_unused]] const ReflectedObject& object) {
-	return Interface(essentials::make_observer(&ponder::classByType<ReflectedObject>()));
-}
+struct Nonreflective {
+};
 
 } // namespace object_test_detail
 
-PONDER_AUTO_TYPE(object_test_detail::SomeObject, &object_test_detail::declareSomeObject)
-PONDER_AUTO_TYPE(object_test_detail::Complex, &object_test_detail::declareComplex);
-PONDER_AUTO_TYPE(object_test_detail::ReflectedObject, &object_test_detail::declareReflectedObject);
+PONDER_AUTO_TYPE(object_test_detail::NonintrusivelyReflectiveClass, &object_test_detail::declareNonintrusive);
+PONDER_AUTO_TYPE(object_test_detail::IntrusivelyReflectiveClass, &object_test_detail::declareIntrusive);
 
 namespace /* anonymous */ {
+
+class Visitor : public ponder::ValueVisitor<int> {
+public:
+	
+	int operator()([[maybe_unused]] bool b) {
+		return 0;
+	}
+
+	int operator()([[maybe_unused]] long l) {
+		return 0;
+	}
+
+	int operator()([[maybe_unused]] double d) {
+		return 0;
+	}
+
+	int operator()([[maybe_unused]] const ponder::String& s) {
+		return 0;
+	}
+
+	int operator()([[maybe_unused]] const ponder::EnumObject& eo) {
+		return 0;
+	}
+
+	int operator()([[maybe_unused]] const ponder::UserObject& uo) {
+		return 0;
+	}
+
+};
 
 BOOST_AUTO_TEST_SUITE(ReflectionSuite);
 BOOST_AUTO_TEST_SUITE(ObjectSuite);
 
-BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsNonintrusively) {
-	auto actualObject = object_test_detail::SomeObject();
-	auto reflectionObject = Object(essentials::make_observer(&actualObject));
-	
-	auto iface = reflectionObject.iface();
+// Implement a common behaviour for all reflective classes
+void behaviour(Object o) {
+	const auto& metaclass = o.metaclass();
 
-	BOOST_CHECK_EQUAL(iface.name().string(), object_test_detail::SomeObject::CLASS_NAME);
+	// Behaviour may be driven by class tags...
+	if (metaclass.name() == object_test_detail::NONINTRUSIVE_CLASS_NAME) {
+		BOOST_CHECK(!metaclass.hasTag(ClassTag::SERIALISABLE));
+	} else if (metaclass.name() == object_test_detail::IntrusivelyReflectiveClass::CLASS_NAME) {
+		BOOST_CHECK(metaclass.hasTag(ClassTag::SERIALISABLE));
+	} else {
+		BOOST_FAIL("Unexpected class name: " + metaclass.name());
+	}
+
+	auto propertyIt = metaclass.propertyIterator();
+
+	for (const auto& propertyEntry : propertyIt) {
+		const auto& property = *propertyEntry.second;
+
+		const auto value = property.get(o.metaobject());
+
+		// ... and property tags
+		if (property.name() == "s") {
+			BOOST_CHECK(property.hasTag(PropertyTag::SHADER_PARAMETER));
+			BOOST_CHECK_EQUAL(property.kind(), ponder::ValueKind::String);
+		} else {
+			BOOST_CHECK(!property.hasTag(PropertyTag::SHADER_PARAMETER));
+		}
+
+		value.visit(Visitor());
+	}
 }
 
-BOOST_AUTO_TEST_CASE(CanCreateReflectionObjectsIntrusively) {
-	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
-	auto reflectionObject = Object(essentials::make_observer(&actualObject));
-
-	auto iface = reflectionObject.iface();
-
-	BOOST_CHECK_EQUAL(iface.name().string(), object_test_detail::ReflectedObject::CLASS_NAME);
+void behaviour([[maybe_unused]] const object_test_detail::Nonreflective& nonreflective) {
 }
 
-BOOST_AUTO_TEST_CASE(CanRetrievePropertyValues) {
-	const auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
-	const auto constReflectionObject = Object(essentials::make_observer(&actualObject));
+BOOST_AUTO_TEST_CASE(UseCase_CreatingCommonBehaviourForAllReflectiveObjects) {
+	auto intrusive = object_test_detail::IntrusivelyReflectiveClass("test string", 42, 666);
+	auto nonintrusive = object_test_detail::NonintrusivelyReflectiveClass{ 123 };
+	auto nonreflective = object_test_detail::Nonreflective();
 
-	BOOST_CHECK_EQUAL(constReflectionObject.property<int>("i"), 42);
-
-	const auto& complex = constReflectionObject.property<const object_test_detail::Complex&>("complex");
-
-	BOOST_CHECK_EQUAL(complex.i, 666);
-	BOOST_CHECK_EQUAL(&complex, &actualObject.complex());
-}
-
-BOOST_AUTO_TEST_CASE(CanChangePropertyValues) {
-	auto actualObject = object_test_detail::ReflectedObject(42, object_test_detail::Complex("test"s, 666));
-	auto reflectionObject = Object(essentials::make_observer(&actualObject));
-
-	// non-const access to const?
-	reflectionObject.property<object_test_detail::Complex&>("complex").i = 1;
-	reflectionObject.property<int&>("i") = 666;
-	//BOOST_CHECK_EQUAL(reflectionObject.property<int>("i"), 666);
+	behaviour(essentials::make_observer(&intrusive));
+	behaviour(essentials::make_observer(&nonintrusive));
+	behaviour(nonreflective);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* ObjectSuite */);

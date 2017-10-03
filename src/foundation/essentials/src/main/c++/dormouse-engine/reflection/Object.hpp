@@ -14,13 +14,21 @@
 namespace dormouse_engine::reflection {
 
 DE_ENUM(
-	Tag,
+	ClassTag,
+	(NONE)
+	(SERIALISABLE)
+	);
+
+namespace detail { void declareClassTag(); }
+
+DE_ENUM(
+	PropertyTag,
 	(NONE)
 	(SHADER_RESOURCE)
 	(SHADER_PARAMETER)
 	);
 
-namespace detail { void declareTag(); }
+namespace detail { void declarePropertyTag(); }
 
 class Object final {
 public:
@@ -35,12 +43,18 @@ public:
 		return storage_->metaclass();
 	}
 
+	ponder::UserObject metaobject() {
+		return storage_->metaobject();
+	}
+
 private:
 
 	class Concept : public essentials::ConceptBase {
 	public:
 
-		virtual ponder::Class& metaclass() const = 0;
+		virtual const ponder::Class& metaclass() const = 0;
+
+		virtual ponder::UserObject metaobject() = 0;
 
 	};
 
@@ -53,8 +67,12 @@ private:
 		{
 		}
 
-		virtual ponder::Class& metaclass() const override {
+		const ponder::Class& metaclass() const override {
 			return ponder::classByObject(*model_);
+		}
+
+		ponder::UserObject metaobject() override {
+			return ponder::UserObject::makeRef(*model_);
 		}
 
 	};
@@ -66,16 +84,11 @@ private:
 
 };
 
-class ReflectiveObject {
-	PONDER_POLYMORPHIC();
-};
-
-namespace detail { void declareReflectiveObject(); }
-
 } // namespace dormouse_engine::reflection
 
-PONDER_AUTO_TYPE(dormouse_engine::reflection::Tag, &dormouse_engine::reflection::detail::declareTag);
 PONDER_AUTO_TYPE(
-	dormouse_engine::reflection::ReflectiveObject, &dormouse_engine::reflection::detail::declareReflectiveObject);
+	dormouse_engine::reflection::ClassTag, &dormouse_engine::reflection::detail::declareClassTag);
+PONDER_AUTO_TYPE(
+	dormouse_engine::reflection::PropertyTag, &dormouse_engine::reflection::detail::declarePropertyTag);
 
 #endif /* _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_ */

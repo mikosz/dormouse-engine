@@ -3,14 +3,18 @@
 using namespace dormouse_engine;
 using namespace dormouse_engine::reflection;
 
-void detail::declareTag() {
-	auto builder = ponder::Enum::declare<Tag>("dormouse_engine::reflection::Tag");
+void detail::declareClassTag() {
+	auto builder = ponder::Enum::declare<ClassTag>("dormouse_engine::reflection::ClassTag");
 
-	for (auto tag : allTagValues()) {
+	for (auto tag : allClassTagValues()) {
 		builder.value(toString(tag), tag);
 	}
 }
 
-void detail::declareReflectiveObject() {
-	ponder::Class::declare<ReflectiveObject>("dormouse_engine::reflection::ReflectiveObject");
+void detail::declarePropertyTag() {
+	auto builder = ponder::Enum::declare<PropertyTag>("dormouse_engine::reflection::PropertyTag");
+
+	for (auto tag : allPropertyTagValues()) {
+		builder.value(toString(tag), tag);
+	}
 }
