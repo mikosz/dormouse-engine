@@ -3,8 +3,9 @@
 
 #pragma warning(push, 3)
 #	include <ponder/classbuilder.hpp>
-#	include <ponder/uses/runtime.hpp>
+#	include <ponder/classvisitor.hpp>
 #	include <ponder/valuevisitor.hpp>
+#	include <ponder/uses/runtime.hpp>
 #pragma warning(pop)
 
 #include "dormouse-engine/reflection/Object.hpp"
@@ -133,6 +134,27 @@ private:
 
 };
 
+class ClassVisitor : public ponder::ClassVisitor {
+public:
+
+	ClassVisitor(Object o, double expectedD, const void* expectedObjectPtr) :
+		o_(std::move(o)),
+		valueVisitor_(expectedD, expectedObjectPtr)
+	{
+	}
+
+	void visit(const ponder::Property& property) override {
+		property.get(o_.metaobject()).visit(valueVisitor_);
+	}
+
+private:
+
+	Object o_;
+
+	Visitor valueVisitor_;
+
+};
+
 BOOST_AUTO_TEST_SUITE(ReflectionSuite);
 BOOST_AUTO_TEST_SUITE(ObjectSuite);
 
@@ -164,10 +186,11 @@ void behaviour(Object o, const void* expectedObjectPtr = nullptr) {
 		} else {
 			BOOST_CHECK(!property.hasTag(PropertyTag::SHADER_PARAMETER));
 		}
-		
-		// And visit them
-		value.visit(Visitor(3.14, expectedObjectPtr));
 	}
+
+	// ... or visit them
+	auto classVisitor = ClassVisitor(o, 3.14, expectedObjectPtr);
+	metaclass.visit(classVisitor);
 }
 
 void behaviour([[maybe_unused]] const object_test_detail::Nonreflective& nonreflective) {
