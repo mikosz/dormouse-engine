@@ -13,6 +13,7 @@
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/essentials/PolymorphicStorage.hpp"
+#include "dormouse-engine/reflection/Object.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "dormouse-engine/math/Matrix.hpp"
@@ -195,6 +196,12 @@ inline bool hasShaderProperty(
 	}
 }
 
+bool hasShaderProperty(
+	reflection::Object reflectionObject,
+	essentials::StringId id,
+	size_t arrayIdx
+	);
+
 template <class T>
 inline Property getShaderProperty(
 	[[maybe_unused]] const T& model,
@@ -209,6 +216,12 @@ inline Property getShaderProperty(
 		return Property();
 	}
 }
+
+Property getShaderProperty(
+	reflection::Object reflectionObject,
+	essentials::StringId id,
+	size_t arrayIdx
+	);
 
 template <class T>
 inline void bindShaderResource(

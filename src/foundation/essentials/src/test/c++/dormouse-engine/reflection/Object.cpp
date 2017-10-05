@@ -16,25 +16,25 @@ using namespace std::string_literals;
 
 namespace object_test_detail {
 
-struct NonintrusivelyReflectiveClass {
+struct Pod {
 	float f;
 };
 
-constexpr auto NONINTRUSIVE_CLASS_NAME = "object_test_detail::NonintrusivelyReflectiveClass";
+constexpr auto POD_CLASS_NAME = "object_test_detail::Pod";
 
-void declareNonintrusive() {
-	ponder::Class::declare<NonintrusivelyReflectiveClass>(NONINTRUSIVE_CLASS_NAME)
-		.property("f", &NonintrusivelyReflectiveClass::f)
+void declarePod() {
+	ponder::Class::declare<Pod>(POD_CLASS_NAME)
+		.property("f", &Pod::f)
 		;
 }
 
 // TODO: bad names if ReflectiveObject keeps being removed
-class IntrusivelyReflectiveClass {
+class Class {
 public:
 
-	static constexpr auto CLASS_NAME = "object_test_detail::IntrusivelyReflectiveClass";
+	static constexpr auto CLASS_NAME = "object_test_detail::Class";
 
-	IntrusivelyReflectiveClass(std::string s, int i, float nf) :
+	Class(std::string s, int i, float nf) :
 		s_(std::move(s)),
 		i_(i)
 	{
@@ -49,7 +49,7 @@ public:
 		return i_;
 	}
 
-	const NonintrusivelyReflectiveClass& ni() const {
+	const Pod& ni() const {
 		return nonintrusive_;
 	}
 
@@ -59,16 +59,16 @@ private:
 
 	int i_;
 
-	NonintrusivelyReflectiveClass nonintrusive_;
+	Pod nonintrusive_;
 
 };
 
-void declareIntrusive() {
-	ponder::Class::declare<IntrusivelyReflectiveClass>(IntrusivelyReflectiveClass::CLASS_NAME)
+void declareClass() {
+	ponder::Class::declare<Class>(Class::CLASS_NAME)
 		.tag(ClassTag::SERIALISABLE)
-		.property("s", &IntrusivelyReflectiveClass::s).tag(PropertyTag::SHADER_PARAMETER)
-		.property("i", &IntrusivelyReflectiveClass::i)
-		.property("ni", &IntrusivelyReflectiveClass::ni)
+		.property("s", &Class::s).tag(PropertyTag::SHADER_PARAMETER)
+		.property("i", &Class::i)
+		.property("ni", &Class::ni)
 		;
 }
 
@@ -77,8 +77,8 @@ struct Nonreflective {
 
 } // namespace object_test_detail
 
-PONDER_AUTO_TYPE(object_test_detail::NonintrusivelyReflectiveClass, &object_test_detail::declareNonintrusive);
-PONDER_AUTO_TYPE(object_test_detail::IntrusivelyReflectiveClass, &object_test_detail::declareIntrusive);
+PONDER_AUTO_TYPE(object_test_detail::Pod, &object_test_detail::declarePod);
+PONDER_AUTO_TYPE(object_test_detail::Class, &object_test_detail::declareClass);
 
 namespace /* anonymous */ {
 
@@ -116,7 +116,7 @@ public:
 	}
 
 	void operator()([[maybe_unused]] const ponder::UserObject& uo) {
-		BOOST_CHECK_EQUAL(uo.getClass().name(), object_test_detail::NONINTRUSIVE_CLASS_NAME);
+		BOOST_CHECK_EQUAL(uo.getClass().name(), object_test_detail::POD_CLASS_NAME);
 		BOOST_CHECK_EQUAL(uo.pointer(), expectedObjectPtr_);
 
 		auto propertyIt = uo.getClass().propertyIterator();
@@ -163,9 +163,9 @@ void behaviour(Object o, const void* expectedObjectPtr = nullptr) {
 	const auto& metaclass = o.metaclass();
 
 	// Behaviour may be driven by class tags
-	if (metaclass.name() == object_test_detail::NONINTRUSIVE_CLASS_NAME) {
+	if (metaclass.name() == object_test_detail::POD_CLASS_NAME) {
 		BOOST_CHECK(!metaclass.hasTag(ClassTag::SERIALISABLE));
-	} else if (metaclass.name() == object_test_detail::IntrusivelyReflectiveClass::CLASS_NAME) {
+	} else if (metaclass.name() == object_test_detail::Class::CLASS_NAME) {
 		BOOST_CHECK(metaclass.hasTag(ClassTag::SERIALISABLE));
 	} else {
 		BOOST_FAIL("Unexpected class name: " + metaclass.name());
@@ -197,12 +197,12 @@ void behaviour([[maybe_unused]] const object_test_detail::Nonreflective& nonrefl
 }
 
 BOOST_AUTO_TEST_CASE(UseCase_CreatingCommonBehaviourForAllReflectiveObjects) {
-	auto intrusive = object_test_detail::IntrusivelyReflectiveClass("test string", 42, 6.48f);
-	auto nonintrusive = object_test_detail::NonintrusivelyReflectiveClass{ 3.14f };
+	auto classInstance = object_test_detail::Class("test string", 42, 6.48f);
+	auto podInstance = object_test_detail::Pod{ 3.14f };
 	auto nonreflective = object_test_detail::Nonreflective();
 
-	behaviour(essentials::make_observer(&intrusive), &intrusive.ni());
-	behaviour(essentials::make_observer(&nonintrusive));
+	behaviour(essentials::make_observer(&classInstance), &classInstance.ni());
+	behaviour(essentials::make_observer(&podInstance));
 	behaviour(nonreflective);
 }
 

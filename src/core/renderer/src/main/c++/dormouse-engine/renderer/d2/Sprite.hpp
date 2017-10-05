@@ -1,6 +1,8 @@
 #ifndef _DORMOUSEENGINE_RENDERER_D2_SPRITE_HPP_
 #define _DORMOUSEENGINE_RENDERER_D2_SPRITE_HPP_
 
+#include <ponder/type.hpp>
+
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
@@ -39,6 +41,8 @@ public:
 		return textureView_;
 	}
 
+	control::Sampler sampler() const noexcept;
+
 	const Layout& layout() const noexcept {
 		return layout_;
 	}
@@ -57,9 +61,10 @@ private:
 
 };
 
-bool hasShaderProperty(const Sprite& model, essentials::StringId id, size_t arrayIdx);
-shader::Property getShaderProperty(const Sprite& model, essentials::StringId id, size_t arrayIdx);
+namespace detail { void declareSprite(); }
 
 } // namespace dormouse_engine::renderer::d2
+
+PONDER_AUTO_TYPE(dormouse_engine::renderer::d2::Sprite, &dormouse_engine::renderer::d2::detail::declareSprite);
 
 #endif /* _DORMOUSEENGINE_RENDERER_D2_SPRITE_HPP_ */

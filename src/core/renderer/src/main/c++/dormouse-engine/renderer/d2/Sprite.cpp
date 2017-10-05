@@ -153,29 +153,13 @@ void Sprite::render(
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 
-bool d2::hasShaderProperty([[maybe_unused]] const Sprite& model, essentials::StringId id, [[maybe_unused]] size_t arrayIdx)
-{
-	if (id == essentials::StringId("texture")) {
-		return true;
-	} else if (id == essentials::StringId("sampler")) {
-		return true;
-	} else if (id == essentials::StringId("toNDC")) {
-		return true;
-	}
-
-	return false;
+control::Sampler sampler() const noexcept {
+	return SpriteCommon::instance()->sampler();
 }
 
-shader::Property d2::getShaderProperty(const Sprite& model, essentials::StringId id, [[maybe_unused]] size_t arrayIdx)
-{
-	if (id == essentials::StringId("texture")) {
-		return model.texture();
-	} else if (id == essentials::StringId("sampler")) {
-		return SpriteCommon::instance()->sampler();
-	} else if (id == essentials::StringId("toNDC")) {
-		return model.layout().toNDC();
-	}
-
-	assert(!"Property not bound");
-	return shader::Property();
+void detail::declareSprite() {
+	ponder::Class::declare<Sprite>("dormouse_engine::renderer::d2::Sprite")
+		.property("texture", &Sprite::texture)
+		.property("sampler", &Sprite::sampler)
+		;
 }

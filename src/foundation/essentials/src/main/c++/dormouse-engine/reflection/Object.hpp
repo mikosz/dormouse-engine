@@ -24,6 +24,7 @@ namespace detail { void declareClassTag(); }
 DE_ENUM(
 	PropertyTag,
 	(NONE)
+	(SHADER_DATA)
 	(SHADER_RESOURCE)
 	(SHADER_PARAMETER)
 	);
@@ -36,6 +37,11 @@ public:
 	template <class T>
 	Object(essentials::observer_ptr<T> ptr) :
 		storage_(std::move(ptr))
+	{
+	}
+
+	Object(ponder::UserObject ponderObject) :
+		storage_(std::move(ponderObject))
 	{
 	}
 
@@ -77,7 +83,27 @@ private:
 
 	};
 
-	static constexpr auto STORAGE_SIZE = 2 * sizeof(void*);
+	template <>
+	class Model<ponder::UserObject> :
+		public essentials::ModelBase<Concept, Model<ponder::UserObject>, ponder::UserObject> {
+	public:
+
+		Model(ponder::UserObject ponderObject) :
+			essentials::ModelBase<Concept, Model<ponder::UserObject>, ponder::UserObject>(std::move(ponderObject))
+		{
+		}
+
+		const ponder::Class& metaclass() const override {
+			return model_.getClass();
+		}
+
+		ponder::UserObject metaobject() override {
+			return model_;
+		}
+
+	};
+
+	static constexpr auto STORAGE_SIZE = sizeof(ponder::UserObject) + sizeof(void*);
 	static constexpr auto STORAGE_ALIGNMENT = alignof(void*);
 
 	essentials::PolymorphicStorage<Concept, Model, STORAGE_SIZE, STORAGE_ALIGNMENT> storage_;
