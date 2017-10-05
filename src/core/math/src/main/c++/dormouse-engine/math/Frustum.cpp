@@ -7,8 +7,9 @@ using namespace dormouse_engine;
 using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
-Frustum::Frustum(Handedness handedness, float focalLength, float aspectRatio, float near, float far) noexcept
-	: Frustum(Transform::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, -1.0f))
+Frustum::Frustum(
+	Handedness handedness, float focalLength, float aspectRatio, float nearDistance, float farDistance) noexcept
+	: Frustum(Transform::perspectiveProjection(handedness, focalLength, aspectRatio, nearDistance, farDistance, -1.0f))
 {
 }
 

@@ -252,16 +252,6 @@ inline void writeShaderData(
 	}
 }
 
-void bindShaderResource(
-	control::ResourceView resourceView, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
-void bindShaderResource(
-	control::Sampler sampler, command::DrawCommand& cmd, graphics::ShaderType stage, size_t slot);
-
-void writeShaderData(
-	const math::Matrix4x4& matrix, essentials::BufferView buffer, graphics::ShaderDataType dataType);
-void writeShaderData(
-	const math::Transform& transform, essentials::BufferView buffer, graphics::ShaderDataType dataType);
-
 } // namespace dormouse_engine::renderer::shader
 
 #endif /* _DORMOUSEENGINE_RENDERER_SHADER_PROPERTY_HPP_ */

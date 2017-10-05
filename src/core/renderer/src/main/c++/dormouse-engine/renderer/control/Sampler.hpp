@@ -1,6 +1,10 @@
 #ifndef _DORMOUSEENGINE_RENDERER_CONTROL_SAMPLER_HPP_
 #define _DORMOUSEENGINE_RENDERER_CONTROL_SAMPLER_HPP_
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Sampler.hpp"
 
@@ -47,6 +51,13 @@ private:
 
 };
 
+namespace detail { void declareSampler(); }
+
 } // namespace dormouse_engine::renderer::control
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::renderer::control::Sampler,
+	&dormouse_engine::renderer::control::detail::declareSampler
+	);
 
 #endif /* _DORMOUSEENGINE_RENDERER_CONTROL_SAMPLER_HPP_ */

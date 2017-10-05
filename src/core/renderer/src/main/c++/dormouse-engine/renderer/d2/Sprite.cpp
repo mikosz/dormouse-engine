@@ -2,6 +2,10 @@
 
 #include <vector>
 
+#pragma warning(push, 3)
+#	include <ponder/classbuilder.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/ShaderCompiler.hpp"
 #include "dormouse-engine/essentials/policy/creation/None.hpp"
@@ -153,13 +157,16 @@ void Sprite::render(
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 
-control::Sampler sampler() const noexcept {
+control::Sampler Sprite::sampler() const noexcept {
 	return SpriteCommon::instance()->sampler();
 }
 
 void detail::declareSprite() {
+	const Layout& (Sprite::*constLayout)() const = &Sprite::layout;
+
 	ponder::Class::declare<Sprite>("dormouse_engine::renderer::d2::Sprite")
 		.property("texture", &Sprite::texture)
 		.property("sampler", &Sprite::sampler)
+		.property("layout", constLayout)
 		;
 }

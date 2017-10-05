@@ -1,7 +1,9 @@
 #ifndef _DORMOUSEENGINE_RENDERER_D2_SPRITE_HPP_
 #define _DORMOUSEENGINE_RENDERER_D2_SPRITE_HPP_
 
-#include <ponder/type.hpp>
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
 
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/Device.hpp"

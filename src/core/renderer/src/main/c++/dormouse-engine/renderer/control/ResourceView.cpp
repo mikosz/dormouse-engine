@@ -4,8 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
+#pragma warning(push, 3)
+#	include <ponder/classbuilder.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/hash-combine.hpp"
+#include "dormouse-engine/reflection/Object.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer::control;
@@ -106,4 +111,11 @@ void ResourceView::bind(graphics::CommandList& commandList, graphics::ShaderType
 	} else {
 		commandList.setResource(ResourceViewFactory::instance()->get(resourceViewId_), stage, slot);
 	}
+}
+
+void detail::declareResourceView() {
+	ponder::Class::declare<ResourceView>("dormouse_engine::renderer::control::ResourceView")
+		.tag(reflection::ClassTag::SHADER_RESOURCE)
+		.function("bind", &ResourceView::bind).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		;
 }

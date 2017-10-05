@@ -3,6 +3,10 @@
 
 #include <utility>
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/enums/enum.hpp"
 #include "dormouse-engine/math/Transform.hpp"
 #include "dormouse-engine/math/Vector.hpp"
@@ -47,42 +51,7 @@ public:
 	{
 	}
 
-	const math::Transform toNDC() const noexcept {
-		auto centreOffset = math::Vec2();
-
-		switch (std::get<HorizontalAnchor>(anchor_)) {
-		case HorizontalAnchor::LEFT:
-			centreOffset.x() = size_.x().ndcVector() * 0.5f;
-			break;
-		case HorizontalAnchor::CENTRE:
-			break;
-		case HorizontalAnchor::RIGHT:
-			centreOffset.x() = -size_.x().ndcVector() * 0.5f;
-			break;
-		default:
-			assert(!"Invalid horizontal anchor value");
-		}
-
-		switch (std::get<VerticalAnchor>(anchor_)) {
-		case VerticalAnchor::BOTTOM:
-			centreOffset.y() = size_.y().ndcVector() * 0.5f;
-			break;
-		case VerticalAnchor::MIDDLE:
-			break;
-		case VerticalAnchor::TOP:
-			centreOffset.y() = -size_.y().ndcVector() * 0.5f;
-			break;
-		default:
-			assert(!"Invalid vertical anchor value");
-		}
-
-		return
-			math::Transform::scale({ size_.x().ndcVector() * 0.5f, size_.y().ndcVector() * 0.5f, 1.0f }) <<
-			math::Transform::translation(
-				{ position_.x().ndcPoint() + centreOffset.x(), position_.y().ndcPoint() + centreOffset.y(), 0.0f }
-				)
-			;
-	}
+	const math::Transform toNDC() const noexcept;
 
 	const Anchor anchor() const noexcept {
 		return anchor_;
@@ -118,6 +87,13 @@ private:
 
 };
 
+namespace detail { void declareLayout(); }
+
 } // namespace dormouse_engine::renderer::d2
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::renderer::d2::Layout,
+	&dormouse_engine::renderer::d2::detail::declareLayout
+	);
 
 #endif /* _DORMOUSEENGINE_RENDERER_D2_LAYOUT_HPP_ */

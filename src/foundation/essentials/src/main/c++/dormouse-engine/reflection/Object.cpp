@@ -18,3 +18,11 @@ void detail::declarePropertyTag() {
 		builder.value(toString(tag), tag);
 	}
 }
+
+void detail::declareFunctionTag() {
+	auto builder = ponder::Enum::declare<FunctionTag>("dormouse_engine::reflection::FunctionTag");
+
+	for (auto tag : allFunctionTagValues()) {
+		builder.value(toString(tag), tag);
+	}
+}

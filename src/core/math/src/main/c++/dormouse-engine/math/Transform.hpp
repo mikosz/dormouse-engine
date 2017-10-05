@@ -1,6 +1,10 @@
 #ifndef _DORMOUSEENGINE_MATH_TRANSFORM_HPP_
 #define _DORMOUSEENGINE_MATH_TRANSFORM_HPP_
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "homogeneous.hpp"
 #include "Matrix.hpp"
 
@@ -109,6 +113,8 @@ inline Transform operator<<(const Transform& first, const Transform& second) {
 	return first.then(second);
 }
 
+namespace detail { void declareTransform(); }
+
 } // namespace dormouse_engine::math
 
 namespace dormouse_engine {
@@ -116,5 +122,10 @@ namespace dormouse_engine {
 using math::Transform;
 
 } // namespace dormouse_engine
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::math::Transform,
+	&dormouse_engine::math::detail::declareTransform
+);
 
 #endif /* _DORMOUSEENGINE_MATH_TRANSFORM_HPP_ */

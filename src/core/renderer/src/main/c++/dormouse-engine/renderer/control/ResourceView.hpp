@@ -1,6 +1,10 @@
 #ifndef _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 #define _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
@@ -37,6 +41,13 @@ private:
 
 };
 
+namespace detail { void declareResourceView(); }
+
 } // namespace dormouse_engine::renderer::control
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::renderer::control::ResourceView,
+	&dormouse_engine::renderer::control::detail::declareResourceView
+	);
 
 #endif /* _DORMOUSEENGINE_RENDERER_CONTROL_RESOURCEVIEW_HPP_ */

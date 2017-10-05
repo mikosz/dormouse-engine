@@ -3,8 +3,10 @@
 
 #include <type_traits>
 
-#include <ponder/class.hpp>
-#include <ponder/pondertype.hpp>
+#pragma warning(push, 3)
+#	include <ponder/class.hpp>
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
 
 #include "dormouse-engine/enums/enum.hpp"
 #include "dormouse-engine/essentials/StringId.hpp"
@@ -15,21 +17,28 @@ namespace dormouse_engine::reflection {
 
 DE_ENUM(
 	ClassTag,
-	(NONE)
 	(SERIALISABLE)
+	(SHADER_DATA)
+	(SHADER_RESOURCE)
+	(SHADER_PARAMETER)
 	);
 
 namespace detail { void declareClassTag(); }
 
 DE_ENUM(
 	PropertyTag,
-	(NONE)
-	(SHADER_DATA)
-	(SHADER_RESOURCE)
-	(SHADER_PARAMETER)
+	(TRANSIENT)
 	);
 
 namespace detail { void declarePropertyTag(); }
+
+DE_ENUM(
+	FunctionTag,
+	(WRITE_SHADER_DATA)
+	(BIND_SHADER_RESOURCE)
+	);
+
+namespace detail { void declareFunctionTag(); }
 
 class Object final {
 public:
@@ -116,5 +125,7 @@ PONDER_AUTO_TYPE(
 	dormouse_engine::reflection::ClassTag, &dormouse_engine::reflection::detail::declareClassTag);
 PONDER_AUTO_TYPE(
 	dormouse_engine::reflection::PropertyTag, &dormouse_engine::reflection::detail::declarePropertyTag);
+PONDER_AUTO_TYPE(
+	dormouse_engine::reflection::FunctionTag, &dormouse_engine::reflection::detail::declareFunctionTag);
 
 #endif /* _DORMOUSEENGINE_REFLECTION_OBJECT_HPP_ */

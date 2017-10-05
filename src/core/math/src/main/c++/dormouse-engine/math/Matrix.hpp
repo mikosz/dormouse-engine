@@ -10,8 +10,13 @@
 
 #include <boost/operators.hpp>
 
-#include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
 
+#include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
+#include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "Angle.hpp"
 #include "Handedness.hpp"
 #include "Vector.hpp"
@@ -397,6 +402,8 @@ public:
 		return viewMatrix(*this);
 	}
 
+	void writeShaderData(essentials::BufferView buffer, graphics::ShaderDataType dataType) const;
+
 private:
 
 	std::array<Row, ROWS> elements_;
@@ -428,6 +435,8 @@ Matrix<ST, R, C, SEF> makeIdentity() {
 	return identity;
 }
 
+void declareMatrix4x4();
+
 } // namespace detail
 
 template <class ST, size_t R, size_t C, class SEF>
@@ -442,5 +451,10 @@ using math::Matrix;
 using math::Matrix4x4;
 
 } // namespace dormouse_engine
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::math::Matrix4x4,
+	&dormouse_engine::math::detail::declareMatrix4x4
+	);
 
 #endif /* _DORMOUSEENGINE_MATH_MATRIX_HPP_ */

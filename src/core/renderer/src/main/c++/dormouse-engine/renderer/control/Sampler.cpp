@@ -4,8 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
+#pragma warning(push, 3)
+#	include <ponder/classbuilder.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/hash-combine.hpp"
+#include "dormouse-engine/reflection/Object.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer::control;
@@ -109,4 +114,11 @@ void Sampler::bind(graphics::CommandList& commandList, graphics::ShaderType stag
 	} else {
 		commandList.setSampler(SamplerFactory::instance()->get(samplerId_), stage, slot);
 	}
+}
+
+void detail::declareSampler() {
+	ponder::Class::declare<Sampler>("dormouse_engine::renderer::control::Sampler")
+		.tag(reflection::ClassTag::SHADER_RESOURCE)
+		.function("bind", &Sampler::bind).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		;
 }
