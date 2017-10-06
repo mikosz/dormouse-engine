@@ -69,6 +69,13 @@ CommandList::LockedData CommandList::lock(const Resource& data, LockPurpose lock
 		);
 }
 
+void CommandList::copy(const Resource& source, const Resource& target) {
+	deviceContext_->CopyResource(
+		detail::Internals::dxResourcePtr(target),
+		detail::Internals::dxResourcePtr(source)
+		);
+}
+
 void CommandList::setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil) {
 	auto* dxRTV = &detail::Internals::dxRenderTargetView(renderTarget);
 	auto& dxDSV = detail::Internals::dxDepthStencilView(depthStencil);

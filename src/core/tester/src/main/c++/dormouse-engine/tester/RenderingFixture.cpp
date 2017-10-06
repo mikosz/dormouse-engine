@@ -1,7 +1,11 @@
 #include "RenderingFixture.hpp"
 
+#include <boost/test/framework.hpp>
+
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/graphics/Image.hpp"
+#include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
 #include "dormouse-engine/renderer/control/RenderState.hpp"
 #include "dormouse-engine/renderer/control/ResourceView.hpp"
@@ -53,4 +57,29 @@ RenderingFixture::RenderingFixture() :
 	renderer::control::Sampler::initialiseSystem(graphicsDevice_);
 	renderer::control::RenderTargetView::initialiseSystem(graphicsDevice_);
 	renderer::control::DepthStencilView::initialiseSystem(graphicsDevice_);
+}
+
+void RenderingFixture::compareWithReferenceScreen(size_t index) const {
+	auto configuration = graphics::Texture::Configuration2d();
+	configuration.allowCPURead = true;
+	configuration.allowGPUWrite = true;
+	configuration.allowModifications = true;
+	configuration.width = window().clientWidth();
+	configuration.height = window().clientWidth();
+	configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+
+	auto screenshot = graphics::Texture(graphicsDevice_, configuration);
+
+	graphicsDevice_.getImmediateCommandList().copy(graphicsDevice_.backBuffer(), screenshot);
+
+	const auto referencePath =
+		boost::filesystem::path("test/") /
+		boost::unit_test::framework::current_test_case().p_name.get() /
+		("screenshot_" + std::to_string(index) + ".png")
+		;
+
+	const auto pixels = test_utils::readBinaryFile(referencePath);
+	const auto image = graphics::Image::load(essentials::viewBuffer(pixels), referencePath);
+
+	
 }

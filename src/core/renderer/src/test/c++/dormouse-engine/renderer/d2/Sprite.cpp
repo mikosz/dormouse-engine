@@ -29,22 +29,22 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 	sprite.layout().anchor() = Layout::Anchor(Layout::HorizontalAnchor::LEFT, Layout::VerticalAnchor::BOTTOM);
 	sprite.layout().position() = Layout::Position(WindowRelative(0.0f), WindowRelative(0.0f));
 
-	for (;;) {
-		graphicsDevice().beginScene();
+	graphicsDevice().beginScene();
 
-		auto commandBuffer = command::CommandBuffer();
-		sprite.render(
-			commandBuffer,
-			shader::Property(),
-			fullscreenViewport(),
-			graphicsDevice().backBuffer(),
-			graphicsDevice().depthStencil()
-			);
+	auto commandBuffer = command::CommandBuffer();
+	sprite.render(
+		commandBuffer,
+		shader::Property(),
+		fullscreenViewport(),
+		graphicsDevice().backBuffer(),
+		graphicsDevice().depthStencil()
+		);
 
-		commandBuffer.submit(graphicsDevice().getImmediateCommandList());
+	commandBuffer.submit(graphicsDevice().getImmediateCommandList());
 
-		graphicsDevice().endScene();
-	}
+	graphicsDevice().endScene();
+
+	compareWithReferenceScreen();
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* RendererSpriteTestSuite */);

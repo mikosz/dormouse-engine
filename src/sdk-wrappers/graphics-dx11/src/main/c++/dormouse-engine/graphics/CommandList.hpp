@@ -54,6 +54,8 @@ public:
 
 	LockedData lock(const Resource& data, LockPurpose lockPurpose);
 
+	void copy(const Resource& source, const Resource& target);
+
 	void setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil);
 
 	void setViewport(const Viewport& viewport);

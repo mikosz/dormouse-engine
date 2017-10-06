@@ -20,6 +20,8 @@ public:
 		return fullscreenViewport_;
 	}
 
+	void compareWithReferenceScreen(size_t index) const;
+
 private:
 
 	graphics::Device graphicsDevice_;
