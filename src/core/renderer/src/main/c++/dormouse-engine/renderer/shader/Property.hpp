@@ -238,6 +238,13 @@ inline void bindShaderResource(
 	}
 }
 
+void bindShaderResource(
+	reflection::Object reflectionObject,
+	command::DrawCommand& cmd,
+	graphics::ShaderType stage,
+	size_t slot
+	);
+
 template <class T>
 inline void writeShaderData(
 	[[maybe_unused]] const T& model,
@@ -251,6 +258,12 @@ inline void writeShaderData(
 		throw PropertyNotWriteable();
 	}
 }
+
+void writeShaderData(
+	reflection::Object reflectionObject,
+	essentials::BufferView buffer,
+	graphics::ShaderDataType dataType
+	);
 
 } // namespace dormouse_engine::renderer::shader
 

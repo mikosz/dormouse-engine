@@ -5,6 +5,8 @@
 #	include <ponder/pondertype.hpp>
 #pragma warning(pop)
 
+#include "dormouse-engine/essentials/memory.hpp"
+#include "dormouse-engine/graphics/ShaderDataType.hpp"
 #include "homogeneous.hpp"
 #include "Matrix.hpp"
 
@@ -101,6 +103,10 @@ public:
 
 	const Matrix4x4& matrix() const {
 		return matrix_;
+	}
+
+	void writeShaderData(essentials::BufferView buffer, graphics::ShaderDataType dataType) const {
+		matrix_.writeShaderData(buffer, dataType);
 	}
 
 private:

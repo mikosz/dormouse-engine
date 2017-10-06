@@ -1,6 +1,10 @@
 #ifndef _DORMOUSEENGINE_RENDERER_COMMAND_DRAWCOMMAND_HPP_
 #define _DORMOUSEENGINE_RENDERER_COMMAND_DRAWCOMMAND_HPP_
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/graphics/CommandList.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
@@ -169,6 +173,13 @@ private:
 
 };
 
+namespace detail { void declareDrawCommand(); }
+
 } // namespace dormouse_engine::renderer::command
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::renderer::command::DrawCommand,
+	&dormouse_engine::renderer::command::detail::declareDrawCommand
+);
 
 #endif /* _DORMOUSEENGINE_RENDERER_COMMAND_DRAWCOMMAND_HPP_ */

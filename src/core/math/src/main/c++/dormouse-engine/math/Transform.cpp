@@ -130,6 +130,8 @@ Transform Transform::rotation(Vec3 around, Angle by) noexcept {
 
 void detail::declareTransform() {
 	ponder::Class::declare<Transform>("dormouse_engine::math::Transform")
+		.tag(reflection::ClassTag::SHADER_DATA)
 		.property("matrix", &Transform::matrix)
+		.function("writeShaderData", &Transform::writeShaderData).tag(reflection::FunctionTag::WRITE_SHADER_DATA)
 		;
 }

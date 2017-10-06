@@ -2,6 +2,10 @@
 
 #include <cassert>
 
+#pragma warning(push, 3)
+#	include <ponder/classbuilder.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/essentials/Range.hpp"
 
 using namespace dormouse_engine;
@@ -70,4 +74,8 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	} else {
 		commandList.draw(0u, vertexCount_, primitiveTopology_);
 	}
+}
+
+void detail::declareDrawCommand() {
+	ponder::Class::declare<DrawCommand>("dormouse_engine::renderer::command::DrawCommand");
 }

@@ -53,7 +53,7 @@ public:
 		cmd.setRenderTarget(std::move(renderTarget));
 		cmd.setDepthStencil(std::move(depthStencil));
 
-		auto spriteProperty = shader::Property(essentials::make_observer(&sprite));
+		auto spriteProperty = shader::Property(reflection::Object(essentials::make_observer(&sprite)));
 		auto spriteEntry = shader::Property(shader::NamedProperty("sprite", essentials::make_observer(&spriteProperty)));
 
 		auto mergedProperty = shader::MergedProperty(

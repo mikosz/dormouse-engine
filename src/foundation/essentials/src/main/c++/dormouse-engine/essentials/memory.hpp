@@ -8,6 +8,10 @@
 #include <cstdint>
 #include <type_traits>
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 namespace dormouse_engine::essentials {
 
 namespace detail {
@@ -125,6 +129,10 @@ auto viewBuffer(const std::basic_string<C, T, A>& s) {
 	return detail::BufferView<const Byte>(s.data(), s.size());
 }
 
+namespace detail { void declareBufferView(); }
+
 } // namespace dormouse_engine::essentials
+
+PONDER_AUTO_TYPE(dormouse_engine::essentials::BufferView, dormouse_engine::essentials::detail::declareBufferView);
 
 #endif /* DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_ */

@@ -11,8 +11,10 @@
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/hash-combine.hpp"
 #include "dormouse-engine/reflection/Object.hpp"
+#include "../command/DrawCommand.hpp"
 
 using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::control;
 
 namespace /* anonymous */ {
@@ -113,9 +115,13 @@ void ResourceView::bind(graphics::CommandList& commandList, graphics::ShaderType
 	}
 }
 
+void ResourceView::bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const {
+	drawCommand.setResource(*this, stage, slot);
+}
+
 void detail::declareResourceView() {
 	ponder::Class::declare<ResourceView>("dormouse_engine::renderer::control::ResourceView")
 		.tag(reflection::ClassTag::SHADER_RESOURCE)
-		.function("bind", &ResourceView::bind).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		.function("bindToDrawCommand", &ResourceView::bindToDrawCommand).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
 		;
 }

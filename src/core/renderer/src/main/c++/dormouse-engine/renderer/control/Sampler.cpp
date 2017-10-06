@@ -11,8 +11,10 @@
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/hash-combine.hpp"
 #include "dormouse-engine/reflection/Object.hpp"
+#include "../command/DrawCommand.hpp"
 
 using namespace dormouse_engine;
+using namespace dormouse_engine::renderer;
 using namespace dormouse_engine::renderer::control;
 
 namespace /* anonymous */ {
@@ -116,9 +118,13 @@ void Sampler::bind(graphics::CommandList& commandList, graphics::ShaderType stag
 	}
 }
 
+void Sampler::bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const {
+	drawCommand.setSampler(*this, stage, slot);
+}
+
 void detail::declareSampler() {
 	ponder::Class::declare<Sampler>("dormouse_engine::renderer::control::Sampler")
 		.tag(reflection::ClassTag::SHADER_RESOURCE)
-		.function("bind", &Sampler::bind).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		.function("bindToDrawCommand", &Sampler::bindToDrawCommand).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
 		;
 }

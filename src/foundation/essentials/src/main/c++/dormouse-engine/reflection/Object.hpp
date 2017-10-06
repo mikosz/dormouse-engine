@@ -20,7 +20,6 @@ DE_ENUM(
 	(SERIALISABLE)
 	(SHADER_DATA)
 	(SHADER_RESOURCE)
-	(SHADER_PARAMETER)
 	);
 
 namespace detail { void declareClassTag(); }

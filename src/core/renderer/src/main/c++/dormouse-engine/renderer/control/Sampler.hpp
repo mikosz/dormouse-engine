@@ -7,6 +7,7 @@
 
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Sampler.hpp"
+#include "../command/commandfwd.hpp"
 
 namespace dormouse_engine::renderer::control {
 
@@ -33,7 +34,10 @@ public:
 
 	Sampler(graphics::Device& graphicsDevice, graphics::Sampler::Configuration configuration);
 
+	// TODO: MUST rename these
 	void bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const;
+
+	void bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const;
 
 private:
 

@@ -4,6 +4,10 @@
 #include <d3dcommon.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 #include "dormouse-engine/enums.hpp"
 
 namespace dormouse_engine::graphics {
@@ -45,6 +49,24 @@ struct ShaderDataType {
 	size_t rows;
 };
 
+namespace detail {
+
+void declareShaderDataTypeClass();
+void declareShaderDataTypeScalarType();
+void declareShaderDataType();
+
+} // namespace detail
+
 } // namespace dormouse_engine::graphics
+
+PONDER_AUTO_TYPE(
+	dormouse_engine::graphics::ShaderDataType::Class,
+	&dormouse_engine::graphics::detail::declareShaderDataTypeClass
+	);
+PONDER_AUTO_TYPE(
+	dormouse_engine::graphics::ShaderDataType::ScalarType,
+	&dormouse_engine::graphics::detail::declareShaderDataTypeScalarType
+	);
+PONDER_AUTO_TYPE(dormouse_engine::graphics::ShaderDataType, &dormouse_engine::graphics::detail::declareShaderDataType);
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_SHADERDATATYPE_HPP_ */

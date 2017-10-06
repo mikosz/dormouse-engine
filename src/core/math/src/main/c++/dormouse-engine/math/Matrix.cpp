@@ -41,6 +41,7 @@ void Matrix4x4::writeShaderData(essentials::BufferView buffer, graphics::ShaderD
 
 void detail::declareMatrix4x4() {
 	ponder::Class::declare<Matrix4x4>("dormouse_engine::math::Matrix4x4")
+		.tag(reflection::ClassTag::SHADER_DATA)
 		.function("writeShaderData", &Matrix4x4::writeShaderData).tag(reflection::FunctionTag::WRITE_SHADER_DATA)
 		;
 }
