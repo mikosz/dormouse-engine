@@ -19,6 +19,10 @@ public:
 		return window_;
 	}
 
+	const wm::Window& window() const {
+		return window_;
+	}
+
 private:
 
 	std::shared_ptr<wm::App> app_;

@@ -20,7 +20,7 @@ public:
 		return fullscreenViewport_;
 	}
 
-	void compareWithReferenceScreen(size_t index) const;
+	void compareWithReferenceScreen(size_t index);
 
 private:
 

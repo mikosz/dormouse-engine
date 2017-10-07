@@ -1,5 +1,6 @@
 #include "RenderingFixture.hpp"
 
+#include <boost/test/tree/test_unit.hpp>
 #include <boost/test/framework.hpp>
 
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
@@ -59,27 +60,53 @@ RenderingFixture::RenderingFixture() :
 	renderer::control::DepthStencilView::initialiseSystem(graphicsDevice_);
 }
 
-void RenderingFixture::compareWithReferenceScreen(size_t index) const {
-	auto configuration = graphics::Texture::Configuration2d();
-	configuration.allowCPURead = true;
-	configuration.allowGPUWrite = true;
-	configuration.allowModifications = true;
-	configuration.width = window().clientWidth();
-	configuration.height = window().clientWidth();
-	configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+void RenderingFixture::compareWithReferenceScreen(size_t index) {
+	auto& commandList = graphicsDevice_.getImmediateCommandList();
 
-	auto screenshot = graphics::Texture(graphicsDevice_, configuration);
+	auto screenshotPixels = essentials::ByteVector();
 
-	graphicsDevice_.getImmediateCommandList().copy(graphicsDevice_.backBuffer(), screenshot);
+	{
+		auto configuration = graphics::Texture::Configuration2d();
+		configuration.allowCPURead = true;
+		configuration.allowGPUWrite = true;
+		configuration.allowModifications = true;
+		configuration.width = window().clientWidth();
+		configuration.height = window().clientWidth();
+		configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+
+		auto screenshot = graphics::Texture(graphicsDevice_, configuration);
+
+		commandList.copy(graphicsDevice_.backBuffer(), screenshot);
+
+		screenshotPixels.resize(window().clientWidth() * window().clientHeight() * screenshot.pixelFormat().pixelSize());
+
+		auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+		std::copy(
+			lockedScreenshotData.get(),
+			lockedScreenshotData.get() + screenshotPixels.size(),
+			screenshotPixels.data()
+			);
+	}
 
 	const auto referencePath =
 		boost::filesystem::path("test/") /
 		boost::unit_test::framework::current_test_case().p_name.get() /
-		("screenshot_" + std::to_string(index) + ".png")
+		("screenshot_" + std::to_string(index) + ".tga")
 		;
 
-	const auto pixels = test_utils::readBinaryFile(referencePath);
-	const auto image = graphics::Image::load(essentials::viewBuffer(pixels), referencePath);
-
-	
+	if (boost::filesystem::exists(referencePath)) {
+		//const auto referenceImageData = essentials::test_utils::readBinaryFile(referencePath);
+		//const auto referenceImage = graphics::Image::load(
+		//	essentials::viewBuffer(referenceImageData), referencePath);
+	} else {
+		auto screenshotImage = graphics::Image(
+			std::move(screenshotPixels),
+			std::make_pair(window().clientWidth(), window().clientHeight()),
+			1u,
+			1u,
+			graphics::FORMAT_R8G8B8A8_UNORM
+			);
+		
+		screenshotImage.save(referencePath.string() + ".candidate");
+	}
 }

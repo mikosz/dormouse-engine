@@ -37,6 +37,7 @@ public:
 	enum class LockPurpose {
 		WRITE_DISCARD = D3D11_MAP_WRITE_DISCARD,
 		WRITE_NO_OVERWRITE = D3D11_MAP_WRITE_NO_OVERWRITE,
+		READ = D3D11_MAP_READ,
 	};
 
 	CommandList() = default;

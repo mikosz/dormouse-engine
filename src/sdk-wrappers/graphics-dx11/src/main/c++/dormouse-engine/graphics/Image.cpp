@@ -33,7 +33,7 @@ ImageLoadingError::ImageLoadingError(const std::string& path, const std::excepti
 }
 
 std::string ImageLoadingError::buildMessage(const std::string& path, const std::string& message) {
-	auto result = "Failed to load image \"" + path + "\"";
+	auto result = R"(Failed to load image ")" + path + R"(")";
 	if (!message.empty()) {
 		result += ": " + message;
 	}
@@ -41,19 +41,19 @@ std::string ImageLoadingError::buildMessage(const std::string& path, const std::
 	return result;
 }
 
-Image Image::load(essentials::ConstBufferView data, const std::string& path) {
+Image Image::load(essentials::ConstBufferView data, const boost::filesystem::path& path) {
 	try {
 		DE_LOG_DEBUG << "Loading image " << path;
 
 		auto metadata = DirectX::TexMetadata();
 		auto scratchImage = DirectX::ScratchImage();
 
-		if (boost::algorithm::ends_with(path, ".tga")) { // TODO: refactor?
+		if (boost::algorithm::ends_with(path.string(), ".tga")) { // TODO: refactor?
 			system::windows::checkSystemCall(
 				DirectX::LoadFromTGAMemory(data.data(), data.size(), &metadata, scratchImage),
 				"Failed to load a targa file"
 			);
-		} else if (boost::algorithm::ends_with(path, ".dds")) {
+		} else if (boost::algorithm::ends_with(path.string(), ".dds")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromDDSMemory(
 					data.data(),
@@ -64,7 +64,7 @@ Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 					),
 				"Failed to load a dds file"
 				);
-		} else if (boost::algorithm::ends_with(path, ".bmp")) {
+		} else if (boost::algorithm::ends_with(path.string(), ".bmp")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromWICMemory( // TODO: definitely refactor
 					data.data(),
@@ -75,7 +75,7 @@ Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 					),
 				"Failed to load a bmp file"
 				);
-		} else if (boost::algorithm::ends_with(path, ".png")) {
+		} else if (boost::algorithm::ends_with(path.string(), ".png")) {
 			system::windows::checkSystemCall(
 				DirectX::LoadFromWICMemory( // TODO: definitely refactor
 					data.data(),
@@ -87,7 +87,7 @@ Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 				"Failed to load a png file"
 				);
 		} else {
-			throw std::runtime_error("Unsupported image format extension: " + path);
+			throw std::runtime_error("Unsupported image format extension: " + path.string());
 		}
 
 		auto pixels = essentials::ByteVector();
@@ -109,6 +109,21 @@ Image Image::load(essentials::ConstBufferView data, const std::string& path) {
 			PixelFormat(pixelFormatId)
 			);
 	} catch (const std::exception& e) {
-		throw ImageLoadingError(path, e);
+		throw ImageLoadingError(path.string(), e);
 	}
+}
+
+void Image::save(const boost::filesystem::path& path) const {
+	auto dxImage = DirectX::Image();
+	dxImage.format = static_cast<DXGI_FORMAT>(pixelFormat_.id());
+	dxImage.width = size_.first;
+	dxImage.height = size_.second;
+	dxImage.pixels = const_cast<essentials::Byte*>(pixels_.data());
+	dxImage.rowPitch = pixelFormat_.rowPitch(dxImage.width);
+	dxImage.slicePitch = pixelFormat_.slicePitch(dxImage.height, dxImage.rowPitch);
+
+	system::windows::checkSystemCall(
+		DirectX::SaveToTGAFile(dxImage, path.wstring().c_str()),
+		"Failed to save a tga file to " + path.string()
+		);
 }

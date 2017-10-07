@@ -38,13 +38,13 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 		fullscreenViewport(),
 		graphicsDevice().backBuffer(),
 		graphicsDevice().depthStencil()
-		);
+	);
 
 	commandBuffer.submit(graphicsDevice().getImmediateCommandList());
 
 	graphicsDevice().endScene();
 
-	compareWithReferenceScreen();
+	compareWithReferenceScreen(0);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* RendererSpriteTestSuite */);
