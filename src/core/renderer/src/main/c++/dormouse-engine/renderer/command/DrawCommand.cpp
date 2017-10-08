@@ -56,7 +56,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 				// TODO: lock should return a std::unique_ptr<BufferView, ...> instead of uint8_t. size is retrievable
 				// from resource anyway
 				auto outPtr = commandList.lock(constantBuffer, graphics::CommandList::LockPurpose::WRITE_DISCARD);
-				std::memcpy(outPtr.get(), data.data(), data.size());
+				std::memcpy(outPtr.pixels.get(), data.data(), data.size());
 			}
 
 			commandList.setConstantBuffer(constantBuffer, stage, constantBufferSlotIdx);

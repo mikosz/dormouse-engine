@@ -8,6 +8,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "detail/detailfwd.hpp"
 #include "PrimitiveTopology.hpp"
@@ -32,7 +33,13 @@ class ResourceView;
 class CommandList {
 public:
 
-	using LockedData = std::unique_ptr<std::uint8_t, std::function<void(std::uint8_t*)>>;
+	struct LockedData {
+		using Pixels = std::unique_ptr<essentials::Byte, std::function<void(essentials::Byte*)>>;
+
+		Pixels pixels;
+		size_t rowPitch;
+		size_t depthPitch;
+	};
 
 	enum class LockPurpose {
 		WRITE_DISCARD = D3D11_MAP_WRITE_DISCARD,

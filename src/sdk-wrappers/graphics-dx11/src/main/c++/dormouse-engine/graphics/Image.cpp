@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iterator>
 
+#include <boost/filesystem.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 #include <DirectXTex/DirectXTex.h>
@@ -113,14 +114,18 @@ Image Image::load(essentials::ConstBufferView data, const boost::filesystem::pat
 	}
 }
 
-void Image::save(const boost::filesystem::path& path) const {
+void Image::save(const boost::filesystem::path& path, size_t rowPitch) const {
+	if (path.has_parent_path()) {
+		boost::filesystem::create_directories(path.parent_path());
+	}
+
 	auto dxImage = DirectX::Image();
 	dxImage.format = static_cast<DXGI_FORMAT>(pixelFormat_.id());
 	dxImage.width = size_.first;
 	dxImage.height = size_.second;
 	dxImage.pixels = const_cast<essentials::Byte*>(pixels_.data());
-	dxImage.rowPitch = pixelFormat_.rowPitch(dxImage.width);
-	dxImage.slicePitch = pixelFormat_.slicePitch(dxImage.height, dxImage.rowPitch);
+	dxImage.rowPitch = rowPitch;
+	dxImage.slicePitch = pixelFormat_.slicePitch(dxImage.height, rowPitch);
 
 	system::windows::checkSystemCall(
 		DirectX::SaveToTGAFile(dxImage, path.wstring().c_str()),

@@ -1,8 +1,10 @@
 #include "RenderingFixture.hpp"
 
-#include <boost/test/tree/test_unit.hpp>
+#define BOOST_TEST_NO_LIB
+#include <boost/test/auto_unit_test.hpp>
 #include <boost/test/framework.hpp>
 
+#include "dormouse-engine/essentials/Range.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/Image.hpp"
@@ -64,49 +66,118 @@ void RenderingFixture::compareWithReferenceScreen(size_t index) {
 	auto& commandList = graphicsDevice_.getImmediateCommandList();
 
 	auto screenshotPixels = essentials::ByteVector();
+	auto screenshotRowPitch = size_t();
+
+	const auto pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM; // TODO
+	const auto width = window().clientWidth();
+	const auto height = window().clientHeight();
 
 	{
 		auto configuration = graphics::Texture::Configuration2d();
 		configuration.allowCPURead = true;
 		configuration.allowGPUWrite = true;
 		configuration.allowModifications = true;
-		configuration.width = window().clientWidth();
-		configuration.height = window().clientWidth();
-		configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+		configuration.width = width;
+		configuration.height = height;
+		configuration.pixelFormat = pixelFormat;
 
 		auto screenshot = graphics::Texture(graphicsDevice_, configuration);
 
 		commandList.copy(graphicsDevice_.backBuffer(), screenshot);
 
-		screenshotPixels.resize(window().clientWidth() * window().clientHeight() * screenshot.pixelFormat().pixelSize());
-
 		auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+		screenshotRowPitch = lockedScreenshotData.rowPitch;
+		
+		screenshotPixels.resize(configuration.height * screenshotRowPitch);
 		std::copy(
-			lockedScreenshotData.get(),
-			lockedScreenshotData.get() + screenshotPixels.size(),
+			lockedScreenshotData.pixels.get(),
+			lockedScreenshotData.pixels.get() + screenshotPixels.size(),
 			screenshotPixels.data()
 			);
 	}
 
+	const auto currentTestCaseName = boost::unit_test::framework::current_test_case().p_name.get();
+
 	const auto referencePath =
-		boost::filesystem::path("test/") /
-		boost::unit_test::framework::current_test_case().p_name.get() /
-		("screenshot_" + std::to_string(index) + ".tga")
+		boost::filesystem::path("test/reference") /
+		(currentTestCaseName + "." + std::to_string(index) + ".tga")
 		;
 
 	if (boost::filesystem::exists(referencePath)) {
-		//const auto referenceImageData = essentials::test_utils::readBinaryFile(referencePath);
-		//const auto referenceImage = graphics::Image::load(
-		//	essentials::viewBuffer(referenceImageData), referencePath);
+		// TODO: do this on the GPU, will be wayyy faster and wayyyyyyy cooler, also would avoid all
+		// this hacking with row pitches etc
+		const auto referenceImageData = essentials::test_utils::readBinaryFile(referencePath);
+		const auto referenceImage = graphics::Image::load(
+			essentials::viewBuffer(referenceImageData), referencePath);
+
+		const auto referencePixels = referenceImage.pixels();
+
+		const auto minBufferSize = (height - 1) * pixelFormat.rowPitch(width) + width;
+		BOOST_REQUIRE(screenshotPixels.size() >= minBufferSize);
+		BOOST_REQUIRE(referencePixels.size() >= minBufferSize);
+
+		auto different = false;
+
+		for (const auto rowIdx : essentials::IndexRange(0u, height)) {
+			const auto referenceRowOffset = rowIdx * pixelFormat.rowPitch(width);
+			const auto screenshotRowOffset = rowIdx * screenshotRowPitch;
+			
+			for (const auto byteIdx : essentials::IndexRange(0u, width * pixelFormat.pixelSize())) {
+				const auto referenceByteOffset = referenceRowOffset + byteIdx;
+				const auto screenshotByteOffset = screenshotRowOffset + byteIdx;
+				if (referencePixels.data()[referenceByteOffset] != screenshotPixels[screenshotByteOffset]) {
+					different = true;
+					break;
+				}
+			}
+
+			if (different) {
+				break;
+			}
+		}
+
+		if (different) {
+			auto screenshotImage = graphics::Image(
+				std::move(screenshotPixels),
+				std::make_pair(width, height),
+				1u,
+				1u,
+				pixelFormat
+				);
+		
+			const auto candidatePath = referencePath.string() + ".bad";
+
+			screenshotImage.save(candidatePath, screenshotRowPitch);
+
+			BOOST_FAIL(
+				"Reference image for test " +
+				currentTestCaseName +
+				" (" +
+				referencePath.string() +
+				" different. Bad screenshot stored at " +
+				candidatePath
+				);
+		}
 	} else {
 		auto screenshotImage = graphics::Image(
 			std::move(screenshotPixels),
-			std::make_pair(window().clientWidth(), window().clientHeight()),
+			std::make_pair(width, height),
 			1u,
 			1u,
-			graphics::FORMAT_R8G8B8A8_UNORM
+			pixelFormat
 			);
 		
-		screenshotImage.save(referencePath.string() + ".candidate");
+		const auto candidatePath = referencePath.string() + ".candidate";
+
+		screenshotImage.save(candidatePath, screenshotRowPitch);
+
+		BOOST_FAIL(
+			"Reference image for test " +
+			currentTestCaseName +
+			" (" +
+			referencePath.string() +
+			" not found. Candidate stored at " +
+			candidatePath
+			);
 	}
 }

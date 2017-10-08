@@ -61,12 +61,20 @@ CommandList::LockedData CommandList::lock(const Resource& data, LockPurpose lock
 		"Failed to map the provided resource"
 		);
 
-	return LockedData(
-		reinterpret_cast<std::uint8_t*>(mappedResource.pData),
-		[deviceContext = deviceContext_, dxResource](std::uint8_t*) {
+
+	auto result = LockedData();
+
+	result.pixels = LockedData::Pixels(
+		reinterpret_cast<essentials::Byte*>(mappedResource.pData),
+		[deviceContext = deviceContext_, dxResource](essentials::Byte*) {
 			deviceContext->Unmap(dxResource, 0);
 		}
 		);
+
+	result.rowPitch = mappedResource.RowPitch;
+	result.depthPitch = mappedResource.DepthPitch;
+
+	return result;
 }
 
 void CommandList::copy(const Resource& source, const Resource& target) {

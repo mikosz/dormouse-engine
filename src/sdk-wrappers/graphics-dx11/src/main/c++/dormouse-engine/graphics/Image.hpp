@@ -59,7 +59,7 @@ public:
 	{
 	}
 
-	void save(const boost::filesystem::path& path) const;
+	void save(const boost::filesystem::path& path, size_t rowPitch) const;
 
 	essentials::ConstBufferView pixels() const {
 		return essentials::viewBuffer(pixels_);
