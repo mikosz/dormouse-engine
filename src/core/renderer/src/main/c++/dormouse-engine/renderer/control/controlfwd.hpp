@@ -6,6 +6,8 @@ namespace dormouse_engine::renderer::control {
 class RenderState;
 class ResourceView;
 class Sampler;
+class RenderSettings;
+class RenderTargetView;
 
 } // namespace dormouse_engine::renderer::control
 

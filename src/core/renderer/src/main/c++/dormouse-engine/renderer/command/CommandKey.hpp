@@ -15,7 +15,7 @@ enum class FullscreenLayerId {
 constexpr auto FULLSCREEN_LAYER_BITS = 2u;
 
 enum class ViewportId {
-	WINDOW,
+	FULLSCREEN,
 };
 constexpr auto VIEWPORT_ID_BITS = 1u;
 

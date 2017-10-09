@@ -92,11 +92,11 @@ private:
 } // anonymous namespace
 
 Viewport::Viewport(const graphics::Viewport::Configuration& configuration) :
-	viewportId_(ViewportFactory::instance()->create(configuration))
+	viewportObjectId_(ViewportFactory::instance()->create(configuration))
 {
 }
 
-void Viewport::bind(graphics::CommandList& commandList) const {
-	assert(viewportId_ != INVALID_VIEWPORT_ID);
-	commandList.setViewport(ViewportFactory::instance()->get(viewportId_));
+graphics::Viewport Viewport::get() const {
+	assert(viewportObjectId_ != INVALID_VIEWPORT_OBJECT_ID);
+	return ViewportFactory::instance()->get(viewportObjectId_);
 }

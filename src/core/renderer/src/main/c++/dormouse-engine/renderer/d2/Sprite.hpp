@@ -34,10 +34,10 @@ public:
 	void render(
 		command::CommandBuffer& commandBuffer,
 		const shader::Property& properties,
-		control::Viewport viewport, // TODO: probably shouldn't be passed to render like that?
+		control::Viewport viewport,
 		control::RenderTargetView renderTarget,
 		control::DepthStencilView depthStencil
-		) const;
+	) const;
 
 	control::ResourceView texture() const noexcept {
 		return textureView_;

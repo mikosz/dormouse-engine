@@ -2,7 +2,6 @@
 #define _DORMOUSEENGINE_RENDERER_CONTROL_VIEWPORT_HPP_
 
 #include "dormouse-engine/graphics/Viewport.hpp"
-#include "dormouse-engine/graphics/CommandList.hpp"
 
 namespace dormouse_engine::renderer::control {
 
@@ -13,16 +12,16 @@ public:
 
 	Viewport(const graphics::Viewport::Configuration& configuration);
 
-	void bind(graphics::CommandList& commandList) const;
+	graphics::Viewport get() const;
 
 private:
 
-	static constexpr size_t INVALID_VIEWPORT_ID = static_cast<size_t>(-1);
+	static constexpr size_t INVALID_VIEWPORT_OBJECT_ID = static_cast<size_t>(-1);
 
-	size_t viewportId_ = INVALID_VIEWPORT_ID;
+	size_t viewportObjectId_ = INVALID_VIEWPORT_OBJECT_ID;
 
 	friend bool operator==(const Viewport& lhs, const Viewport& rhs) {
-		return lhs.viewportId_ == rhs.viewportId_;
+		return lhs.viewportObjectId_ == rhs.viewportObjectId_;
 	}
 
 	friend bool operator!=(const Viewport& lhs, const Viewport& rhs) {

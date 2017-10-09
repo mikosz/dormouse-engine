@@ -16,7 +16,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	const auto* previousCommand = dynamic_cast<const DrawCommand*>(previous);
 
 	if (!previousCommand || (previousCommand->viewport_ != viewport_)) {
-		viewport_.bind(commandList);
+		commandList.setViewport(viewport_.get());
 	}
 
 	if (!previousCommand ||
