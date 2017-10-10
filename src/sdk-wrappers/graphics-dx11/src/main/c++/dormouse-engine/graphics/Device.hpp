@@ -3,14 +3,15 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "dormouse-engine/system/windows/types.hpp"
-
-#include "Texture2d.hpp"
+#include "detail/detailfwd.hpp"
+#include "Texture.hpp"
 #include "CommandList.hpp"
 #include "PrimitiveTopology.hpp"
 
@@ -27,6 +28,8 @@ public:
 	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = true;
 
 	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = false;
+
+	using DeviceDestroyedHandler = std::function<void()>;
 
 	using LockedData = std::unique_ptr<void, std::function<void(void*)>>;
 
@@ -54,6 +57,12 @@ public:
 
 	Device(system::windows::WindowHandle windowHandle, const Configuration& configuration);
 
+	~Device();
+
+	void addDeviceDestroyedHandler(DeviceDestroyedHandler handler) {
+		deviceDestroyedHandlers_.emplace_back(std::move(handler));
+	}
+
 	CommandList& getImmediateCommandList();
 
 	CommandList createDeferredCommandList();
@@ -66,16 +75,12 @@ public:
 
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
-	Texture2d& backBuffer() {
+	Texture backBuffer() const {
 		return backBuffer_;
 	}
 
-	Texture2d& depthStencil() {
+	Texture depthStencil() const {
 		return depthStencil_;
-	}
-
-	ID3D11Device& internalDevice() {
-		return *d3dDevice_;
 	}
 
 private:
@@ -86,13 +91,17 @@ private:
 
 	system::windows::COMWrapper<ID3D11Device> d3dDevice_;
 
+	std::vector<DeviceDestroyedHandler> deviceDestroyedHandlers_;
+
 	CommandList immediateCommandList_;
 
 	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
-	Texture2d backBuffer_;
+	Texture backBuffer_;
 
-	Texture2d depthStencil_;
+	Texture depthStencil_;
+
+	friend struct detail::Internals;
 
 };
 

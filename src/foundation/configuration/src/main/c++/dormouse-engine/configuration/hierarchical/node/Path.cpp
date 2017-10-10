@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "Path.hpp"
 
 #include <algorithm>

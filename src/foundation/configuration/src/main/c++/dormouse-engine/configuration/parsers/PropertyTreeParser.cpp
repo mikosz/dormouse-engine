@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "PropertyTreeParser.hpp"
 
 #include <boost/bind.hpp>

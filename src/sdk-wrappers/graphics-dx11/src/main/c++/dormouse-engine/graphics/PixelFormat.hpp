@@ -47,6 +47,11 @@ public:
 		(BLUE)
 		(ALPHA)
 
+		(X)
+		(Y)
+		(Z)
+		(W)
+
 		(COMPRESSION_BLOCK)
 
 		(DEPTH)
@@ -182,6 +187,11 @@ constexpr auto G32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::GREEN,
 constexpr auto B32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::BLUE, PixelFormat::DataType::FLOAT, 32u);
 constexpr auto A32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::ALPHA, PixelFormat::DataType::FLOAT, 32u);
 
+constexpr auto X32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::X, PixelFormat::DataType::FLOAT, 32u);
+constexpr auto Y32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::Y, PixelFormat::DataType::FLOAT, 32u);
+constexpr auto Z32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::Z, PixelFormat::DataType::FLOAT, 32u);
+constexpr auto W32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::W, PixelFormat::DataType::FLOAT, 32u);
+
 constexpr auto R32_UINT = PixelFormat::Channel(PixelFormat::ChannelType::RED, PixelFormat::DataType::UINT, 32u);
 
 constexpr auto R16_UINT = PixelFormat::Channel(PixelFormat::ChannelType::RED, PixelFormat::DataType::UINT, 16u);
@@ -208,6 +218,11 @@ constexpr auto FORMAT_R32G32_FLOAT = PixelFormat() << R32_FLOAT << G32_FLOAT;
 constexpr auto FORMAT_R32G32B32_FLOAT = PixelFormat() << R32_FLOAT << G32_FLOAT << B32_FLOAT;
 constexpr auto FORMAT_R32G32B32A32_FLOAT = PixelFormat() << R32_FLOAT << G32_FLOAT << B32_FLOAT << A32_FLOAT;
 
+constexpr auto FORMAT_X32_FLOAT = PixelFormat() << X32_FLOAT;
+constexpr auto FORMAT_X32Y32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT;
+constexpr auto FORMAT_X32Y32Z32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT << Z32_FLOAT;
+constexpr auto FORMAT_X32Y32Z32W32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT << Z32_FLOAT << W32_FLOAT;
+
 constexpr auto FORMAT_R32_UINT = PixelFormat() << R32_UINT;
 
 constexpr auto FORMAT_R16_UINT = PixelFormat() << R16_UINT;
@@ -227,7 +242,27 @@ constexpr auto FORMAT_D32_FLOAT = PixelFormat() << D32_FLOAT;
 namespace detail {
 
 constexpr const auto FORMAT_BY_ID = essentials::makeArray(
-	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_R32_FLOAT)
+	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_R32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32_FLOAT, FORMAT_R32G32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32_FLOAT, FORMAT_R32G32B32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32A32_FLOAT, FORMAT_R32G32B32A32_FLOAT),
+
+	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_X32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32_FLOAT, FORMAT_X32Y32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32_FLOAT, FORMAT_X32Y32Z32_FLOAT),
+	std::make_pair(PixelFormatId::R32G32B32A32_FLOAT, FORMAT_X32Y32Z32W32_FLOAT),
+
+	std::make_pair(PixelFormatId::R32_UINT, FORMAT_R32_UINT),
+
+	std::make_pair(PixelFormatId::R8G8B8A8_UNORM, FORMAT_R8G8B8A8_UNORM),
+	std::make_pair(PixelFormatId::B8G8R8A8_UNORM, FORMAT_B8G8R8A8_UNORM),
+	std::make_pair(PixelFormatId::B8G8R8X8_UNORM, FORMAT_B8G8R8X8_UNORM),
+
+	std::make_pair(PixelFormatId::R8G8B8A8_UNORM_SRGB, FORMAT_R8G8B8A8_UNORM_SRGB),
+
+	std::make_pair(PixelFormatId::BC1_UNORM, FORMAT_BC1_UNORM),
+
+	std::make_pair(PixelFormatId::D32_FLOAT, FORMAT_D32_FLOAT)
 	);
 
 constexpr inline const PixelFormat& getFormatById(PixelFormatId pixelFormatId) {

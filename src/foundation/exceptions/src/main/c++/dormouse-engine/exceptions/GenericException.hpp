@@ -5,6 +5,13 @@
 #include <sstream>
 #include <exception>
 
+#include "dormouse-engine/system/platform.hpp"
+
+#if defined(DE_COMPILER_VISUAL_CXX)
+#	include <intrin.h>
+#	define DE_DEBUG_BREAK() __debugbreak()
+#endif
+
 #include "Backtrace.hpp"
 
 namespace dormouse_engine::exceptions {
@@ -68,17 +75,24 @@ private:
 
 };
 
+// TODO: cleanup! remove this macro, don't debug break if not under debugger, move intrinsics to system or at least .cpp
 #define EXCEPTION_CONSTRUCTORS(TYPE, PARENT) \
 	TYPE() : \
-		PARENT(#TYPE) { \
+		PARENT(#TYPE) \
+	{ \
+		DE_DEBUG_BREAK(); \
 	} \
 	\
 	TYPE(const std::string& message) : \
-		PARENT(message) { \
+		PARENT(message) \
+	{ \
+		DE_DEBUG_BREAK(); \
 	} \
 	\
 	TYPE(const std::string& message, const std::exception& cause) : \
-		PARENT(message, cause) { \
+		PARENT(message, cause) \
+	{ \
+		DE_DEBUG_BREAK(); \
 	} \
 	\
 	const std::string& name() const noexcept override { \

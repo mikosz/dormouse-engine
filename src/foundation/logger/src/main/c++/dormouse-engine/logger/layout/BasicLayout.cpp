@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "BasicLayout.hpp"
 
 using namespace dormouse_engine;

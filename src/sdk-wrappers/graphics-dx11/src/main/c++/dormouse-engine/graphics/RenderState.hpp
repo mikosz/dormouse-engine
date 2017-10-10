@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "detail/detailfwd.hpp"
 #include "dormouse-engine/enums.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 
@@ -39,21 +40,17 @@ public:
 
 	};
 
+	RenderState() = default;
+
 	RenderState(Device& renderer, const Configuration& configuration);
-
-	ID3D11RasterizerState& internalRasteriserState() const {
-		return *rasteriserState_;
-	}
-
-	ID3D11BlendState& internalBlendState() const {
-		return *blendState_;
-	}
 
 private:
 
 	system::windows::COMWrapper<ID3D11RasterizerState> rasteriserState_;
 
 	system::windows::COMWrapper<ID3D11BlendState> blendState_;
+
+	friend struct detail::Internals;
 
 };
 

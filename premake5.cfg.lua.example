@@ -1,11 +1,13 @@
-BOOST_INCLUDE_DIR = "E:/tools/Boost/boost_1_65_0_beta1_rc2"
-BOOST_LIB_DIR = "E:/tools/Boost/boost_1_65_0_beta1_rc2/lib64-msvc-14.1"
+BOOST_INCLUDE_DIR = "D:/tools/boost_1_64_0"
+BOOST_LIB_DIR = "D:/tools/boost_1_64_0/lib64-msvc-14.1"
 BOOST_USE_STATIC_LIBS = true
-BOOST_VERSION = "1_65"
+BOOST_VERSION = "1_64"
 BOOST_TOOLSET = "vc141"
 BOOST_MULTITHREADED = true
 
-DIRECTX_TEX_ROOT = "E:/work/DirectXTex"
+PONDER_INSTALL_DIR = "E:/private/dormouse-engine/external/ponder/install"
+
+DIRECTX_TEX_ROOT = "E:/private/DirectXTex"
 
 GRAPHICS_API = "dx11"
 WM_API = "winapi"

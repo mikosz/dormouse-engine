@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/filesystem/path.hpp>
+
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
 #include "PixelFormat.hpp"
@@ -35,15 +37,32 @@ private:
 
 };
 
-class Image { // TODO: extract to a separate file
+class Image {
 public:
 
 	using Dimensions = std::pair<size_t, size_t>; // TODO: find a better type
 
-	static Image load(essentials::ConstBufferView data, const std::string& path);
+	static Image load(essentials::ConstBufferView data, const boost::filesystem::path& path);
 
-	const std::uint8_t* pixels() const {
-		return pixels_.data();
+	Image(
+		std::vector<std::uint8_t> pixels,
+		Dimensions size,
+		size_t arraySize,
+		size_t mipLevels,
+		PixelFormat pixelFormat
+		) :
+		pixels_(std::move(pixels)),
+		size_(size),
+		arraySize_(arraySize),
+		mipLevels_(mipLevels),
+		pixelFormat_(pixelFormat)
+	{
+	}
+
+	void save(const boost::filesystem::path& path, size_t rowPitch) const;
+
+	essentials::ConstBufferView pixels() const {
+		return essentials::viewBuffer(pixels_);
 	}
 
 	Dimensions size() const {
@@ -64,21 +83,6 @@ public:
 
 private:
 
-	Image(
-		std::vector<std::uint8_t> pixels,
-		Dimensions size,
-		size_t arraySize,
-		size_t mipLevels,
-		PixelFormat pixelFormat
-		) :
-		pixels_(std::move(pixels)),
-		size_(size),
-		arraySize_(arraySize),
-		mipLevels_(mipLevels),
-		pixelFormat_(pixelFormat)
-	{
-	}
-
 	essentials::ByteVector pixels_;
 
 	Dimensions size_;
@@ -88,8 +92,6 @@ private:
 	size_t mipLevels_;
 
 	PixelFormat pixelFormat_;
-
-	friend class ImageLoader;
 
 };
 

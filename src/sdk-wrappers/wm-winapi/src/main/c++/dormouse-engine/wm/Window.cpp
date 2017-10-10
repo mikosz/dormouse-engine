@@ -38,9 +38,9 @@ Window::Window(const Configuration& configuration, std::shared_ptr<App> app) :
 		WS_EX_APPWINDOW,
 		configuration_.className.c_str(),
 		configuration_.title.c_str(),
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		100,
-		100,
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
 		static_cast<int>(configuration_.width),
 		static_cast<int>(configuration_.height),
 		0,
@@ -64,9 +64,9 @@ Window::~Window() {
 	if (handle_ != 0) {
 		DestroyWindow(handle_);
 		handle_ = 0;
-
-		UnregisterClassA(configuration_.className.c_str(), app_->instance());
 	}
+
+	UnregisterClassA(configuration_.className.c_str(), app_->instance());
 }
 
 LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
@@ -92,11 +92,11 @@ LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam
 		{
 			Window* instance = reinterpret_cast<Window*>(::GetWindowLongPtr(window, GWLP_USERDATA));
 
-			if (!instance) {
-				throw std::logic_error("Window instance shall not be null!");
+			if (instance) {
+				return instance->app_->systemCallback(window, message, wparam, lparam);
+			} else {
+				return FALSE;
 			}
-
-			return instance->app_->systemCallback(window, message, wparam, lparam);
 		}
 	}
 }

@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "SelectorIs.hpp"
 
 #include "dormouse-engine/configuration/hierarchical/HierarchicalConfiguration.hpp"

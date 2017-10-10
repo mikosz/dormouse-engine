@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "SystemLogger.hpp"
 
 #include "dormouse-engine/system/platform.hpp"

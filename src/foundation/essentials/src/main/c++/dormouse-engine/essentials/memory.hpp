@@ -1,11 +1,16 @@
 #ifndef DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
 #define DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_
 
+#include <cassert>
 #include <array>
 #include <vector>
 #include <string>
 #include <cstdint>
 #include <type_traits>
+
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
 
 namespace dormouse_engine::essentials {
 
@@ -16,6 +21,8 @@ class BufferView {
 public:
 
 	using ByteType = ByteT;
+
+	BufferView() = default;
 
 	template <class T>
 	BufferView(T* elements, size_t elementCount) :
@@ -43,11 +50,22 @@ public:
 		return size_ * sizeof(ByteType);
 	}
 
+	BufferView& operator+=(size_t offset) {
+		assert(offset <= size_);
+		data_ += offset;
+		return *this;
+	}
+
+	BufferView operator+(size_t offset) {
+		auto result = BufferView(*this);
+		return result += offset;
+	}
+
 private:
 
-	ByteType* const data_;
+	ByteType* data_ = nullptr;
 
-	const size_t size_;
+	const size_t size_ = 0u;
 
 };
 
@@ -111,6 +129,10 @@ auto viewBuffer(const std::basic_string<C, T, A>& s) {
 	return detail::BufferView<const Byte>(s.data(), s.size());
 }
 
+namespace detail { void declareBufferView(); }
+
 } // namespace dormouse_engine::essentials
+
+PONDER_AUTO_TYPE(dormouse_engine::essentials::BufferView, dormouse_engine::essentials::detail::declareBufferView);
 
 #endif /* DORMOUSEENGINE_ESSENTIALS_MEMORY_HPP_ */

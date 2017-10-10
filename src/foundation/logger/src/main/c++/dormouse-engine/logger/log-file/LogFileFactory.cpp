@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "LogFileFactory.hpp"
 
 using namespace dormouse_engine;

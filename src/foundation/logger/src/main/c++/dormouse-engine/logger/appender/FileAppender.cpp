@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "FileAppender.hpp"
 
 using namespace dormouse_engine;

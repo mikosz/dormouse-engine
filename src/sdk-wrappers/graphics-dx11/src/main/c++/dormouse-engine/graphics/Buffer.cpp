@@ -1,27 +1,34 @@
+#include "graphics.pch.hpp"
+
 #include "Buffer.hpp"
 
 #include <cstring>
 #include <stdexcept>
 #include <functional>
 
+#include "detail/Internals.hpp"
 #include "Device.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-Buffer::Buffer(Device& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData) :
-	configuration_(std::move(configuration))
+namespace /* anonymous */ {
+
+system::windows::COMWrapper<ID3D11Resource> createBufferResource(
+	Device& device,
+	const Buffer::Configuration& configuration,
+	essentials::ConstBufferView initialData
+	)
 {
-	D3D11_BUFFER_DESC desc;
+	auto desc = D3D11_BUFFER_DESC();
 	std::memset(&desc, 0, sizeof(desc));
 
-	desc.ByteWidth = static_cast<UINT>(configuration_.size);
-	desc.BindFlags = static_cast<UINT>(purpose);
-	desc.StructureByteStride = static_cast<UINT>(configuration_.stride);
+	desc.ByteWidth = static_cast<UINT>(configuration.size);
+	desc.BindFlags = static_cast<UINT>(configuration.purpose);
 
-	if (configuration_.allowModifications) {
-		if (configuration_.allowCPURead) {
+	if (configuration.allowModifications) {
+		if (configuration.allowCPURead) {
 			desc.Usage = D3D11_USAGE_STAGING;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 		} else {
@@ -29,43 +36,36 @@ Buffer::Buffer(Device& renderer, CreationPurpose purpose, Configuration configur
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		}
 	} else {
-		if (configuration_.allowCPURead) {
+		if (configuration.allowCPURead) {
 			desc.Usage = D3D11_USAGE_STAGING;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		} else {
-			if (configuration_.allowGPUWrite) {
+			if (configuration.allowGPUWrite) {
 				desc.Usage = D3D11_USAGE_DEFAULT;
 			} else {
 				desc.Usage = D3D11_USAGE_IMMUTABLE;
 			}
 		}
 	}
-	
-	D3D11_SUBRESOURCE_DATA* dataPtr = 0;
-	D3D11_SUBRESOURCE_DATA data;
-	if (initialData) {
+
+	auto* dataPtr = static_cast<D3D11_SUBRESOURCE_DATA*>(nullptr);
+	auto data = D3D11_SUBRESOURCE_DATA();
+	if (initialData.data()) {
 		std::memset(&data, 0, sizeof(data));
-		data.pSysMem = initialData;
+		data.pSysMem = initialData.data();
 		dataPtr = &data;
 	}
 
 	auto buffer = system::windows::COMWrapper<ID3D11Buffer>();
-	checkDirectXCall(renderer.internalDevice().CreateBuffer(&desc, dataPtr, &buffer.get()),
+	checkDirectXCall(detail::Internals::dxDevice(device).CreateBuffer(&desc, dataPtr, &buffer.get()),
 		"Failed to create a buffer");
-	resource_ = std::move(buffer);
 
-	if (purpose == CreationPurpose::SHADER_RESOURCE) { // TODO: duplicated with Texture
-		auto srvDesc = D3D11_SHADER_RESOURCE_VIEW_DESC();
-		std::memset(&srvDesc, 0, sizeof(decltype(srvDesc)));
+	return buffer;
+}
 
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-		srvDesc.Format = static_cast<DXGI_FORMAT>(configuration_.elementFormat.id());
-		srvDesc.Buffer.ElementOffset = 0;
-		srvDesc.Buffer.NumElements = static_cast<UINT>(configuration_.size / configuration_.elementFormat.pixelSize());
+} // anonymous namespace
 
-		checkDirectXCall(
-			renderer.internalDevice().CreateShaderResourceView(resource_.get(), &srvDesc, &shaderResourceView_.get()),
-			"Failed to create a shader resource view of buffer"
-		);
-	}
+Buffer::Buffer(Device& renderer, const Configuration& configuration, essentials::ConstBufferView initialData) :
+	Resource(createBufferResource(renderer, configuration, initialData))
+{
 }

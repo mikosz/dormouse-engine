@@ -9,7 +9,7 @@ using namespace dormouse_engine::essentials;
 std::string FormatterError::constructMessage(const std::string& message, const std::string& formattedString,
 		std::string::size_type pos) {
 	std::ostringstream oss;
-	oss << "Got error: " << message << " while formatting \"" << formattedString << "\" at pos: " << pos;
+	oss << "Got error: " << message << R"( while formatting )" << formattedString << R"(" at pos: )" << pos;
 	return oss.str();
 }
 
@@ -53,7 +53,7 @@ void Formatter::format(FormatList& result, const std::string& s) const {
 				state = prevState;
 				break;
 			case STRING:
-				result.push_back(FormatNode('\0', oss.str()));
+				result.emplace_back('\0', oss.str());
 				oss.str("");
 				state = FORMAT_MARKER;
 				break;
@@ -104,7 +104,7 @@ void Formatter::format(FormatList& result, const std::string& s) const {
 				break;
 			case FORMAT_MARKER:
 			case OPTS_READ:
-				result.push_back(FormatNode(s[pos], oss.str()));
+				result.emplace_back(s[pos], oss.str());
 				oss.str("");
 				state = READY;
 				break;
@@ -118,7 +118,7 @@ void Formatter::format(FormatList& result, const std::string& s) const {
 	case READY:
 		break;
 	case STRING:
-		result.push_back(FormatNode('\0', oss.str()));
+		result.emplace_back('\0', oss.str());
 		break;
 	default:
 		throw FormatterError("Unexpected end of string", s, s.length());

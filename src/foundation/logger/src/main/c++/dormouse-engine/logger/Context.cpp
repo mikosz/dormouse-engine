@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "Context.hpp"
 
 using namespace dormouse_engine::logger;

@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "LoggerConfiguration.hpp"
 
 #include <vector>

@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "LoggerFactory.hpp"
 
 #include "SystemLogger.hpp"

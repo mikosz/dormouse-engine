@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "DirectXError.hpp"
 
 #include <sstream>

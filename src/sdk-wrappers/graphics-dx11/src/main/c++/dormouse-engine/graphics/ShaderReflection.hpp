@@ -8,9 +8,9 @@
 #include <d3dcommon.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
-#include "dormouse-engine/enums.hpp"
-
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "dormouse-engine/enums.hpp"
+#include "ShaderDataType.hpp"
 
 namespace dormouse_engine::graphics {
 
@@ -48,36 +48,11 @@ public:
 
 		using Members = std::vector<Member>;
 
-		DE_MEMBER_ENUM_VALUES(
-			Class,
-			(SCALAR)(D3D_SVC_SCALAR)
-			(VECTOR)(D3D_SVC_VECTOR)
-			(MATRIX_ROW_MAJOR)(D3D_SVC_MATRIX_ROWS)
-			(MATRIX_COLUMN_MAJOR)(D3D_SVC_MATRIX_COLUMNS)
-			(OBJECT)(D3D_SVC_OBJECT)
-			(STRUCT)(D3D_SVC_STRUCT)
-			);
-
-		DE_MEMBER_ENUM_VALUES(
-			ScalarType,
-			(EMPTY)(D3D_SVT_VOID)
-			(BOOL)(D3D_SVT_BOOL)
-			(INT)(D3D_SVT_INT)
-			(UINT)(D3D_SVT_UINT)
-			(FLOAT)(D3D_SVT_FLOAT)
-			);
-
 		std::string name;
 
 		size_t offset;
 
-		Class klass;
-
-		ScalarType scalarType;
-
-		size_t columns;
-
-		size_t rows;
+		ShaderDataType dataType;
 
 		size_t elements;
 

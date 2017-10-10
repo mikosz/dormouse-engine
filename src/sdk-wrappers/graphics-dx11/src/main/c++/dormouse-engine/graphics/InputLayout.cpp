@@ -1,9 +1,12 @@
+#include "graphics.pch.hpp"
+
 #include "InputLayout.hpp"
 
 #include <iterator>
 
 #include "dormouse-engine/exceptions/LogicError.hpp"
 #include "dormouse-engine/essentials/Range.hpp"
+#include "detail/Internals.hpp"
 #include "DirectXError.hpp"
 #include "Device.hpp"
 #include "ShaderCompiler.hpp"
@@ -29,7 +32,7 @@ size_t inputSlotIndex(InputLayout::SlotType inputSlot) {
 
 system::windows::COMWrapper<ID3D11InputLayout> createLayout(
 	const InputLayout::Elements& elements,
-	Device& renderer,
+	Device& device,
 	std::vector<std::uint8_t> shaderData
 	)
 {
@@ -55,7 +58,7 @@ system::windows::COMWrapper<ID3D11InputLayout> createLayout(
 
 	system::windows::COMWrapper<ID3D11InputLayout> layout;
 	checkDirectXCall(
-		renderer.internalDevice().CreateInputLayout(
+		detail::Internals::dxDevice(device).CreateInputLayout(
 			descs.empty() ? &dummy : descs.data(),
 			static_cast<UINT>(descs.size()),
 			shaderData.data(),
@@ -153,9 +156,9 @@ InputLayout::Element::Element(
 }
 
 InputLayout::InputLayout(
-	Device& renderer,
+	Device& device,
 	const Elements& elements
 	) :
-	dxInputLayout_(createLayout(elements, renderer, createDummyVertexShader(elements)))
+	inputLayout_(createLayout(elements, device, createDummyVertexShader(elements)))
 {
 }

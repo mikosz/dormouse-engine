@@ -2,10 +2,11 @@ structure = require "structure"
 
 include "boost.lua"
 include "gmock.lua"
+include "ponder.lua"
 
 workspace "dormouse-engine"
 
-	configurations { "DebugStatic", "DebugMemcheckStatic", "ReleaseStatic" }
+	configurations { "DebugStatic", "DebugMemcheckStatic", "ProfileBuildTimes", "ReleaseStatic" }
 	
 	platforms { "Win64" }
 	
@@ -19,6 +20,9 @@ workspace "dormouse-engine"
 	filter "configurations:DebugMemcheckStatic"
 		buildoptions { "/Ob0" } -- disable inline expansion
 		flags { "NoFramePointer" }
+	
+	filter "configurations:ProfileBuildTimes"
+		buildoptions { "/Bt+ /showIncludes /nologo- /FC" }
 	
 	filter "configurations:Release*"
 		defines { "NDEBUG" }
@@ -58,6 +62,8 @@ workspace "dormouse-engine"
 		defines { "GTEST_LANG_CXX11=1" } -- otherwise gmock fails to compile with c++latest
 	filter {}
 
+	defines { "PONDER_STATIC" }
+	
 	include "foundation"
 	include "sdk-wrappers"
 	include "core"

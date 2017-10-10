@@ -3,6 +3,10 @@
 
 #include "dormouse-engine/enums.hpp"
 
+#pragma warning(push, 3)
+#	include <ponder/pondertype.hpp>
+#pragma warning(pop)
+
 struct ID3D11VertexShader;
 struct ID3D11GeometryShader;
 struct ID3D11HullShader;
@@ -47,6 +51,10 @@ constexpr ShaderType shaderTypeFromShader<ID3D11PixelShader>() {
 	return ShaderType::PIXEL;
 }
 
+namespace detail { void declareShaderType(); }
+
 } // namespace dormouse_engine::graphics
+
+PONDER_AUTO_TYPE(dormouse_engine::graphics::ShaderType, dormouse_engine::graphics::detail::declareShaderType);
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_DX11_SHADERTYPE_HPP_ */

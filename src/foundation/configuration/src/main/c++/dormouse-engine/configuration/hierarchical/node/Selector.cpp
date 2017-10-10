@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "Selector.hpp"
 
 #include <iostream>

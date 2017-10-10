@@ -9,6 +9,7 @@
 
 #include "dormouse-engine/enums.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "detail/detailfwd.hpp"
 #include "PixelFormat.hpp"
 
 namespace dormouse_engine::graphics {
@@ -49,18 +50,18 @@ public:
 
 	using Elements = std::vector<Element>;
 
+	InputLayout() = default;
+
 	InputLayout(
 		Device& renderer,
 		const Elements& elements
 		);
 
-	ID3D11InputLayout& internalInputLayout() const {
-		return *dxInputLayout_;
-	}
-
 private:
 
-	mutable system::windows::COMWrapper<ID3D11InputLayout> dxInputLayout_;
+	system::windows::COMWrapper<ID3D11InputLayout> inputLayout_;
+
+	friend struct detail::Internals;
 
 };
 

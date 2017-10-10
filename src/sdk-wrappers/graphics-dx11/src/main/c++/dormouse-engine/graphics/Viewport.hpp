@@ -4,6 +4,8 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "detail/detailfwd.hpp"
+
 namespace dormouse_engine::graphics {
 
 class Viewport {
@@ -25,15 +27,15 @@ public:
 
 	};
 
-	Viewport(const Configuration& configuration);
+	Viewport() = default;
 
-	D3D11_VIEWPORT& internalViewport() {
-		return viewport_;
-	}
+	Viewport(const Configuration& configuration);
 
 private:
 
 	D3D11_VIEWPORT viewport_;
+
+	friend struct detail::Internals;
 
 };
 

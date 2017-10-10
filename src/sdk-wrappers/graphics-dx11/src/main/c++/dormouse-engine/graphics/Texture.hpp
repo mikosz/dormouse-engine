@@ -6,6 +6,8 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "detail/detailfwd.hpp"
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/enums/Mask.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "PixelFormat.hpp"
@@ -14,6 +16,7 @@
 namespace dormouse_engine::graphics {
 
 class Device;
+class Image;
 
 class Texture : public Resource {
 public:
@@ -25,23 +28,96 @@ public:
 		(DEPTH_STENCIL)(D3D11_BIND_DEPTH_STENCIL)
 		);
 
-	void initialise(Device& renderer, dormouse_engine::Mask<CreationPurpose> purposeFlags);
+	struct Configuration1d {
 
-	void reset();
+		size_t width;
 
-	ID3D11RenderTargetView& internalRenderTargetView() {
-		return *renderTargetView_;
+		size_t arraySize = 1u;
+
+		size_t mipLevels = 1u;
+
+		PixelFormat pixelFormat;
+
+		bool allowModifications;
+
+		bool allowCPURead;
+
+		bool allowGPUWrite;
+
+		dormouse_engine::Mask<CreationPurpose> purposeFlags;
+
+	};
+
+	struct Configuration2d : Configuration1d {
+
+		size_t height;
+
+		size_t sampleCount = 1u;
+
+		size_t sampleQuality = 0u;
+
+	};
+
+	Texture() = default;
+
+	Texture(
+		Device& device,
+		const Configuration1d& configuration,
+		essentials::ConstBufferView initialData = essentials::ConstBufferView()
+		);
+
+	Texture(
+		Device& device,
+		const Configuration2d& configuration,
+		essentials::ConstBufferView initialData = essentials::ConstBufferView()
+		);
+
+	Texture(Device& device, const Image& image);
+
+	graphics::PixelFormat pixelFormat() const;
+
+private:
+
+	Texture(system::windows::COMWrapper<ID3D11Texture2D> texture) :
+		Resource(std::move(texture))
+	{
 	}
 
-	ID3D11DepthStencilView& internalDepthStencilView() {
-		return *depthStencilView_;
-	}
+	friend struct detail::Internals;
+
+};
+
+class RenderTargetView {
+public:
+
+	RenderTargetView() = default;
+
+	RenderTargetView(const Texture& texture);
+
+	Resource::Id resourceId() const;
 
 private:
 
 	system::windows::COMWrapper<ID3D11RenderTargetView> renderTargetView_;
 
+	friend struct detail::Internals;
+
+};
+
+class DepthStencilView {
+public:
+
+	DepthStencilView() = default;
+
+	DepthStencilView(const Texture& texture);
+
+	Resource::Id resourceId() const;
+
+private:
+
 	system::windows::COMWrapper<ID3D11DepthStencilView> depthStencilView_;
+
+	friend struct detail::Internals;
 
 };
 

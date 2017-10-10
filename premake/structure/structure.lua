@@ -26,9 +26,11 @@ end
 local create_source_vpaths = function(patterns, source_directory)
 	for _, pattern in pairs(patterns) do
 		for _, file in pairs(os.matchfiles(pattern)) do
-			local file_with_namespace = file:sub(string.len(source_directory) + 1)
-			local namespace_path = path.getdirectory(file_with_namespace)
-			vpaths { [ namespace_path:gsub("/", "::") ] = file }
+			if not path.hasextension(path.getbasename(file), ".pch") then
+				local file_with_namespace = file:sub(string.len(source_directory) + 1)
+				local namespace_path = path.getdirectory(file_with_namespace)
+				vpaths { [ namespace_path:gsub("/", "::") ] = file }
+			end
 		end
 	end
 end
@@ -127,11 +129,25 @@ local gather_headers = function()
 	end
 end
 
+local add_precompiled_header = function(name)
+	local pch_header_path = source_dir("main")..name..".pch.hpp"
+	local pch_source_path = source_dir("main")..name..".pch.cpp"
+
+	if os.isfile(pch_header_path) and os.isfile(pch_source_path) then
+		pchheader(path.getname(pch_header_path))
+		pchsource(pch_source_path)
+		
+		vpaths { [ ".pch" ] = pch_header_path }
+		vpaths { [ ".pch" ] = pch_source_path }
+	end
+end
+
 local create_main_project = function(name)
 
 	create_source_project(name, "main")
+		add_precompiled_header(name)
 	project "*"
-	
+		
 	includedirs(source_dir("main"))
 	gather_headers()
 end
@@ -140,25 +156,30 @@ function m.set_group(name)
 	m.current_group = name
 end
 
-function m.header_project(name)
+function m.header_project(name, common_settings)
 	create_main_project(name)
 
 	project(name)
 		kind "Utility"
+		
+		if common_settings then
+			common_settings()
+		end
 	project "*"
 	
-	create_test_projects(name, false)
+	create_test_projects(name, false, common_settings)
 end
 
 function m.library_project(name, common_settings)
 	create_main_project(name)
 
 	project(name)
+		kind "StaticLib"
+		targetprefix "lib"
+
 		filter "configurations:*Shared"
 			kind "SharedLib"
-		filter "configurations:*Static"
-			kind "StaticLib"
-			targetprefix("lib")
+			targetprefix ""
 		filter {}
 		
 		targetdir(target_dir_path("lib"))

@@ -2,9 +2,13 @@
 
 #include <cassert>
 
+#pragma warning(push, 3)
+#	include <ponder/classbuilder.hpp>
+#pragma warning(pop)
+
+#include "dormouse-engine/reflection/Object.hpp"
 #include "ScalarEqual.hpp"
 
-using namespace dormouse_engine;
 using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
@@ -14,8 +18,8 @@ Transform Transform::orthographicProjection(
 	float right,
 	float top,
 	float bottom,
-	float near,
-	float far,
+	float nearDistance,
+	float farDistance,
 	float ndcNear
 	) noexcept
 {
@@ -23,13 +27,13 @@ Transform Transform::orthographicProjection(
 	matrix[0][0] = 2.0f / (right - left);
 	matrix[1][1] = 2.0f / (top - bottom);
 	if (handedness == Handedness::RIGHT) {
-		matrix[2][2] = (1.0f - ndcNear) / (near - far);
+		matrix[2][2] = (1.0f - ndcNear) / (nearDistance - farDistance);
 	} else {
-		matrix[2][2] = (1.0f - ndcNear) / (far - near);
+		matrix[2][2] = (1.0f - ndcNear) / (farDistance - nearDistance);
 	}
 	matrix[0][3] = -(right + left) / (right - left);
 	matrix[1][3] = -(top + bottom) / (top - bottom);
-	matrix[2][3] = (near - (far * ndcNear)) / (near - far);
+	matrix[2][3] = (nearDistance - (farDistance * ndcNear)) / (nearDistance - farDistance);
 	matrix[3][3] = 1.0f;
 
 	return Transform(matrix);
@@ -39,23 +43,23 @@ Transform Transform::perspectiveProjection(
 	Handedness handedness,
 	float focalLength,
 	float aspectRatio,
-	float near,
-	float far,
+	float nearDistance,
+	float farDistance,
 	float ndcNear
 	) noexcept
 {
-	assert(near > 0.0f);
-	assert(near < far);
+	assert(nearDistance > 0.0f);
+	assert(nearDistance < farDistance);
 
 	auto matrix = Matrix4x4();
 	matrix[0][0] = focalLength;
 	matrix[1][1] = focalLength / aspectRatio;
-	matrix[2][3] = -((1 - ndcNear) * far * near) / (far - near);
+	matrix[2][3] = -((1 - ndcNear) * farDistance * nearDistance) / (farDistance - nearDistance);
 	if (handedness == Handedness::RIGHT) {
-		matrix[2][2] = -((-ndcNear * near) + far) / (far - near);
+		matrix[2][2] = -((-ndcNear * nearDistance) + farDistance) / (farDistance - nearDistance);
 		matrix[3][2] = -1.0f;
 	} else {
-		matrix[2][2] = ((-ndcNear * near) + far) / (far - near);
+		matrix[2][2] = ((-ndcNear * nearDistance) + farDistance) / (farDistance - nearDistance);
 		matrix[3][2] = 1.0f;
 	}
 
@@ -66,14 +70,14 @@ Transform Transform::perspectiveProjection(
 	Handedness handedness,
 	Angle horizontalFOV,
 	float aspectRatio,
-	float near,
-	float far,
+	float nearDistance,
+	float farDistance,
 	float ndcNear
 	) noexcept
 {
 	const auto focalLength = 1.0f / std::tan(horizontalFOV.radians() / 2.0f);
 
-	return perspectiveProjection(handedness, focalLength, aspectRatio, near, far, ndcNear);
+	return perspectiveProjection(handedness, focalLength, aspectRatio, nearDistance, farDistance, ndcNear);
 }
 
 Transform Transform::translation(const Vec3& vector) noexcept {
@@ -122,4 +126,12 @@ Transform Transform::rotation(Vec3 around, Angle by) noexcept {
 	matrix[3][3] = 1.0f;
 
 	return Transform(matrix);
+}
+
+void detail::declareTransform() {
+	ponder::Class::declare<Transform>("dormouse_engine::math::Transform")
+		.tag(reflection::ClassTag::SHADER_DATA)
+		.property("matrix", &Transform::matrix)
+		.function("writeShaderData", &Transform::writeShaderData).tag(reflection::FunctionTag::WRITE_SHADER_DATA)
+		;
 }

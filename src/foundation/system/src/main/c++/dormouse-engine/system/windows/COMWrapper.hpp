@@ -95,6 +95,10 @@ private:
 
 	T* comObject_ = nullptr;
 
+	friend bool operator==(const COMWrapper& lhs, const COMWrapper& rhs) {
+		return lhs.comObject_ == rhs.comObject_;
+	}
+
 };
 
 template <class T>

@@ -7,7 +7,7 @@
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
-
+#include "dormouse-engine/essentials/memory.hpp"
 #include "Resource.hpp"
 #include "ShaderType.hpp"
 #include "PixelFormat.hpp"
@@ -16,6 +16,8 @@ namespace dormouse_engine::graphics {
 
 class Device;
 
+const auto CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+
 class Buffer : public Resource {
 public:
 
@@ -23,54 +25,32 @@ public:
 		VERTEX_BUFFER = D3D11_BIND_VERTEX_BUFFER,
 		INDEX_BUFFER = D3D11_BIND_INDEX_BUFFER,
 		CONSTANT_BUFFER = D3D11_BIND_CONSTANT_BUFFER,
-		SHADER_RESOURCE = D3D11_BIND_SHADER_RESOURCE, // TODO: duplicated with texture
+		SHADER_RESOURCE = D3D11_BIND_SHADER_RESOURCE,
 	};
 
 	struct Configuration {
 
-		size_t size = 0;
+		size_t size;
 
-		size_t stride = 0;
+		size_t stride;
 
-		bool allowModifications = false;
+		bool allowModifications;
 
-		bool allowCPURead = false;
+		bool allowCPURead;
 
-		bool allowGPUWrite = false;
+		bool allowGPUWrite;
 
-		// TODO: move to another argument? Use different constructor?
-		PixelFormat elementFormat; // Used only when purpose is SHADER_RESOURCE
-
-		Configuration() = default;
-
-		Configuration(
-			size_t size,
-			size_t stride,
-			bool allowModifications,
-			bool allowCPURead,
-			bool allowGPUWrite
-			) :
-			size(size),
-			stride(stride),
-			allowModifications(allowModifications),
-			allowCPURead(allowCPURead),
-			allowGPUWrite(allowGPUWrite)
-		{
-		}
+		CreationPurpose purpose;
 
 	};
 
 	Buffer() = default;
 
-	Buffer(Device& renderer, CreationPurpose purpose, Configuration configuration, const void* initialData = nullptr);
-
-	const Configuration& configuration() const noexcept {
-		return configuration_;
-	}
-
-private:
-
-	Configuration configuration_;
+	Buffer(
+		Device& renderer,
+		const Configuration& configuration,
+		essentials::ConstBufferView initialData = essentials::ConstBufferView()
+		);
 
 };
 

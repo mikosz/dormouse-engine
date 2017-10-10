@@ -8,86 +8,95 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
-
+#include "detail/detailfwd.hpp"
 #include "PrimitiveTopology.hpp"
 #include "Shader.hpp"
 #include "ShaderType.hpp"
 
 namespace dormouse_engine::graphics {
 
+class Buffer;
 class Resource;
 class Device;
-class ConstantBuffer;
-class IndexBuffer;
-class VertexBuffer;
-class Texture2d;
+class Texture;
 class Sampler;
 class RenderState;
 class InputLayout;
 class Viewport;
 class PixelFormat;
+class RenderTargetView;
+class DepthStencilView;
+class ResourceView;
 
 class CommandList {
 public:
 
-	using LockedData = std::unique_ptr<std::uint8_t, std::function<void(std::uint8_t*)>>;
+	struct LockedData {
+		using Pixels = std::unique_ptr<essentials::Byte, std::function<void(essentials::Byte*)>>;
+
+		Pixels pixels;
+		size_t rowPitch;
+		size_t depthPitch;
+	};
 
 	enum class LockPurpose {
 		WRITE_DISCARD = D3D11_MAP_WRITE_DISCARD,
 		WRITE_NO_OVERWRITE = D3D11_MAP_WRITE_NO_OVERWRITE,
+		READ = D3D11_MAP_READ,
 	};
 
-	CommandList();
+	CommandList() = default;
 
 	CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
 
 	void initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
+
+	void draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology);
 
 	void drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology);
 
 	void drawIndexedInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t startingIndex,
 		PrimitiveTopology primitiveTopology);
 
-	LockedData lock(Resource& data, LockPurpose lockPurpose);
+	LockedData lock(const Resource& data, LockPurpose lockPurpose);
 
-	void setRenderTarget(Texture2d& renderTarget, Texture2d& depthStencil);
+	void copy(const Resource& source, const Resource& target);
 
-	void setViewport(Viewport& viewport);
+	void setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil);
 
-	void setInputLayout(const InputLayout* inputLayout) noexcept;
+	void setViewport(const Viewport& viewport);
 
-	void setVertexShader(VertexShader* vertexShader) noexcept;
+	void setInputLayout(const InputLayout& inputLayout) noexcept;
 
-	void setGeometryShader(GeometryShader* geometryShader) noexcept;
+	void setShader(const VertexShader& vertexShader) noexcept;
 
-	void setHullShader(HullShader* hullShader) noexcept;
+	void setShader(const GeometryShader& geometryShader) noexcept;
 
-	void setDomainShader(DomainShader* domainShader) noexcept;
+	void setShader(const HullShader& hullShader) noexcept;
 
-	void setPixelShader(PixelShader* pixelShader) noexcept;
+	void setShader(const DomainShader& domainShader) noexcept;
 
-	void setConstantBuffer(ConstantBuffer& buffer, ShaderType stage, size_t slot);
+	void setShader(const PixelShader& pixelShader) noexcept;
 
-	void setIndexBuffer(IndexBuffer& buffer, size_t offset);
+	void setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot);
 
-	void setVertexBuffer(VertexBuffer& buffer, size_t slot);
+	void setIndexBuffer(const Buffer& buffer, size_t offset);
 
-	void setInstanceDataBuffer(VertexBuffer& buffer, size_t slot);
+	void setVertexBuffer(const Buffer& buffer, size_t slot, size_t stride);
 
-	void setResource(const Resource& resource, ShaderType stage, size_t slot);
+	void setResource(const ResourceView& resource, ShaderType stage, size_t slot);
 
-	void setSampler(Sampler& sampler, ShaderType stage, size_t slot);
+	void setSampler(const Sampler& sampler, ShaderType stage, size_t slot);
 
 	void setRenderState(const RenderState& renderState);
-
-	ID3D11DeviceContext& internalDeviceContext() {
-		return *deviceContext_;
-	}
 
 private:
 
 	system::windows::COMWrapper<ID3D11DeviceContext> deviceContext_;
+
+	friend struct detail::Internals;
 
 };
 

@@ -6,8 +6,10 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/graphics/ShaderType.hpp"
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "detail/detailfwd.hpp"
 
 namespace dormouse_engine::graphics {
 
@@ -21,15 +23,15 @@ public:
 
 	static const auto SHADER_TYPE = shaderTypeFromShader<InternalShaderType>();
 
-	Shader(Device& renderer, const void* data, size_t size);
+	Shader() = default;
 
-	InternalShaderType& internalShader() {
-		return *shader_;
-	}
+	Shader(Device& device, essentials::ConstBufferView shaderData);
 
 private:
 
 	system::windows::COMWrapper<InternalShaderType> shader_;
+
+	friend struct detail::Internals;
 
 };
 

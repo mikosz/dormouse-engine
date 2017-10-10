@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "ShaderCompiler.hpp"
 
 #include <algorithm>
@@ -17,7 +19,7 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
-DE_LOGGER_CATEGORY("COCONUT.MILK.GRAPHICS.COMPILE_SHADER");
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.GRAPHICS.COMPILE_SHADER");
 
 std::string featureLevel(ShaderType shaderType) {
 	switch (shaderType) {
@@ -69,13 +71,20 @@ private:
 
 	ShaderCompiler::IncludeHandler handler_;
 
-	std::vector<std::shared_ptr<ShaderCompiler::ShaderData>> data_;
+	std::vector<std::shared_ptr<essentials::ByteVector>> data_;
 
 };
 
 } // anonymous namespace
 
-ShaderCompiler::ShaderData ShaderCompiler::compile(
+const ShaderCompiler::CompilerFlags ShaderCompiler::FULL_DEBUG_MASK =
+	CompilerFlags() |
+	CompilerFlag::DEBUG |
+	CompilerFlag::SKIP_OPTIMISATION |
+	CompilerFlag::OPTIMISATION_LEVEL_0
+	;
+
+essentials::ByteVector ShaderCompiler::compile(
 	essentials::ConstBufferView code,
     const std::string& name,
 	const std::string& entrypoint,
@@ -121,7 +130,7 @@ ShaderCompiler::ShaderData ShaderCompiler::compile(
 		throw DirectXError(result, "Failed to compile a shader");
 	}
 
-	std::vector<std::uint8_t> data;
+	auto data = essentials::ByteVector();
 	data.reserve(codeBlob->GetBufferSize());
 	std::copy(
 		reinterpret_cast<const std::uint8_t*>(codeBlob->GetBufferPointer()),

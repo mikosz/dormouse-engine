@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "XMLParser.hpp"
 
 #include <boost/property_tree/xml_parser.hpp>

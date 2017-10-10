@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "ParseError.hpp"
 
 #include <sstream>

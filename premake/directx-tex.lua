@@ -9,7 +9,7 @@ function link_directx_tex_libs()
 		directx_tex_lib = path.join(directx_tex_lib, "Desktop_2017")
 	end
 	
-	filter { "Debug*", "platforms:Win64" }
+	filter { "not Release*", "platforms:Win64" }
 		libdirs { path.join(directx_tex_lib, "x64/Debug") }
 	
 	filter { "Release*", "platforms:Win64" }

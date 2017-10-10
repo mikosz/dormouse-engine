@@ -1,3 +1,5 @@
+#include "logger.pch.hpp"
+
 #include "dormouse-engine/system/platform.hpp"
 
 #if defined(DE_COMPILER_VISUAL_CXX)

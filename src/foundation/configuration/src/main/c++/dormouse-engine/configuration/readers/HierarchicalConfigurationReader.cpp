@@ -1,3 +1,5 @@
+#include "configuration.pch.hpp"
+
 #include "HierarchicalConfigurationReader.hpp"
 
 #include <fstream>

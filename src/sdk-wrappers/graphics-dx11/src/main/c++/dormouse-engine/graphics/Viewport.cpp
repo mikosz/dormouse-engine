@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "Viewport.hpp"
 
 using namespace dormouse_engine;
