@@ -29,16 +29,32 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 	sprite.layout().anchor() = Layout::Anchor(Layout::HorizontalAnchor::LEFT, Layout::VerticalAnchor::BOTTOM);
 	sprite.layout().position() = Layout::Position(WindowRelative(0.0f), WindowRelative(0.0f));
 
+	auto renderStateConfiguration = graphics::RenderState::Configuration();
+
+	auto commandKey = command::CommandKey();
+	commandKey.attributes.fullscreenLayerId = command::FullscreenLayerId::HUD;
+	commandKey.attributes.viewportId = command::ViewportId::FULLSCREEN;
+	commandKey.attributes.viewportLayer = command::ViewportLayer::HUD;
+	commandKey.attributes.translucencyType = command::TranslucencyType::OPAQUE;
+	commandKey.attributes.depth = 0u;
+	commandKey.attributes.materialId = 0u;
+
+	const auto renderControl = Control(
+		commandKey,
+		graphicsDevice().depthStencil(),
+		graphicsDevice().backBuffer(),
+		fullscreenViewport(),
+		control::RenderState(graphicsDevice(), control::RenderState::OPAQUE)
+		);
+
 	graphicsDevice().beginScene();
 
 	auto commandBuffer = command::CommandBuffer();
 	sprite.render(
 		commandBuffer,
 		shader::Property(),
-		fullscreenViewport(),
-		graphicsDevice().backBuffer(),
-		graphicsDevice().depthStencil()
-	);
+		renderControl
+		);
 
 	commandBuffer.submit(graphicsDevice().getImmediateCommandList());
 

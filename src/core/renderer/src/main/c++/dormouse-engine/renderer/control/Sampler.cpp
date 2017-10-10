@@ -117,13 +117,16 @@ graphics::Sampler Sampler::get() const {
 	}
 }
 
-void Sampler::bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const {
-	drawCommand.setSampler(*this, stage, slot);
-}
-
+	
 void detail::declareSampler() {
+	// TODO: could the reflection objects returning sampler as a ponder::UserObject return it as Sampler?
+	// Then we would not need to register either Sampler or the bind function
 	ponder::Class::declare<Sampler>("dormouse_engine::renderer::control::Sampler")
 		.tag(reflection::ClassTag::SHADER_RESOURCE)
-		.function("bindToDrawCommand", &Sampler::bindToDrawCommand).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		.function(
+			"bind",
+			[](const Sampler& sampler, command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) {
+				drawCommand.setSampler(sampler, stage, slot);
+			}).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
 		;
 }

@@ -10,12 +10,9 @@
 #include "dormouse-engine/graphics/PrimitiveTopology.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/essentials/memory.hpp"
-#include "../control/RenderState.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/ResourceView.hpp"
-#include "../control/RenderTargetView.hpp"
-#include "../control/DepthStencilView.hpp"
-#include "../control/Viewport.hpp"
+#include "../control/Control.hpp"
 #include "../shader/Technique.hpp"
 #include "Command.hpp"
 #include "CommandKey.hpp"
@@ -26,29 +23,17 @@ class DrawCommand final : public Command {
 public:
 
 	CommandKey key() const override {
-		return key_;
+		return control_.commandKey();
 	}
 
 	void submit(graphics::CommandList& commandList, const Command* previous) const override;
 
-	void setViewport(control::Viewport viewport) {
-		viewport_ = std::move(viewport);
-	}
-
-	void setRenderTarget(control::RenderTargetView renderTarget) {
-		renderTarget_ = std::move(renderTarget);
-	}
-
-	void setDepthStencil(control::DepthStencilView depthStencil) {
-		depthStencil_ = std::move(depthStencil);
+	void setRenderControl(const Control& control) {
+		control_ = std::move(control);
 	}
 
 	void setTechnique(essentials::observer_ptr<const shader::Technique> technique) {
 		technique_ = std::move(technique);
-	}
-
-	void setRenderState(control::RenderState renderState) {
-		renderState_ = std::move(renderState);
 	}
 
 	void setSampler(control::Sampler sampler, graphics::ShaderType stage, size_t slot) {		
@@ -102,17 +87,9 @@ private:
 
 	static constexpr auto STAGE_COUNT = 5u; // vs, gs, hs, ds, ps
 
-	CommandKey key_;
-
-	control::Viewport viewport_;
-
-	control::RenderTargetView renderTarget_;
-
-	control::DepthStencilView depthStencil_;
+	Control control_;
 
 	essentials::observer_ptr<const shader::Technique> technique_;
-
-	control::RenderState renderState_;
 
 	// TODO: consider a different way of storing samplers, resources etc. Arrays are great, because they
 	// store data locally, but most of these control objects are null, so they're a waste of space.

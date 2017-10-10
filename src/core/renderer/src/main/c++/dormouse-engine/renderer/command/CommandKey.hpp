@@ -54,17 +54,6 @@ union CommandKey {
 	Hash hash;
 };
 
-static_assert(
-	FULLSCREEN_LAYER_BITS +
-	VIEWPORT_ID_BITS +
-	VIEWPORT_LAYER_BITS +
-	TRANSLUCENCY_TYPE_BITS +
-	DEPTH_BITS +
-	MATERIAL_ID_BITS
-	<
-	sizeof(CommandKey) * 8u
-	);
-
 static_assert(sizeof(CommandKey) == sizeof(CommandKey::Hash));
 
 } // namespace dormouse_engine::renderer::command

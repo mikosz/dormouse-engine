@@ -36,9 +36,6 @@ public:
 
 	graphics::Sampler get() const;
 
-	// TODO: MUST rename these
-	void bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const;
-
 private:
 
 	static constexpr size_t INVALID_SAMPLER_ID = static_cast<size_t>(-1);

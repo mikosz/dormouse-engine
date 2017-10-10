@@ -3,11 +3,13 @@
 
 namespace dormouse_engine::renderer::control {
 
+class DepthStencilView;
+class RenderContext;
 class RenderState;
+class RenderTargetView;
 class ResourceView;
 class Sampler;
-class RenderSettings;
-class RenderTargetView;
+class Viewport;
 
 } // namespace dormouse_engine::renderer::control
 

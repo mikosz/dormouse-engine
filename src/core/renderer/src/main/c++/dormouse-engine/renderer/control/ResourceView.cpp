@@ -116,6 +116,8 @@ graphics::ResourceView ResourceView::get() const {
 }
 
 void detail::declareResourceView() {
+	// TODO: could the reflection objects returning ResourceView as a ponder::UserObject return it as ResourceView?
+	// Then we would not need to register either ResourceView or the bind function
 	ponder::Class::declare<ResourceView>("dormouse_engine::renderer::control::ResourceView")
 		.tag(reflection::ClassTag::SHADER_RESOURCE)
 		.function(

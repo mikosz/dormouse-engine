@@ -44,14 +44,10 @@ public:
 		command::DrawCommand& cmd,
 		const Sprite& sprite,
 		const shader::Property& properties,
-		control::Viewport viewport,
-		control::RenderTargetView renderTarget,
-		control::DepthStencilView depthStencil
+		const Control& renderControl
 		) const
 	{
-		cmd.setViewport(std::move(viewport));
-		cmd.setRenderTarget(std::move(renderTarget));
-		cmd.setDepthStencil(std::move(depthStencil));
+		cmd.setRenderControl(renderControl);
 
 		auto spriteProperty = shader::Property(reflection::Object(essentials::make_observer(&sprite)));
 		auto spriteEntry = shader::Property(shader::NamedProperty("sprite", essentials::make_observer(&spriteProperty)));
@@ -63,7 +59,6 @@ public:
 
 		technique_.render(cmd, mergedProperty);
 
-		cmd.setRenderState(renderState_);
 		cmd.setVertexBuffer(vertexBuffer_, 4u, 2 * sizeof(math::Vec2));
 		cmd.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_STRIP);
 		cmd.setTechnique(essentials::make_observer(&technique_));
@@ -147,13 +142,10 @@ void Sprite::initialiseSystem(graphics::Device& device, essentials::ConstBufferV
 void Sprite::render(
 	command::CommandBuffer& commandBuffer,
 	const shader::Property& properties,
-	control::Viewport viewport,
-	control::RenderTargetView renderTarget,
-	control::DepthStencilView depthStencil
+	const Control& renderControl
 	) const
 {
-	SpriteCommon::instance()->render(
-		cmd_, *this, properties, std::move(viewport), std::move(renderTarget), std::move(depthStencil));
+	SpriteCommon::instance()->render(cmd_, *this, properties, renderControl);
 	commandBuffer.add(essentials::make_observer(&cmd_));
 }
 

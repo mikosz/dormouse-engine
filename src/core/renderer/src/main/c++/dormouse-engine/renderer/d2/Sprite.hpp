@@ -9,10 +9,7 @@
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/math/Transform.hpp"
-#include "../control/ResourceView.hpp"
-#include "../control/Viewport.hpp"
-#include "../control/RenderTargetView.hpp"
-#include "../control/DepthStencilView.hpp"
+#include "../control/Control.hpp"
 #include "../command/CommandBuffer.hpp"
 #include "../command/DrawCommand.hpp"
 #include "../shader/Property.hpp"
@@ -34,10 +31,8 @@ public:
 	void render(
 		command::CommandBuffer& commandBuffer,
 		const shader::Property& properties,
-		control::Viewport viewport,
-		control::RenderTargetView renderTarget,
-		control::DepthStencilView depthStencil
-	) const;
+		const Control& renderControl
+		) const;
 
 	control::ResourceView texture() const noexcept {
 		return textureView_;
