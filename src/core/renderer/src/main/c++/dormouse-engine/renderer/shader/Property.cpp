@@ -79,7 +79,7 @@ void findAndCallTagged(
 	ArgTypes&&... args
 	)
 {
-		const auto& metaclass = reflectionObject.metaclass();
+	const auto& metaclass = reflectionObject.metaclass();
 
 	if (!metaclass.hasTag(requiredClassTag)) {
 		throw exceptions::RuntimeError(
@@ -105,11 +105,24 @@ void findAndCallTagged(
 			);
 	}
 
-	ponder::runtime::call(
-		*functionPtr,
-		reflectionObject.metaobject(),
-		std::forward<ArgTypes>(args)...
+	const auto functionKind = functionPtr->kind();
+	if (
+		functionKind == ponder::FunctionKind::MemberFunction ||
+		functionKind == ponder::FunctionKind::MemberObject
+		)
+	{
+		ponder::runtime::call(
+			*functionPtr,
+			reflectionObject.metaobject(),
+			std::forward<ArgTypes>(args)...
 		);
+	} else {
+		ponder::runtime::callStatic(
+			*functionPtr,
+			reflectionObject.metaobject(),
+			std::forward<ArgTypes>(args)...
+			);
+	}
 }
 
 } // anonymous namespace

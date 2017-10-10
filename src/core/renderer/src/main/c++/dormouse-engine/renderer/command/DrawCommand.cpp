@@ -28,7 +28,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	}
 
 	if (!previousCommand || (previousCommand->renderState_ != renderState_)) {
-		renderState_.bind(commandList);
+		commandList.setRenderState(renderState_.get());
 	}
 
 	for (const auto stageIdx : range<size_t>(0u, STAGE_COUNT)) {
@@ -37,14 +37,14 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 		for (const auto samplerSlotIdx : range<size_t>(0u, graphics::SAMPLER_SLOT_COUNT_PER_SHADER)) {
 			const auto sampler = sampler_(stage, samplerSlotIdx);
 			if (!previousCommand || (previousCommand->sampler_(stage, samplerSlotIdx) != sampler)) {
-				sampler.bind(commandList, stage, samplerSlotIdx);
+				commandList.setSampler(sampler.get(), stage, samplerSlotIdx);
 			}
 		}
 
 		for (const auto resourceSlotIdx : range<size_t>(0u, graphics::RESOURCE_SLOT_COUNT_PER_SHADER)) {
 			const auto resource = resource_(stage, resourceSlotIdx);
 			if (!previousCommand || (previousCommand->resource_(stage, resourceSlotIdx) != resource)) {
-				resource.bind(commandList, stage, resourceSlotIdx);
+				commandList.setResource(resource.get(), stage, resourceSlotIdx);
 			}
 		}
 

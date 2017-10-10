@@ -3,7 +3,6 @@
 
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/RenderState.hpp"
-#include "dormouse-engine/graphics/CommandList.hpp"
 
 namespace dormouse_engine::renderer::control {
 
@@ -23,7 +22,7 @@ public:
 
 	RenderState(graphics::Device& graphicsDevice, graphics::RenderState::Configuration configuration);
 
-	void bind(graphics::CommandList& commandList) const;
+	graphics::RenderState get() const;
 
 private:
 

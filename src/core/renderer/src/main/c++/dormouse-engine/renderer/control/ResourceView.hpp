@@ -8,7 +8,6 @@
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Buffer.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
-#include "dormouse-engine/graphics/CommandList.hpp"
 #include "../command/commandfwd.hpp"
 
 namespace dormouse_engine::renderer::control {
@@ -24,10 +23,7 @@ public:
 
 	ResourceView(const graphics::Texture& texture);
 
-	// TODO: MUST rename these
-	void bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const;
-
-	void bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const;
+	graphics::ResourceView get() const;
 
 private:
 

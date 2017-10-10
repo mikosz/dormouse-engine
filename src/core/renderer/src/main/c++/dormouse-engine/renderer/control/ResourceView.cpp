@@ -107,21 +107,21 @@ ResourceView::ResourceView(const graphics::Texture& texture) :
 {
 }
 
-void ResourceView::bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const {
+graphics::ResourceView ResourceView::get() const {
 	if (resourceViewId_ == INVALID_RESOURCE_VIEW_ID) {
-		commandList.setResource(graphics::ResourceView(), stage, slot);
+		return {};
 	} else {
-		commandList.setResource(ResourceViewFactory::instance()->get(resourceViewId_), stage, slot);
+		return ResourceViewFactory::instance()->get(resourceViewId_);
 	}
-}
-
-void ResourceView::bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const {
-	drawCommand.setResource(*this, stage, slot);
 }
 
 void detail::declareResourceView() {
 	ponder::Class::declare<ResourceView>("dormouse_engine::renderer::control::ResourceView")
 		.tag(reflection::ClassTag::SHADER_RESOURCE)
-		.function("bindToDrawCommand", &ResourceView::bindToDrawCommand).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
+		.function(
+			"bind",
+			[](const ResourceView& resource, command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) {
+				drawCommand.setResource(resource, stage, slot);
+			}).tag(reflection::FunctionTag::BIND_SHADER_RESOURCE)
 		;
 }

@@ -102,10 +102,10 @@ RenderState::RenderState(
 {
 }
 
-void RenderState::bind(graphics::CommandList& commandList) const {
+graphics::RenderState RenderState::get() const {
 	if (renderStateId_ == INVALID_RENDER_STATE_ID) {
-		commandList.setRenderState(graphics::RenderState());
+		return {};
 	} else {
-		commandList.setRenderState(RenderStateFactory::instance()->get(renderStateId_));
+		return RenderStateFactory::instance()->get(renderStateId_);
 	}
 }

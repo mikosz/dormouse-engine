@@ -34,9 +34,9 @@ public:
 
 	Sampler(graphics::Device& graphicsDevice, graphics::Sampler::Configuration configuration);
 
-	// TODO: MUST rename these
-	void bind(graphics::CommandList& commandList, graphics::ShaderType stage, size_t slot) const;
+	graphics::Sampler get() const;
 
+	// TODO: MUST rename these
 	void bindToDrawCommand(command::DrawCommand& drawCommand, graphics::ShaderType stage, size_t slot) const;
 
 private:
