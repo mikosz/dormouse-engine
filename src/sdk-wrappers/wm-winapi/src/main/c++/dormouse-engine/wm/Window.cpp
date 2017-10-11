@@ -7,12 +7,13 @@
 #include "dormouse-engine/system/windows/Error.hpp"
 #include "App.hpp"
 
+using namespace dormouse_engine;
 using namespace dormouse_engine::wm;
 
-Window::Window(const Configuration& configuration, std::shared_ptr<App> app) :
+Window::Window(const Configuration& configuration, essentials::observer_ptr<App> app) :
 	configuration_(configuration),
 	app_(app),
-	handle_(0)
+	handle_(nullptr)
 {
 	WNDCLASSEXA wndClassEx;
 	std::memset(&wndClassEx, 0, sizeof(WNDCLASSEX));
@@ -20,9 +21,9 @@ Window::Window(const Configuration& configuration, std::shared_ptr<App> app) :
 	wndClassEx.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wndClassEx.lpfnWndProc = &messageHandler;
 	wndClassEx.hInstance = app->instance();
-	wndClassEx.hIcon = LoadIcon(0, IDI_WINLOGO);
+	wndClassEx.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wndClassEx.hIconSm = wndClassEx.hIcon;
-	wndClassEx.hCursor = LoadCursor(0, IDC_ARROW);
+	wndClassEx.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wndClassEx.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 	wndClassEx.lpszClassName = configuration_.className.c_str();
 	wndClassEx.cbSize = sizeof(WNDCLASSEX);
@@ -43,13 +44,13 @@ Window::Window(const Configuration& configuration, std::shared_ptr<App> app) :
 		CW_USEDEFAULT,
 		static_cast<int>(configuration_.width),
 		static_cast<int>(configuration_.height),
-		0,
-		0,
+		nullptr,
+		nullptr,
 		app_->instance(),
 		this
 		);
 
-	if (handle_ == 0) {
+	if (handle_ == nullptr) {
 		throw system::windows::Error(GetLastError(), "Failed to create a window.");
 	}
 
@@ -61,9 +62,9 @@ Window::Window(const Configuration& configuration, std::shared_ptr<App> app) :
 }
 
 Window::~Window() {
-	if (handle_ != 0) {
+	if (handle_ != nullptr) {
 		DestroyWindow(handle_);
-		handle_ = 0;
+		handle_ = nullptr;
 	}
 
 	UnregisterClassA(configuration_.className.c_str(), app_->instance());

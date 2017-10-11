@@ -8,6 +8,7 @@
 #include <windows.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/system/windows/types.hpp"
 
 namespace dormouse_engine::wm {
@@ -31,7 +32,7 @@ public:
 
 	};
 
-	Window(const Configuration& configuration, std::shared_ptr<App> app);
+	Window(const Configuration& configuration, essentials::observer_ptr<App> app);
 
 	~Window();
 
@@ -49,7 +50,7 @@ private:
 
 	Configuration configuration_;
 
-	std::shared_ptr<App> app_;
+	essentials::observer_ptr<App> app_;
 
 	system::windows::WindowHandle handle_;
 
