@@ -7,7 +7,7 @@
 
 namespace dormouse_engine::math {
 
-const float PI = static_cast<float>(3.14159264f);
+constexpr auto PI = 3.14159264f;
 
 class Angle :
 	boost::less_than_comparable<Angle,
@@ -17,11 +17,19 @@ class Angle :
 {
 public:
 
-	static const Angle RIGHT;
+	static constexpr Angle right() {
+		return Angle(PI * 0.5f);
+	}
 
-	static const Angle HALF_FULL;
+	static constexpr Angle halfFull() {
+		return Angle(PI);
+	}
 
-	static const Angle FULL;
+	static constexpr Angle full() {
+		return Angle(PI * 2.0f);
+	}
+
+	constexpr Angle() = default;
 
 	constexpr float radians() const noexcept {
 		return radians_;
@@ -39,38 +47,38 @@ public:
 		return radians_ < rhs.radians_;
 	}
 
-	Angle& operator+=(const Angle& rhs) noexcept {
+	constexpr Angle& operator+=(const Angle& rhs) noexcept {
 		radians_ += rhs.radians_;
 		return *this;
 	}
 
-	Angle& operator-=(const Angle& rhs) noexcept {
+	constexpr Angle& operator-=(const Angle& rhs) noexcept {
 		radians_ -= rhs.radians_;
 		return *this;
 	}
 
-	Angle& operator*=(float rhs) noexcept {
+	constexpr Angle& operator*=(float rhs) noexcept {
 		radians_ *= rhs;
 		return *this;
 	}
 
-	Angle& operator/=(float rhs) noexcept {
+	constexpr Angle& operator/=(float rhs) noexcept {
 		radians_ /= rhs;
 		return *this;
 	}
 
-	Angle operator-() const noexcept {
-		return -1.0f * (*this);
+	constexpr Angle operator-() const noexcept {
+		return Angle(-1.0f * radians_);
 	}
 
-	friend const Angle radians(float radians) noexcept;
+	friend constexpr const Angle radians(float r) noexcept;
 
-	friend const Angle degrees(float degrees) noexcept;
+	friend constexpr const Angle degrees(float d) noexcept;
 
 private:
 
-	constexpr explicit Angle(float radians) noexcept :
-		radians_(radians)
+	constexpr explicit Angle(float r) noexcept :
+		radians_(r)
 	{
 	}
 
@@ -82,21 +90,23 @@ private:
 
 static_assert(sizeof(Angle) == sizeof(float), "Angle should have no extra data");
 
-std::ostream& operator<<(std::ostream& os, const Angle& angle);
-
-inline const Angle radians(float radians) noexcept {
-	return Angle(radians);
+inline std::ostream& operator<<(std::ostream& os, const Angle& angle) {
+	return os << angle.radians() << " rad";
 }
 
-inline const Angle degrees(float degrees) noexcept {
-	return Angle(degrees * (PI / 180.0f));
+inline constexpr const Angle radians(float r) noexcept {
+	return Angle(r);
 }
 
-inline const Angle operator""_rad(long double r) noexcept {
+inline constexpr const Angle degrees(float d) noexcept {
+	return Angle(d * (PI / 180.0f));
+}
+
+inline constexpr const Angle operator""_rad(long double r) noexcept {
 	return radians(static_cast<float>(r));
 }
 
-inline const Angle operator""_deg(long double d) noexcept {
+inline constexpr Angle operator""_deg(long double d) noexcept {
 	return degrees(static_cast<float>(d));
 }
 

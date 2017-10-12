@@ -14,36 +14,36 @@ BOOST_AUTO_TEST_SUITE(PulpMathTestSuite);
 BOOST_AUTO_TEST_SUITE(PulpMathAngleTestSuite);
 
 BOOST_AUTO_TEST_CASE(AngleIsConstructibleWithRadians) {
-	Angle a(3.0_rad);
-	BOOST_CHECK_EQUAL(a.radians(), 3.0f);
+	constexpr auto a = 3.0_rad;
+	static_assert(a.radians() == 3.0f);
 }
 
 BOOST_AUTO_TEST_CASE(AngleIsConstructibleWithDegrees) {
-	Angle a(90.0_deg);
-	BOOST_CHECK_EQUAL(a.degrees(), 90.0f);
+	constexpr auto a = 90.0_deg;
+	static_assert(a.degrees() == 90.0f);
 }
 
 BOOST_AUTO_TEST_CASE(AngleConvertsRadiansToDegrees) {
-	Angle a(radians(PI));
-	BOOST_CHECK_EQUAL(a.degrees(), 180.0f);
+	constexpr auto a = radians(PI);
+	static_assert(a.degrees() == 180.0f);
 }
 
 BOOST_AUTO_TEST_CASE(AngleConvertsDegreesToRadians) {
-	Angle a(degrees(360.0f));
-	BOOST_CHECK_EQUAL(a.radians(), 2.0f * PI);
+	constexpr auto a = 360.0_deg;
+	static_assert(a.radians() == a.full().radians());
 }
 
 BOOST_AUTO_TEST_CASE(AnglesAreAdditive) {
-	Angle lhs = Angle::RIGHT;
-	Angle rhs = Angle::HALF_FULL;
+	constexpr auto lhs = Angle::right();
+	constexpr auto rhs = Angle::halfFull();
 
-	BOOST_CHECK_EQUAL(lhs + rhs, radians(1.5f * PI));
-	BOOST_CHECK_EQUAL(rhs - lhs, Angle::RIGHT);
+	BOOST_CHECK_EQUAL(lhs + rhs, radians(1.5f * PI)); // TODO: constexpr addition et al?
+	BOOST_CHECK_EQUAL(rhs - lhs, Angle::right());
 }
 
 BOOST_AUTO_TEST_CASE(AnglesAreMultiplicativeByScalar) {
-	BOOST_CHECK_EQUAL(Angle::RIGHT * 4.0f, Angle::FULL);
-	BOOST_CHECK_EQUAL(Angle::HALF_FULL / 2.0f, Angle::RIGHT);
+	BOOST_CHECK_EQUAL(Angle::right() * 4.0f, Angle::full());
+	BOOST_CHECK_EQUAL(Angle::halfFull() / 2.0f, Angle::right());
 }
 
 BOOST_AUTO_TEST_CASE(AnglesAreComparable) {
