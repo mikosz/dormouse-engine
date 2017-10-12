@@ -3,7 +3,6 @@
 
 #include <thread>
 
-#include "dormouse-engine/engine/timer/Clock.hpp"
 #include "dormouse-engine/engine/timer/ChildTimer.hpp"
 
 using namespace dormouse_engine;

@@ -3,7 +3,7 @@
 
 #include "dormouse-engine/wm/App.hpp"
 #include "dormouse-engine/wm/Window.hpp"
-#include "../timer/Clock.hpp"
+#include "../timer/WallClock.hpp"
 
 namespace dormouse_engine::engine::app {
 
@@ -26,7 +26,7 @@ private:
 
 	wm::Window mainWindow_;
 
-	timer::Clock clock_;
+	timer::WallClock clock_;
 
 };
 

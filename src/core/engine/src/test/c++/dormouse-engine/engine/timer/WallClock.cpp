@@ -3,7 +3,7 @@
 
 #include <thread>
 
-#include "dormouse-engine/engine/timer/Clock.hpp"
+#include "dormouse-engine/engine/timer/WallClock.hpp"
 
 using namespace dormouse_engine::engine::timer;
 
@@ -12,7 +12,7 @@ namespace /* anonymous */ {
 BOOST_AUTO_TEST_SUITE(EngineTimerClockTestSuite);
 
 BOOST_AUTO_TEST_CASE(MeasuresTime) {
-	auto clock = Clock();
+	auto clock = WallClock();
 
 	BOOST_CHECK_EQUAL(clock.lastFrameDuration(), 0.0f);
 

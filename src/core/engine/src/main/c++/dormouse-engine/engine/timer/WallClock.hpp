@@ -1,11 +1,11 @@
-#ifndef _DORMOUSEENGINE_ENGINE_TIMER_CLOCK_HPP_
-#define _DORMOUSEENGINE_ENGINE_TIMER_CLOCK_HPP_
+#ifndef _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_
+#define _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_
 
 #include <chrono>
 
 namespace dormouse_engine::engine::timer {
 
-class Clock final {
+class WallClock final {
 public:
 
 	using Seconds = float; // TODO: TEMP!
@@ -42,4 +42,4 @@ private:
 
 } // namespace dormouse_engine::engine::timer
 
-#endif /* _DORMOUSEENGINE_ENGINE_TIMER_CLOCK_HPP_ */
+#endif /* _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_ */
