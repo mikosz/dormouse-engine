@@ -2,17 +2,22 @@
 #define _DORMOUSEENGINE_MATH_SI_HPP_
 
 #include <type_traits>
+#include <ratio>
 
 namespace dormouse_engine::math {
 
 namespace detail {
 
-template <int MExp, int KGExp, int SExp>
+template <int MExp, int KGExp, int SExp, class ToBaseRatioT>
 struct Unit {
+
+	using ToBaseRatio = ToBaseRatioT;
+	static_assert(ToBaseRatio::num != 0 && ToBaseRatio::den != 0);
 
 	static constexpr auto M_EXP = MExp;
 	static constexpr auto KG_EXP = KGExp;
 	static constexpr auto S_EXP = SExp;
+	static constexpr auto TO_BASE = static_cast<float>(ToBaseRatio::num) / static_cast<float>(ToBaseRatio::den);
 
 };
 
@@ -48,7 +53,11 @@ constexpr inline auto operator*(Value<LhsUnitT> lhs, Value<RhsUnitT> rhs) noexce
 		Value<Unit<
 			LhsUnitT::M_EXP + RhsUnitT::M_EXP,
 			LhsUnitT::KG_EXP + RhsUnitT::KG_EXP,
-			LhsUnitT::S_EXP + RhsUnitT::S_EXP
+			LhsUnitT::S_EXP + RhsUnitT::S_EXP,
+			std::ratio<
+				LhsUnitT::ToBaseRatio::num * RhsUnitT::ToBaseRatio::num,
+				LhsUnitT::ToBaseRatio::den * RhsUnitT::ToBaseRatio::den
+				>
 			>>(lhs.value() * rhs.value());
 }
 
@@ -58,31 +67,58 @@ constexpr inline auto operator/(Value<LhsUnitT> lhs, Value<RhsUnitT> rhs) noexce
 		Value<Unit<
 			LhsUnitT::M_EXP - RhsUnitT::M_EXP,
 			LhsUnitT::KG_EXP - RhsUnitT::KG_EXP,
-			LhsUnitT::S_EXP - RhsUnitT::S_EXP
+			LhsUnitT::S_EXP - RhsUnitT::S_EXP,
+			std::ratio<
+				LhsUnitT::ToBaseRatio::num * RhsUnitT::ToBaseRatio::den,
+				LhsUnitT::ToBaseRatio::den * RhsUnitT::ToBaseRatio::num
+				>
 			>>(lhs.value() / rhs.value());
 }
 
 } // namespace detail
 
-using Metres = detail::Unit<1, 0, 0>;
-using Kilograms = detail::Unit<0, 1, 0>;
-using Seconds = detail::Unit<0, 0, 1>;
+// -- base SI units / values
 
-using Length = detail::Value<Metres>;
-using Mass = detail::Value<Kilograms>;
-using Time = detail::Value<Seconds>;
+template <class ToBaseRatio = std::ratio<1, 1>>
+using Metre = detail::Unit<1, 0, 0, ToBaseRatio>;
 
-constexpr inline Length operator""_m(long double m) noexcept {
-	return Length(static_cast<float>(m));
+template <class ToBaseRatio = std::ratio<1, 1>>
+using Kilogram = detail::Unit<0, 1, 0, ToBaseRatio>;
+
+template <class ToBaseRatio = std::ratio<1, 1>>
+using Second = detail::Unit<0, 0, 1, ToBaseRatio>;
+
+using Metres = detail::Value<Metre<>>;
+using Kilograms = detail::Value<Kilogram<>>;
+using Seconds = detail::Value<Second<>>;
+
+constexpr inline Metres operator""_m(long double m) noexcept {
+	return Metres(static_cast<float>(m));
 }
 
-constexpr inline Mass operator""_kg(long double kg) noexcept {
-	return Mass(static_cast<float>(kg));
+constexpr inline Kilograms operator""_kg(long double kg) noexcept {
+	return Kilograms(static_cast<float>(kg));
 }
 
-constexpr inline Time operator""_s(long double s) noexcept {
-	return Time(static_cast<float>(s));
+constexpr inline Seconds operator""_s(long double s) noexcept {
+	return Seconds(static_cast<float>(s));
 }
+
+// -- common multipliers
+
+using Kilometres = detail::Value<Metre<std::kilo>>;
+
+constexpr inline Kilometres operator""_km(long double km) noexcept {
+	return Kilometres(static_cast<float>(km));
+}
+
+using Hours = detail::Value<Second<std::ratio<60>>>;
+
+constexpr inline Hours operator""_h(long double h) noexcept {
+	return Hours(static_cast<float>(h));
+}
+
+// -- derived SI units / values
 
 using Speed = decltype(1.0_m / 1.0_s);
 using MetresPerSecond = Speed::Unit;
@@ -108,13 +144,13 @@ constexpr inline Force operator""_N(long double n) noexcept {
 
 namespace dormouse_engine {
 
+using math::Metre;
+using math::Kilogram;
+using math::Second;
+
 using math::Metres;
 using math::Kilograms;
 using math::Seconds;
-
-using math::Length;
-using math::Mass;
-using math::Time;
 
 using math::Speed;
 using math::MetresPerSecond;
