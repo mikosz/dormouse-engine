@@ -4,7 +4,6 @@
 #include "dormouse-engine/math/Angle.hpp"
 
 using namespace dormouse_engine;
-using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
 namespace /* anonymous */ {
