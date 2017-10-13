@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <functional>
 
-#include <boost/operators.hpp>
+#include <boost/operators.hpp> // TODO: boost operators are breaking constexpr-ness of Matrix
 
 #include "dormouse-engine/essentials/InfixOstreamIterator.hpp"
 
