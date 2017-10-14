@@ -10,19 +10,17 @@ public:
 
 	using Seconds = float; // TODO: TEMP!
 
-	void tick() noexcept {
-		using namespace std::chrono_literals;
-		using TimeResolution = std::chrono::microseconds;
-		static constexpr auto TICKS_PER_SECOND =
-			static_cast<float>(std::chrono::duration_cast<TimeResolution>(1s).count());
+	static constexpr Seconds NO_LIMIT = -1.0f;
 
-		const auto now = ChronoClock::now();
-		
-		lastFrameDuration_ =
-			std::chrono::duration_cast<std::chrono::microseconds>(now - frameStart_).count() / TICKS_PER_SECOND;
+	WallClock() = default;
 
-		frameStart_ = now;
+	WallClock(Seconds minFrameLength, Seconds maxFrameLength) :
+		minFrameLength_(minFrameLength),
+		maxFrameLength_(maxFrameLength)
+	{
 	}
+
+	void tick() noexcept;
 
 	Seconds lastFrameDuration() const noexcept {
 		return lastFrameDuration_;
@@ -35,6 +33,10 @@ private:
 	ChronoClock clock_;
 
 	ChronoClock::time_point frameStart_ = ChronoClock::now();
+
+	Seconds minFrameLength_ = NO_LIMIT;
+
+	Seconds maxFrameLength_ = NO_LIMIT;
 
 	Seconds lastFrameDuration_ = 0.0f;
 
