@@ -2,7 +2,7 @@
 
 #include <thread>
 
-using namespace dormouse_engine::engine::timer;
+using namespace dormouse_engine::engine::time;
 
 void WallClock::tick() noexcept {
 	using namespace std::chrono_literals;

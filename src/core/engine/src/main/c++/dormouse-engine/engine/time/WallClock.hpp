@@ -1,9 +1,9 @@
-#ifndef _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_
-#define _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_
+#ifndef _DORMOUSEENGINE_ENGINE_TIME_WALLCLOCK_HPP_
+#define _DORMOUSEENGINE_ENGINE_TIME_WALLCLOCK_HPP_
 
 #include <chrono>
 
-namespace dormouse_engine::engine::timer {
+namespace dormouse_engine::engine::time {
 
 class WallClock final {
 public:
@@ -42,6 +42,6 @@ private:
 
 };
 
-} // namespace dormouse_engine::engine::timer
+} // namespace dormouse_engine::engine::time
 
-#endif /* _DORMOUSEENGINE_ENGINE_TIMER_WALLCLOCK_HPP_ */
+#endif /* _DORMOUSEENGINE_ENGINE_TIME_WALLCLOCK_HPP_ */
