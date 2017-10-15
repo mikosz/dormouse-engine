@@ -40,18 +40,20 @@ const auto IMGUI_TECHNIQUE_CODE = R"(
 		float2 texcoord : TEXCOORD0;
 	};
 
-	Sampler fontAtlasSampler;
+	SamplerState fontAtlasSampler;
 	Texture2D fontAtlasTexture;
 
 	PIn vs(VIn vin) {
 		PIn pin;
 		pin.pos = mul(projectionMatrix, float4(vin.pos.xy, 0.0f, 1.0f));
-		pin.colour = input.colour;
-		pin.texcoord = input.texcoord;
+		pin.colour = vin.colour;
+		pin.texcoord = vin.texcoord;
+
+		return pin;
 	}
 
 	float4 ps(PIn pin) : SV_Target {
-		return pin.colour * fontAtlasTexture.Sample(fontAtlasSampler, input.texcoord);
+		return pin.colour * fontAtlasTexture.Sample(fontAtlasSampler, pin.texcoord);
 	}
 	)"s;
 
@@ -192,17 +194,24 @@ ImGuiHost::ImGuiHost(time::Timer timer, graphics::Device& graphicsDevice, size_t
 	// TODO: try alpha 8
 	imguiIO.Fonts->GetTexDataAsRGBA32(&imguiFontAtlasPixels, &imguiFontAtlasWidth, &imguiFontAtlasHeight);
 
+	const auto pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+
 	auto imguiFontAtlasConfiguration = graphics::Texture::Configuration2d();
 	imguiFontAtlasConfiguration.allowCPURead = false;
 	imguiFontAtlasConfiguration.allowGPUWrite = false;
 	imguiFontAtlasConfiguration.allowModifications = false;
 	imguiFontAtlasConfiguration.width = imguiFontAtlasWidth;
 	imguiFontAtlasConfiguration.height = imguiFontAtlasHeight;
-	imguiFontAtlasConfiguration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
+	imguiFontAtlasConfiguration.pixelFormat = pixelFormat;
 	imguiFontAtlasConfiguration.purposeFlags = graphics::Texture::CreationPurpose::SHADER_RESOURCE;
 
-	imguiFontAtlas_ =
-		renderer::control::ResourceView(graphics::Texture(graphicsDevice, imguiFontAtlasConfiguration));
+	auto imguiFontAtlasTexture = graphics::Texture(
+		graphicsDevice,
+		imguiFontAtlasConfiguration,
+		essentials::viewBuffer(imguiFontAtlasPixels, imguiFontAtlasWidth * imguiFontAtlasHeight * pixelFormat.pixelSize())
+		);
+
+	imguiFontAtlas_ = renderer::control::ResourceView(imguiFontAtlasTexture);
 
 	imguiIO.Fonts->TexID = &imguiFontAtlas_;
 }
@@ -211,11 +220,15 @@ void ImGuiHost::update() {
 	auto& imguiIO = ImGui::GetIO();
 	imguiIO.DeltaTime = timer_.lastFrameDuration();
 	ImGui::NewFrame();
+
+	ImGui::Text("Hejo Okruch!");
 }
 
 void ImGuiHost::render(
 	graphics::Device& graphicsDevice, renderer::command::CommandBuffer& rendererCommandBuffer)
 {
+	ImGui::Render();
+
 	const auto& imguiDrawData = *ImGui::GetDrawData();
 	auto cmdIdx = size_t(0);
 
@@ -253,12 +266,19 @@ void ImGuiHost::render(
 }
 
 void ImGuiHost::populateBuffers_(graphics::Device& graphicsDevice, const ImDrawData& imguiDrawData) {
-	if (imguiDrawData.TotalVtxCount > vertexCount_) {
-		std::tie(vertexBuffer_, vertexCount_) = createImguiVertexBuffer(graphicsDevice, imguiDrawData.TotalVtxCount);
+	vertexCount_ = imguiDrawData.TotalVtxCount;
+	indexCount_ = imguiDrawData.TotalIdxCount;
+
+	if (vertexCount_ == 0 || indexCount_ == 0) {
+		return;
 	}
 
-	if (imguiDrawData.TotalIdxCount > indexCount_) {
-		std::tie(indexBuffer_, indexCount_) = createImguiIndexBuffer(graphicsDevice, imguiDrawData.TotalIdxCount);
+	if (imguiDrawData.TotalVtxCount > vertexBufferSize_) {
+		std::tie(vertexBuffer_, vertexBufferSize_) = createImguiVertexBuffer(graphicsDevice, vertexCount_);
+	}
+
+	if (imguiDrawData.TotalIdxCount > indexBufferSize_) {
+		std::tie(indexBuffer_, indexBufferSize_) = createImguiIndexBuffer(graphicsDevice, indexCount_);
 	}
 
 	auto vertexData =

@@ -7,5 +7,5 @@ structure.library_project("renderer", function()
 project "renderer-unit-test"
 	kind "WindowedApp"
 	flags { "WinMain" }
-	links { "wm", "tester" }
+	links { "tester" }
 project "*"

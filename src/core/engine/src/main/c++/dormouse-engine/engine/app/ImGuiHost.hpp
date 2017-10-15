@@ -32,9 +32,13 @@ private:
 
 	graphics::Buffer vertexBuffer_;
 
+	size_t vertexBufferSize_ = 0;
+
 	size_t vertexCount_ = 0;
 
 	graphics::Buffer indexBuffer_;
+
+	size_t indexBufferSize_ = 0;
 
 	size_t indexCount_ = 0;
 
