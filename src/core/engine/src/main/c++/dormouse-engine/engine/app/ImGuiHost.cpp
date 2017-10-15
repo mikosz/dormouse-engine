@@ -244,23 +244,23 @@ void ImGuiHost::render(
 			} else {
 				const auto fontAtlas = *static_cast<const renderer::control::ResourceView*>(cmd.TextureId);
 
-				auto& drawCommand =
+				auto drawCommand =
 					rendererCommandBuffer.get(renderer::command::CommandBuffer::CommandId{ this, cmdIdx++ });
 
-				drawCommand.setVertexBuffer(vertexBuffer_, vertexCount_, sizeof(ImDrawVert));
-				drawCommand.setIndexBuffer(indexBuffer_, indexCount_);
-				drawCommand.setResource(fontAtlas, graphics::ShaderType::PIXEL, 0u);
-				drawCommand.setSampler(
+				drawCommand->setVertexBuffer(vertexBuffer_, vertexCount_, sizeof(ImDrawVert));
+				drawCommand->setIndexBuffer(indexBuffer_, indexCount_);
+				drawCommand->setResource(fontAtlas, graphics::ShaderType::PIXEL, 0u);
+				drawCommand->setSampler(
 					renderer::control::Sampler(graphicsDevice, renderer::control::Sampler::WRAPPED_LINEAR),
 					graphics::ShaderType::PIXEL,
 					0
 					);
-				drawCommand.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_LIST);
-				drawCommand.setConstantBuffer(constantBuffer_, graphics::ShaderType::PIXEL, 0u);
-				drawCommand.setTechnique(essentials::make_observer(&technique_));
-				drawCommand.setRenderControl(renderControl_);
+				drawCommand->setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_LIST);
+				drawCommand->setConstantBuffer(constantBuffer_, graphics::ShaderType::PIXEL, 0u);
+				drawCommand->setTechnique(essentials::make_observer(&technique_));
+				drawCommand->setRenderControl(renderControl_);
 
-				rendererCommandBuffer.add(essentials::make_observer(&drawCommand));
+				rendererCommandBuffer.add(drawCommand);
 			}
 		}
 	}

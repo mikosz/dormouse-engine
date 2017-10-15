@@ -19,9 +19,11 @@ public:
 		size_t idx;
 	};
 
-	DrawCommand& get(const CommandId& commandId);
+	essentials::observer_ptr<DrawCommand> get(const CommandId& commandId);
 
 	void add(essentials::observer_ptr<const Command> command) {
+		// TODO: can't take observer_ptr here, must be size_t, index to pool, otherwise a get that
+		// grows the vector will invalidate the pointer!
 		commands_.emplace_back(std::move(command));
 	}
 

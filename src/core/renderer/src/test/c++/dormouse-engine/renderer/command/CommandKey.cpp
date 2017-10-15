@@ -23,7 +23,6 @@ BOOST_AUTO_TEST_CASE(CommandKeyOrdering) {
 	BOOST_CHECK(lower.hash() < midLower.hash());
 	BOOST_CHECK(midLower.hash() < midHigher.hash());
 	BOOST_CHECK(midHigher.hash() < higher.hash());
-
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* CommandKeyTestSuite */);

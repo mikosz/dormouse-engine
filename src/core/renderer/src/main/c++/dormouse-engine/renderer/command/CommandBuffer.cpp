@@ -2,14 +2,15 @@
 
 #include <algorithm>
 
+using namespace dormouse_engine;
 using namespace dormouse_engine::renderer::command;
 
-DrawCommand& CommandBuffer::get(const CommandId& commandId) {
+essentials::observer_ptr<DrawCommand> CommandBuffer::get(const CommandId& commandId) {
 	auto it = drawCommandPoolIndex_.find(commandId);
 
 	if (it != drawCommandPoolIndex_.end()) {
 		it->second.lastFrameUsed = lastFrameIdx_ + 1;
-		return drawCommandPool_[it->second.poolIndex];
+		return essentials::make_observer(&drawCommandPool_[it->second.poolIndex]);
 	} else {
 		// TODO: could be done much more efficiently, so this is temp, right?
 		// TODO: also, potentially the pooling could be done by an external class for separation of concerns
@@ -20,14 +21,14 @@ DrawCommand& CommandBuffer::get(const CommandId& commandId) {
 				drawCommandPoolIndex_.erase(indexEntry.first);
 				drawCommandPoolIndex_.emplace(
 					commandId, DrawCommandPoolIndexEntry{ poolIndex, lastFrameIdx_ + 1 });
-				return drawCommandPool_[poolIndex];
+				return essentials::make_observer(&drawCommandPool_[poolIndex]);
 			}
 		}
 
 		drawCommandPool_.emplace_back();
 		drawCommandPoolIndex_.emplace(
 			commandId, DrawCommandPoolIndexEntry{ drawCommandPool_.size() - 1, lastFrameIdx_ + 1 });
-		return drawCommandPool_.back();
+		return essentials::make_observer(&drawCommandPool_.back());
 	}
 }
 
