@@ -47,9 +47,9 @@ inline dormouse_engine::wm::Window::Configuration windowConfiguration() {
 DE_APP_MAIN()
 	using namespace dormouse_engine;
 
-	auto app = engine::app::App(*wm::GlobalMainArguments::instance(), windowConfiguration());
+	//auto app = engine::app::App(*wm::GlobalMainArguments::instance(), windowConfiguration());
 
-	app.run();
+	//app.run();
 
 #if defined(DE_COMPILER_VISUAL_CXX)
 	auto boostTestLogger = std::make_shared<logger::Logger>(logger::Level::INFO);

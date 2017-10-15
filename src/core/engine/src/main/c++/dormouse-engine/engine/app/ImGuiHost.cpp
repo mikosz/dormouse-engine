@@ -140,13 +140,14 @@ renderer::shader::Technique createImguiTechnique(graphics::Device& graphicsDevic
 }
 
 renderer::control::Control createRenderControl(graphics::Device& graphicsDevice, size_t width, size_t height) {
-	auto commandKey = renderer::command::CommandKey();
-	commandKey.attributes.fullscreenLayerId = renderer::command::FullscreenLayerId::DEBUG;
-	commandKey.attributes.viewportId = renderer::command::ViewportId::FULLSCREEN;
-	commandKey.attributes.viewportLayer = renderer::command::ViewportLayer::HUD;
-	commandKey.attributes.translucencyType = renderer::command::TranslucencyType::OPAQUE;
-	commandKey.attributes.depth = 0u;
-	commandKey.attributes.materialId = 0u;
+	auto commandKey = renderer::command::CommandKey(
+		renderer::command::FullscreenLayerId::DEBUG,
+		renderer::command::ViewportId::FULLSCREEN,
+		renderer::command::ViewportLayer::HUD,
+		renderer::command::TranslucencyType::OPAQUE,
+		0,
+		0
+		);
 
 	auto renderTarget = renderer::control::RenderTargetView(graphicsDevice.backBuffer());
 

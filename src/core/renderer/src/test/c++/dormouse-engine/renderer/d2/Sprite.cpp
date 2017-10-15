@@ -31,13 +31,14 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 
 	auto renderStateConfiguration = graphics::RenderState::Configuration();
 
-	auto commandKey = command::CommandKey();
-	commandKey.attributes.fullscreenLayerId = command::FullscreenLayerId::HUD;
-	commandKey.attributes.viewportId = command::ViewportId::FULLSCREEN;
-	commandKey.attributes.viewportLayer = command::ViewportLayer::HUD;
-	commandKey.attributes.translucencyType = command::TranslucencyType::OPAQUE;
-	commandKey.attributes.depth = 0u;
-	commandKey.attributes.materialId = 0u;
+	auto commandKey = command::CommandKey(
+		command::FullscreenLayerId::HUD,
+		command::ViewportId::FULLSCREEN,
+		command::ViewportLayer::HUD,
+		command::TranslucencyType::OPAQUE,
+		0,
+		0
+		);
 
 	const auto renderControl = Control(
 		commandKey,
