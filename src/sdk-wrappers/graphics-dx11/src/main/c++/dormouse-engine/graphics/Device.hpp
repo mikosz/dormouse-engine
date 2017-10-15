@@ -73,6 +73,7 @@ public:
 
 	void submit(CommandList& commandList);
 
+	// TODO: duplicated with CommandList::lock, remove
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
 	Texture backBuffer() const {

@@ -3,7 +3,13 @@
 
 #include "dormouse-engine/wm/App.hpp"
 #include "dormouse-engine/wm/Window.hpp"
+#include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/renderer/command/CommandBuffer.hpp"
+#include "dormouse-engine/renderer/control/ResourceView.hpp"
 #include "../time/WallClock.hpp"
+#include "ImGuiHost.hpp"
+
+struct ImDrawData;
 
 namespace dormouse_engine::engine::app {
 
@@ -27,6 +33,12 @@ private:
 	wm::Window mainWindow_;
 
 	time::WallClock clock_;
+
+	graphics::Device graphicsDevice_;
+
+	renderer::command::CommandBuffer rendererCommandBuffer_;
+
+	ImGuiHost imguiHost_;
 
 };
 

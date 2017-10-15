@@ -3,6 +3,7 @@ structure = require "structure"
 include "boost.lua"
 include "gmock.lua"
 include "ponder.lua"
+include "imgui.lua"
 
 workspace "dormouse-engine"
 
