@@ -2,6 +2,7 @@
 #define _DORMOUSEENGINE_MATH_SI_HPP_
 
 #include <string>
+#include <sstream>
 #include <type_traits>
 #include <ratio>
 
@@ -51,7 +52,7 @@ struct Unit final {
 };
 
 template <int MExp, int KGExp, int SExp, class ToBaseRatioT>
-std::string to_string(Unit<MExp, KGExp, SExp, ToBaseRatioT>) {
+inline std::string to_string(Unit<MExp, KGExp, SExp, ToBaseRatioT>) {
 	using std::to_string;
 
 	auto numerator = std::string();
@@ -108,7 +109,23 @@ std::string to_string(Unit<MExp, KGExp, SExp, ToBaseRatioT>) {
 		denominator = "/" + denominator;
 	}
 
-	return "[" + numerator + denominator + "]";
+	auto ratio = std::string();
+
+	if constexpr (ToBaseRatioT::den != 1) {
+		ratio = to_string(ToBaseRatioT::num) + "/" + to_string(ToBaseRatioT::den) + "*";
+	} else if constexpr (ToBaseRatioT::num != 1) {
+		ratio = to_string(ToBaseRatioT::num) + "*";
+	}
+
+	return "[" + ratio + numerator + denominator + "]";
+}
+
+inline std::string to_string(Unit<1, 1, -2, std::ratio<1>>) noexcept {
+	return "[N]";
+}
+
+inline std::string to_string(Unit<1, 0, -1, std::ratio<1000, 3600>>) noexcept {
+	return "[km/h]";
 }
 
 template <class ToBaseRatioT>
@@ -231,13 +248,15 @@ constexpr inline auto operator/(float f, Value<UnitT> value) noexcept {
 }
 
 template <class UnitT>
-std::string to_string(Value<UnitT> value) {
+inline std::string to_string(Value<UnitT> value) {
 	using std::to_string;
-	return to_string(value.template value<UnitT>()) + " " + to_string(UnitT());
+	std::ostringstream oss{};
+	oss << value.template value<UnitT>() << ' ' << to_string(UnitT());
+	return oss.str();
 }
 
 template <class UnitT>
-std::ostream& operator<<(std::ostream& os, Value<UnitT> value) {
+inline std::ostream& operator<<(std::ostream& os, Value<UnitT> value) {
 	return os << to_string(value);
 }
 

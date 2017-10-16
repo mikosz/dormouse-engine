@@ -64,19 +64,22 @@ BOOST_AUTO_TEST_CASE(ValuesPrintInInitialisedUnits) {
 	using std::to_string;
 
 	// base
-	BOOST_CHECK_EQUAL(to_string(42_m), "42.0 [m]"s);
-	BOOST_CHECK_EQUAL(to_string(42_kg), "42.0 [kg]"s);
-	BOOST_CHECK_EQUAL(to_string(42_s), "42.0 [s]"s);
+	BOOST_CHECK_EQUAL(to_string(42.5_m), "42.5 [m]"s);
+	BOOST_CHECK_EQUAL(to_string(42_kg), "42 [kg]"s);
+	BOOST_CHECK_EQUAL(to_string(42_s), "42 [s]"s);
 
-	BOOST_CHECK_EQUAL(to_string(42_m), "42.0 [m]"s);
-
+	BOOST_CHECK_EQUAL(to_string(42_m), "42 [m]"s);
 
 	// complex
 	BOOST_CHECK_EQUAL(to_string(2_mps), "2 [m/s]"s);
 	BOOST_CHECK_EQUAL(to_string(4_m / 2_s), "2 [m/s]"s);
-	BOOST_CHECK_EQUAL(to_string(42_N), "42.0 [N]"s);
+	BOOST_CHECK_EQUAL(to_string(42_N), "42 [N]"s);
+	BOOST_CHECK_EQUAL(to_string(1_kg * 1_m / (1_s * 1_s)), "1 [N]"s);
 
-	BOOST_FAIL("Add moar!");
+	// multiples
+	BOOST_CHECK_EQUAL(to_string(3_km / 2_h), "1.5 [km/h]"s);
+	BOOST_CHECK_EQUAL(to_string(1_g * 1_mps / 1_s), "1 [1/1000*kg*m/s^2]");
+	BOOST_CHECK_EQUAL(to_string(Force(1_g * 1_mps / 1_s)), "0.001 [N]");
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* MathSITestSuite */);
