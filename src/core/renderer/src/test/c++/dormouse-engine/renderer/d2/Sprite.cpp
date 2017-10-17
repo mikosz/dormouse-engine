@@ -2,9 +2,14 @@
 #include <boost/test/auto_unit_test.hpp>
 
 #include "dormouse-engine/graphics/Image.hpp"
+#include "dormouse-engine/graphics/RenderState.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/tester/RenderingFixture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
+#include "dormouse-engine/renderer/command/CommandKey.hpp"
+#include "dormouse-engine/renderer/command/CommandBuffer.hpp"
+#include "dormouse-engine/renderer/control/Control.hpp"
+#include "dormouse-engine/renderer/control/RenderState.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -40,7 +45,7 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 		0
 		);
 
-	const auto renderControl = Control(
+	const auto renderControl = control::Control(
 		commandKey,
 		graphicsDevice().depthStencil(),
 		graphicsDevice().backBuffer(),

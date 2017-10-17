@@ -45,7 +45,7 @@ const auto IMGUI_TECHNIQUE_CODE = R"(
 
 	PIn vs(VIn vin) {
 		PIn pin;
-		pin.pos = mul(projectionMatrix, float4(vin.pos.xy, 0.0f, 1.0f));
+		pin.pos = mul(float4(vin.pos.xy, 0.0f, 1.0f), projectionMatrix);
 		pin.colour = vin.colour;
 		pin.texcoord = vin.texcoord;
 
@@ -63,8 +63,7 @@ std::tuple<graphics::Buffer, size_t> createImguiVertexBuffer(graphics::Device& g
 	configuration.allowGPUWrite = false;
 	configuration.allowModifications = true;
 	configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
-	configuration.size = vertexCount;
-	configuration.stride = sizeof(ImDrawVert);
+	configuration.size = vertexCount * sizeof(ImDrawVert);
 
 	return { graphics::Buffer(graphicsDevice, configuration), vertexCount };
 }
@@ -75,8 +74,7 @@ std::tuple<graphics::Buffer, size_t> createImguiIndexBuffer(graphics::Device& gr
 	configuration.allowGPUWrite = false;
 	configuration.allowModifications = true;
 	configuration.purpose = graphics::Buffer::CreationPurpose::INDEX_BUFFER;
-	configuration.size = indexCount;
-	configuration.stride = sizeof(ImDrawIdx);
+	configuration.size = indexCount * sizeof(ImDrawIdx);
 
 	return { graphics::Buffer(graphicsDevice, configuration), indexCount };
 }
@@ -88,7 +86,6 @@ graphics::Buffer createImguiConstantBuffer(graphics::Device& graphicsDevice, siz
 	configuration.allowModifications = false;
 	configuration.purpose = graphics::Buffer::CreationPurpose::CONSTANT_BUFFER;
 	configuration.size = sizeof(math::Matrix4x4);
-	configuration.stride = 0;
 
 	const auto transform = math::Transform::orthographicProjection(
 		math::Handedness::LEFT,
@@ -244,23 +241,21 @@ void ImGuiHost::render(
 			} else {
 				const auto fontAtlas = *static_cast<const renderer::control::ResourceView*>(cmd.TextureId);
 
-				auto drawCommand =
-					rendererCommandBuffer.get(renderer::command::CommandBuffer::CommandId{ this, cmdIdx++ });
+				auto& drawCommand =
+					rendererCommandBuffer.create(renderer::command::CommandBuffer::CommandId{ this, cmdIdx++ });
 
-				drawCommand->setVertexBuffer(vertexBuffer_, vertexCount_, sizeof(ImDrawVert));
-				drawCommand->setIndexBuffer(indexBuffer_, indexCount_);
-				drawCommand->setResource(fontAtlas, graphics::ShaderType::PIXEL, 0u);
-				drawCommand->setSampler(
+				drawCommand.setVertexBuffer(vertexBuffer_, vertexCount_, sizeof(ImDrawVert));
+				drawCommand.setIndexBuffer(indexBuffer_, indexCount_, sizeof(ImDrawIdx));
+				drawCommand.setResource(fontAtlas, graphics::ShaderType::PIXEL, 0u);
+				drawCommand.setSampler(
 					renderer::control::Sampler(graphicsDevice, renderer::control::Sampler::WRAPPED_LINEAR),
 					graphics::ShaderType::PIXEL,
 					0
 					);
-				drawCommand->setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_LIST);
-				drawCommand->setConstantBuffer(constantBuffer_, graphics::ShaderType::PIXEL, 0u);
-				drawCommand->setTechnique(essentials::make_observer(&technique_));
-				drawCommand->setRenderControl(renderControl_);
-
-				rendererCommandBuffer.add(drawCommand);
+				drawCommand.setPrimitiveTopology(graphics::PrimitiveTopology::TRIANGLE_LIST);
+				drawCommand.setConstantBuffer(constantBuffer_, graphics::ShaderType::VERTEX, 0u);
+				drawCommand.setTechnique(essentials::make_observer(&technique_));
+				drawCommand.setRenderControl(renderControl_);
 			}
 		}
 	}

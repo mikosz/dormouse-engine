@@ -25,6 +25,7 @@ class Sampler;
 class RenderState;
 class InputLayout;
 class Viewport;
+class ScissorRect;
 class PixelFormat;
 class RenderTargetView;
 class DepthStencilView;
@@ -68,6 +69,8 @@ public:
 
 	void setViewport(const Viewport& viewport);
 
+	void setScissorRect(const ScissorRect& scissorRect);
+
 	void setInputLayout(const InputLayout& inputLayout) noexcept;
 
 	void setShader(const VertexShader& vertexShader) noexcept;
@@ -82,7 +85,7 @@ public:
 
 	void setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot);
 
-	void setIndexBuffer(const Buffer& buffer, size_t offset);
+	void setIndexBuffer(const Buffer& buffer, size_t offset, size_t stride);
 
 	void setVertexBuffer(const Buffer& buffer, size_t slot, size_t stride);
 

@@ -2,6 +2,7 @@
 #define _DORMOUSEENGINE_RENDERER_COMMAND_COMMANDBUFFER_HPP_
 
 #include <vector>
+#include <deque>
 #include <unordered_map>
 
 #include "dormouse-engine/essentials/observer_ptr.hpp"
@@ -19,18 +20,16 @@ public:
 		size_t idx;
 	};
 
-	essentials::observer_ptr<DrawCommand> get(const CommandId& commandId);
-
-	void add(essentials::observer_ptr<const Command> command) {
-		// TODO: can't take observer_ptr here, must be size_t, index to pool, otherwise a get that
-		// grows the vector will invalidate the pointer!
-		commands_.emplace_back(std::move(command));
-	}
+	// TODO: separate create and add?
+	DrawCommand& create(const CommandId& commandId);
 
 	void submit(dormouse_engine::graphics::CommandList& commandList);
 
 private:
 
+	// TODO: does this pooling strategy make any sense? Might as well just create
+	// the commands every frame. There's probably no use in re-using them and it complicates
+	// the logic.
 	struct DrawCommandPoolIndexEntry {
 		size_t poolIndex;
 		size_t lastFrameUsed;
@@ -44,9 +43,9 @@ private:
 		bool operator()(const CommandId& lhs, const CommandId& rhs) const noexcept;
 	};
 
-	using Commands = std::vector<essentials::observer_ptr<const Command>>;
+	using Commands = std::vector<size_t>;
 
-	using DrawCommandPool = std::vector<DrawCommand>;
+	using DrawCommandPool = std::deque<DrawCommand>;
 
 	using DrawCommandPoolIndex =
 		std::unordered_map<CommandId, DrawCommandPoolIndexEntry, CommandIdHash, CommandIdEqual>;

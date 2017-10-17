@@ -90,7 +90,6 @@ BOOST_AUTO_TEST_CASE(ReturnsEqualResourceViewsForSameBuffer) {
 	configuration.allowGPUWrite = true;
 	configuration.allowModifications = true;
 	configuration.size = 10u;
-	configuration.stride = 3u;
 	configuration.purpose = graphics::Buffer::CreationPurpose::SHADER_RESOURCE;
 
 	const auto buffer = graphics::Buffer(graphicsDevice(), configuration);
@@ -107,7 +106,6 @@ BOOST_AUTO_TEST_CASE(ReturnsUnequalResourceViewsForDifferentBuffer) {
 	configuration.allowGPUWrite = true;
 	configuration.allowModifications = true;
 	configuration.size = 36u;
-	configuration.stride = 3u;
 	configuration.purpose = graphics::Buffer::CreationPurpose::SHADER_RESOURCE;
 
 	const auto bufferL = graphics::Buffer(graphicsDevice(), configuration);
@@ -125,7 +123,6 @@ BOOST_AUTO_TEST_CASE(ReturnsUnequalResourceViewsForSameBufferWithDifferentElemen
 	configuration.allowGPUWrite = true;
 	configuration.allowModifications = true;
 	configuration.size = 12u;
-	configuration.stride = 3u;
 	configuration.purpose = graphics::Buffer::CreationPurpose::SHADER_RESOURCE;
 
 	const auto buffer = graphics::Buffer(graphicsDevice(), configuration);

@@ -243,7 +243,7 @@ void Device::beginScene() {
 	dxDeviceContext.ClearRenderTargetView(
 		&detail::Internals::dxRenderTargetView(backBuffer_), colour);
 	dxDeviceContext.ClearDepthStencilView(
-		&detail::Internals::dxDepthStencilView(depthStencil_),
+		detail::Internals::dxDepthStencilView(depthStencil_),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		static_cast<UINT8>(0)

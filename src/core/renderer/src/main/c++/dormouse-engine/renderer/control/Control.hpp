@@ -60,6 +60,8 @@ private:
 
 	Viewport viewport_;
 
+	ScissorRect scissorRect_;
+
 	RenderState renderState_;
 
 };
