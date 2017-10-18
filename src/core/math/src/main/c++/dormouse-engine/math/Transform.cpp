@@ -5,10 +5,9 @@
 #include "ScalarEqual.hpp"
 
 using namespace dormouse_engine;
-using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
-Transform Transform::orthographicProjection(
+detail::UncheckedTransform detail::UncheckedTransform::orthographicProjection(
 	Handedness handedness,
 	float left,
 	float right,
@@ -32,10 +31,10 @@ Transform Transform::orthographicProjection(
 	matrix[2][3] = (near - (far * ndcNear)) / (near - far);
 	matrix[3][3] = 1.0f;
 
-	return Transform(matrix);
+	return detail::UncheckedTransform(matrix);
 }
 
-Transform Transform::perspectiveProjection(
+detail::UncheckedTransform detail::UncheckedTransform::perspectiveProjection(
 	Handedness handedness,
 	float focalLength,
 	float aspectRatio,
@@ -59,10 +58,10 @@ Transform Transform::perspectiveProjection(
 		matrix[3][2] = 1.0f;
 	}
 
-	return Transform(matrix);
+	return detail::UncheckedTransform(matrix);
 }
 
-Transform Transform::perspectiveProjection(
+detail::UncheckedTransform detail::UncheckedTransform::perspectiveProjection(
 	Handedness handedness,
 	Angle horizontalFOV,
 	float aspectRatio,
@@ -76,25 +75,25 @@ Transform Transform::perspectiveProjection(
 	return perspectiveProjection(handedness, focalLength, aspectRatio, near, far, ndcNear);
 }
 
-Transform Transform::translation(const Vec3& vector) noexcept {
+detail::UncheckedTransform detail::UncheckedTransform::translation(const Vec3& vector) noexcept {
 	auto matrix = Matrix4x4::IDENTITY;
 	matrix[0][3] = vector.x();
 	matrix[1][3] = vector.y();
 	matrix[2][3] = vector.z();
 
-	return Transform(matrix);
+	return detail::UncheckedTransform(matrix);
 }
 
-Transform Transform::scale(const Vec3& by) noexcept {
+detail::UncheckedTransform detail::UncheckedTransform::scale(const Vec3& by) noexcept {
 	auto matrix = Matrix4x4::IDENTITY;
 	matrix[0][0] = by.x();
 	matrix[1][1] = by.y();
 	matrix[2][2] = by.z();
 
-	return Transform(matrix);
+	return detail::UncheckedTransform(matrix);
 }
 
-Transform Transform::rotation(Vec3 around, Angle by) noexcept {
+detail::UncheckedTransform detail::UncheckedTransform::rotation(Vec3 around, Angle by) noexcept {
 	around.normalise();
 
 	const auto x = around.x();
@@ -121,5 +120,5 @@ Transform Transform::rotation(Vec3 around, Angle by) noexcept {
 	matrix[2][2] = zSq + (1.0f - zSq) * cos;
 	matrix[3][3] = 1.0f;
 
-	return Transform(matrix);
+	return detail::UncheckedTransform(matrix);
 }

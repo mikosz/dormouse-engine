@@ -4,7 +4,7 @@
 #include <array>
 
 #include "Plane.hpp"
-#include "Transform.hpp"
+#include "Matrix.hpp"
 #include "Vector.hpp"
 
 namespace dormouse_engine::math {
@@ -14,7 +14,7 @@ public:
 
 	Frustum(Handedness handedness, float focalLength, float aspectRatio, float near, float far) noexcept;
 
-	Frustum(const Transform& projectionTransform) noexcept;
+	Frustum(const Matrix4x4& projectionMatrix) noexcept;
 
 	bool contains(const Vec3& point) const noexcept;
 

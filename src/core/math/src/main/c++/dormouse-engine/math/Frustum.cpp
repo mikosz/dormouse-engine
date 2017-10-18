@@ -3,23 +3,26 @@
 #include <algorithm>
 #include <cmath>
 
+#include "Transform.hpp"
+
 using namespace dormouse_engine;
 using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
 Frustum::Frustum(Handedness handedness, float focalLength, float aspectRatio, float near, float far) noexcept
-	: Frustum(Transform::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, -1.0f))
+// TODO: temp workaround
+	: Frustum(detail::UncheckedTransform::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, -1.0f).matrix())
 {
 }
 
-Frustum::Frustum(const Transform& projectionTransform) noexcept :
+Frustum::Frustum(const Matrix4x4& projectionMatrix) noexcept :
 	planes_{
-		Plane(projectionTransform.matrix().row(3) + projectionTransform.matrix().row(2)),
-		Plane(projectionTransform.matrix().row(3) - projectionTransform.matrix().row(2)),
-		Plane(projectionTransform.matrix().row(3) + projectionTransform.matrix().row(0)),
-		Plane(projectionTransform.matrix().row(3) - projectionTransform.matrix().row(0)),
-		Plane(projectionTransform.matrix().row(3) + projectionTransform.matrix().row(1)),
-		Plane(projectionTransform.matrix().row(3) - projectionTransform.matrix().row(1)),
+		Plane(projectionMatrix.row(3) + projectionMatrix.row(2)),
+		Plane(projectionMatrix.row(3) - projectionMatrix.row(2)),
+		Plane(projectionMatrix.row(3) + projectionMatrix.row(0)),
+		Plane(projectionMatrix.row(3) - projectionMatrix.row(0)),
+		Plane(projectionMatrix.row(3) + projectionMatrix.row(1)),
+		Plane(projectionMatrix.row(3) - projectionMatrix.row(1)),
 	}
 {
 }
