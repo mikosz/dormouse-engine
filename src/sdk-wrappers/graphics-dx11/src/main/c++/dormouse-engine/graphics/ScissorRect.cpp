@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "ScissorRect.hpp"
 
 using namespace dormouse_engine::graphics;

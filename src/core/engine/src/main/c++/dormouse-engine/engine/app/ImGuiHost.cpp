@@ -30,14 +30,14 @@ const auto IMGUI_TECHNIQUE_CODE = R"(
 
 	struct VIn {
 		float2 pos : POSITION;
-		float4 colour : COLOR0;
 		float2 texcoord : TEXCOORD0;
+		float4 colour : COLOR0;
 	};
 
 	struct PIn {
 		float4 pos : SV_POSITION;
-		float4 colour : COLOR0;
 		float2 texcoord : TEXCOORD0;
+		float4 colour : COLOR0;
 	};
 
 	SamplerState fontAtlasSampler;
@@ -45,7 +45,7 @@ const auto IMGUI_TECHNIQUE_CODE = R"(
 
 	PIn vs(VIn vin) {
 		PIn pin;
-		pin.pos = mul(float4(vin.pos.xy, 0.0f, 1.0f), projectionMatrix);
+		pin.pos = mul(projectionMatrix, float4(vin.pos.xy, 0.0f, 1.0f));
 		pin.colour = vin.colour;
 		pin.texcoord = vin.texcoord;
 
@@ -98,10 +98,12 @@ graphics::Buffer createImguiConstantBuffer(graphics::Device& graphicsDevice, siz
 		graphics::Device::NDC_NEAR
 		);
 
+	const auto constantBufferData = transform.matrix().transpose();
+
 	return graphics::Buffer(
 		graphicsDevice,
 		configuration,
-		essentials::viewBuffer(&transform.matrix(), sizeof(math::Matrix4x4))
+		essentials::viewBuffer(&constantBufferData, sizeof(math::Matrix4x4))
 		);
 }
 

@@ -28,8 +28,8 @@ App::App(const wm::MainArguments& mainArguments, const wm::Window::Configuration
 	imguiHost_(
 		time::Timer(essentials::make_observer(&clock_)),
 		graphicsDevice_,
-		mainWindowConfiguration.width,
-		mainWindowConfiguration.height
+		mainWindow_.clientWidth(),
+		mainWindow_.clientHeight()
 		)
 {
 }
