@@ -1,8 +1,10 @@
 #ifndef _DORMOUSEENGINE_MATH_TRANSFORM_HPP_
 #define _DORMOUSEENGINE_MATH_TRANSFORM_HPP_
 
+#include "dormouse-engine/essentials/Null.hpp"
 #include "homogeneous.hpp"
 #include "Matrix.hpp"
+#include "basis.hpp"
 
 namespace dormouse_engine::math {
 
@@ -20,7 +22,7 @@ public:
 		float near,
 		float far,
 		float ndcNear
-		) noexcept;
+	) noexcept;
 
 	static UncheckedTransform perspectiveProjection(
 		Handedness handedness,
@@ -29,7 +31,7 @@ public:
 		float near,
 		float far,
 		float ndcNear
-		) noexcept;
+	) noexcept;
 
 	static UncheckedTransform perspectiveProjection(
 		Handedness handedness,
@@ -38,7 +40,7 @@ public:
 		float near,
 		float far,
 		float ndcNear
-		) noexcept;
+	) noexcept;
 
 	static UncheckedTransform translation(const Vec3& vector) noexcept;
 
@@ -49,7 +51,7 @@ public:
 	UncheckedTransform() noexcept = default;
 
 	UncheckedTransform(Matrix4x4 transformationMatrix) noexcept :
-		matrix_(std::move(transformationMatrix))
+	matrix_(std::move(transformationMatrix))
 	{
 	}
 
@@ -59,7 +61,7 @@ public:
 			matrix_.row(1).dot(coords),
 			matrix_.row(2).dot(coords),
 			matrix_.row(3).dot(coords)
-			);
+		);
 	}
 
 	UncheckedTransform& append(const UncheckedTransform& next) noexcept {
@@ -96,24 +98,89 @@ inline UncheckedTransform operator<<(const UncheckedTransform& first, const Unch
 
 } // namespace detail
 
-enum class BasisId {
-	ANY,
-	SAME,
-	SCREEN,
-	CAMERA,
-	WORLD,
-	LOCAL
+/**
+ * TransformTargetBasis_t is the target type of a transform, respecting Any and Same.
+ */
+template <class SourceBasisT, class TargetBasisT>
+struct TransformTargetBasis {
+	using Type = TargetBasisT;
 };
 
-template <BasisId FROM_BASIS, BasisId TO_BASIS>
-class Transform {
+template <class SourceBasisT>
+struct TransformTargetBasis<SourceBasisT, basis::Same> {
+	using Type = SourceBasisT;
+};
+
+template <>
+struct TransformTargetBasis<basis::Any, basis::Same> {
+	using Type = basis::Same;
+};
+
+template <class SourceBasisT, class TargetBasisT>
+using TransformTargetBasis_t = typename TransformTargetBasis<SourceBasisT, TargetBasisT>::Type;
+
+/**
+ * JointTransformSourceBasis_t is the source type of the transformation created from joining
+ * two transforms. Does not respect Same (should be repeated source type).
+ */
+template <class LhsSourceBasisT, class LhsTargetBasisT, class RhsSourceBasisT, class RhsTargetBasisT>
+struct JointTransformSourceBasis {
+	using Type = LhsSourceBasisT;
+};
+
+template <class RhsSourceBasisT, class RhsTargetBasisT>
+struct JointTransformSourceBasis<basis::Any, basis::Any, RhsSourceBasisT, RhsTargetBasisT> {
+	using Type = RhsSourceBasisT;
+};
+
+template <class LhsSourceBasisT, class LhsTargetBasisT, class RhsSourceBasisT, class RhsTargetBasisT>
+using JointTransformSourceBasis_t =
+	typename JointTransformSourceBasis<LhsSourceBasisT, LhsTargetBasisT, RhsSourceBasisT, RhsTargetBasisT>::Type;
+
+/**
+ * JointTransformTargetBasis_t is the target type of the transformation created from joining
+ * two transforms. Does not respect Same (should Be repeated source type).
+ */
+template <class LhsSourceBasisT, class LhsTargetBasisT, class RhsSourceBasisT, class RhsTargetBasisT>
+struct JointTransformTargetBasis {
+	using Type = RhsTargetBasisT;
+};
+
+template <class LhsSourceBasisT, class LhsTargetBasisT>
+struct JointTransformTargetBasis<LhsSourceBasisT, LhsTargetBasisT, basis::Any, basis::Any> {
+	using Type = LhsTargetBasisT;
+};
+
+template <class LhsSourceBasisT, class LhsTargetBasisT, class RhsSourceBasisT, class RhsTargetBasisT>
+using JointTransformTargetBasis_t =
+	typename JointTransformTargetBasis<LhsSourceBasisT, LhsTargetBasisT, RhsSourceBasisT, RhsTargetBasisT>::Type;
+
+/**
+ * MatchingBasis_v yields true iff the target of a transform is compatible with the source of another.
+ */
+template <class LhsBasisT, class RhsBasisT>
+struct MatchingBasis {
+	static constexpr auto value = std::is_same_v<LhsBasisT, RhsBasisT>;
+};
+
+template <class LhsBasisT>
+struct MatchingBasis<LhsBasisT, basis::Any> {
+	static constexpr auto value = true;
+};
+
+template <class LhsBasisT, class RhsBasisT>
+constexpr auto MatchingBasis_v = MatchingBasis<LhsBasisT, RhsBasisT>::value;
+
+template <class SourceBasisT, class TargetBasisT>
+class Transform : SourceBasisT, TargetBasisT {
 public:
 
-	static_assert(FROM_BASIS != BasisId::SAME);
-	static_assert(TO_BASIS != BasisId::ANY);
+	static_assert(!std::is_same_v<SourceBasisT, basis::Same>);
+	static_assert(!std::is_same_v<TargetBasisT, basis::Any>);
+	static_assert(!std::is_same_v<SourceBasisT, basis::Any> || std::is_same_v<TargetBasisT, basis::Same>);
 
-	static constexpr auto FROM_BASIS_ID = FROM_BASIS;
-	static constexpr auto TO_BASIS_ID = TO_BASIS;
+	using SourceBasis = SourceBasisT;
+	using TargetBasis = TransformTargetBasis_t<SourceBasis, TargetBasisT>;
 
 	/**
 	 * Creates a perspective projection transformation. Positions within the view frustum are mapped into
@@ -202,20 +269,30 @@ public:
 		return unchecked_.apply(coords);
 	}
 
-	template <BasisId NEXT_FROM_BASIS, BasisId NEXT_TO_BASIS>
-	Transform& append(const Transform<NEXT_FROM_BASIS, NEXT_TO_BASIS>& next) noexcept {
-		static_assert((NEXT_FROM_BASIS == TO_BASIS) || (NEXT_FROM_BASIS == BasisId::ANY), "Incompatible transforms");
-		static_assert((NEXT_TO_BASIS == TO_BASIS) || (NEXT_TO_BASIS == BasisId::SAME), "Incompatible transforms");
+	template <class NextSourceBasis, class NextTargetBasis>
+	Transform& append(const Transform<NextSourceBasis, NextTargetBasis>& next) noexcept {
+		static_assert(
+			MatchingBasis_v<TargetBasis, decltype(next)::SourceBasis>,
+			"Attempted to append a transform with a source-type not matching the current target type."
+			);
+		static_assert(
+			MatchingBasis_v<TargetBasis, decltype(next)::TargetBasis>,
+			"Attempted to append a transform with a target-type not equal to the current target type."
+			);
 		unchecked_.append(next.matrix());
 		return *this;
 	}
 
-	template <BasisId NEXT_FROM_BASIS, BasisId NEXT_TO_BASIS>
-	auto then(const Transform<NEXT_FROM_BASIS, NEXT_TO_BASIS>& next) const noexcept {
-		static_assert((NEXT_FROM_BASIS == TO_BASIS) || (NEXT_FROM_BASIS == BasisId::ANY), "Incompatible transforms");
-		static_assert(NEXT_TO_BASIS == BasisId::CAMERA || NEXT_TO_BASIS == BasisId::SAME);
-		constexpr auto RESULT_TO_BASIS = (NEXT_TO_BASIS == BasisId::SAME ? TO_BASIS : NEXT_TO_BASIS);
-		return Transform<FROM_BASIS, RESULT_TO_BASIS>(next.matrix() * matrix());
+	template <class NextSourceBasis, class NextTargetBasis>
+	auto then(const Transform<NextSourceBasis, NextTargetBasis>& next) const noexcept {
+		static_assert(
+			MatchingBasis_v<TargetBasis, decltype(next)::SourceBasis>,
+			"Attempted to append a transform with a source-type not matching the current target type."
+			);
+		return Transform<
+			JointTransformSourceBasis_t<SourceBasis, TargetBasis, decltype(next)::SourceBasis, decltype(next)::TargetBasis>,
+			JointTransformTargetBasis_t<SourceBasis, TargetBasis, decltype(next)::SourceBasis, decltype(next)::TargetBasis>
+			>(next.matrix() * matrix());
 	}
 
 	const Matrix4x4& matrix() const {
@@ -233,10 +310,12 @@ private:
 
 };
 
-template <BasisId LHS_FROM_BASIS, BasisId LHS_TO_BASIS, BasisId RHS_FROM_BASIS, BasisId RHS_TO_BASIS>
+//static_assert(sizeof(Transform<basis::Any, basis::Same>) == sizeof(Matrix4x4));
+
+template <class LhsSourceBasis, class LhsTargetBasis, class RhsSourceBasis, class RhsTargetBasis>
 inline auto operator<<(
-	const Transform<LHS_FROM_BASIS, LHS_TO_BASIS>& first,
-	const Transform<RHS_FROM_BASIS, RHS_TO_BASIS>& second
+	const Transform<LhsSourceBasis, LhsTargetBasis>& first,
+	const Transform<RhsSourceBasis, RhsTargetBasis>& second
 	)
 {
 	return first.then(second);
