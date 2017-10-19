@@ -55,14 +55,14 @@ public:
 	{
 	}
 
-	HomogeneousCoordinates apply(const HomogeneousCoordinates& coords) const noexcept {
-		return Vec4(
-			matrix_.row(0).dot(coords),
-			matrix_.row(1).dot(coords),
-			matrix_.row(2).dot(coords),
-			matrix_.row(3).dot(coords)
-		);
-	}
+	//HomogeneousCoordinates apply(const HomogeneousCoordinates& coords) const noexcept {
+	//	return Vec4(
+	//		matrix_.row(0).dot(coords),
+	//		matrix_.row(1).dot(coords),
+	//		matrix_.row(2).dot(coords),
+	//		matrix_.row(3).dot(coords)
+	//	);
+	//}
 
 	UncheckedTransform& append(const UncheckedTransform& next) noexcept {
 		matrix_ = next.matrix_ * matrix_;
@@ -98,6 +98,8 @@ inline UncheckedTransform operator<<(const UncheckedTransform& first, const Unch
 
 } // namespace detail
 
+// TODO: move below to detail (until MatchingBasis which is to be user-specialised
+
 /**
  * TransformTargetBasis_t is the target type of a transform, respecting Any and Same.
  */
@@ -111,13 +113,24 @@ struct TransformTargetBasis<SourceBasisT, basis::Same> {
 	using Type = SourceBasisT;
 };
 
-template <>
-struct TransformTargetBasis<basis::Any, basis::Same> {
+template <class SourceBasisT, class TargetBasisT>
+using TransformTargetBasis_t = typename TransformTargetBasis<SourceBasisT, TargetBasisT>::Type;
+
+/**
+ * DecayIfSame_t yields Same if Source and Target are the same, Target otherwise.
+ */
+template <class SourceBasisT, class TargetBasisT>
+struct DecayIfSameBasis {
+	using Type = TargetBasisT;
+};
+
+template <class SourceBasisT>
+struct DecayIfSameBasis<SourceBasisT, SourceBasisT> {
 	using Type = basis::Same;
 };
 
 template <class SourceBasisT, class TargetBasisT>
-using TransformTargetBasis_t = typename TransformTargetBasis<SourceBasisT, TargetBasisT>::Type;
+using DecayIfSameBasis_t = typename DecayIfSameBasis<SourceBasisT, TargetBasisT>::Type;
 
 /**
  * JointTransformSourceBasis_t is the source type of the transformation created from joining
@@ -265,8 +278,20 @@ public:
 	{
 	}
 
-	HomogeneousCoordinates apply(const HomogeneousCoordinates& coords) const noexcept {
-		return unchecked_.apply(coords);
+	template <class CoordsBasis>
+	auto apply(const HomogeneousCoordinates<CoordsBasis>& coords) const noexcept {
+		static_assert(
+			MatchingBasis_v<SourceBasis, CoordsBasis>,
+			"Attempted to apply transform from a non-matching source-basis"
+			);
+
+		return Vec4(
+			// TODO: access member
+			matrix().row(0).dot(coords),
+			matrix().row(1).dot(coords),
+			matrix().row(2).dot(coords),
+			matrix().row(3).dot(coords)
+			);
 	}
 
 	template <class NextSourceBasis, class NextTargetBasis>
@@ -283,15 +308,21 @@ public:
 		return *this;
 	}
 
-	template <class NextSourceBasis, class NextTargetBasis>
-	auto then(const Transform<NextSourceBasis, NextTargetBasis>& next) const noexcept {
+	template <class NextSourceBasisT, class NextTargetBasisT>
+	auto then(const Transform<NextSourceBasisT, NextTargetBasisT>& next) const noexcept {
+		using NextType = std::decay_t<decltype(next)>;
+		using NextSourceBasis = NextType::SourceBasis;
+		using NextTargetBasis = NextType::TargetBasis;
+
 		static_assert(
-			MatchingBasis_v<TargetBasis, decltype(next)::SourceBasis>,
+			MatchingBasis_v<TargetBasis, NextType::SourceBasis>,
 			"Attempted to append a transform with a source-type not matching the current target type."
 			);
+		
+		using ResultSourceBasis = JointTransformSourceBasis_t<SourceBasis, TargetBasis, NextSourceBasis, NextTargetBasis>;
+		using ResultTargetBasis = JointTransformTargetBasis_t<SourceBasis, TargetBasis, NextSourceBasis, NextTargetBasis>;
 		return Transform<
-			JointTransformSourceBasis_t<SourceBasis, TargetBasis, decltype(next)::SourceBasis, decltype(next)::TargetBasis>,
-			JointTransformTargetBasis_t<SourceBasis, TargetBasis, decltype(next)::SourceBasis, decltype(next)::TargetBasis>
+			ResultSourceBasis, DecayIfSameBasis_t<ResultSourceBasis, ResultTargetBasis>
 			>(next.matrix() * matrix());
 	}
 

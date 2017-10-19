@@ -6,8 +6,11 @@
 
 namespace dormouse_engine::math {
 
+template <class BasisT>
 class HomogeneousCoordinates {
 public:
+
+	using Basis = BasisT;
 
 	constexpr HomogeneousCoordinates(Vec4 vector) noexcept :
 		vector_(std::move(vector))
@@ -44,8 +47,19 @@ private:
 
 };
 
-class HomogeneousPoint : public HomogeneousCoordinates {
+template <class BasisT>
+class HomogeneousPoint : public HomogeneousCoordinates<BasisT> {
 public:
+
+	explicit constexpr HomogeneousPoint(std::initializer_list<float> coords) noexcept :
+		HomogeneousPoint(Vec3(std::move(coords)))
+	{
+	}
+
+	explicit constexpr HomogeneousPoint(float x, float y, float z) noexcept :
+		HomogeneousCoordinates(Vec4(x, y, z, 1.0f))
+	{
+	}
 
 	explicit constexpr HomogeneousPoint(Vec3 point) noexcept :
 		HomogeneousCoordinates(Vec4(point, 1.0f))
@@ -54,8 +68,19 @@ public:
 
 };
 
-class HomogeneousVector : public HomogeneousCoordinates {
+template <class BasisT>
+class HomogeneousVector : public HomogeneousCoordinates<BasisT> {
 public:
+
+	explicit constexpr HomogeneousVector(std::initializer_list<float> coords) noexcept :
+		HomogeneousVector(Vec3(std::move(coords)))
+	{
+	}
+
+	explicit constexpr HomogeneousVector(float x, float y, float z) noexcept :
+		HomogeneousCoordinates(Vec4(x, y, z, 1.0f))
+	{
+	}
 
 	explicit constexpr HomogeneousVector(Vec3 vector) noexcept :
 		HomogeneousCoordinates(Vec4(vector, 0.0f))
