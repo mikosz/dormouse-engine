@@ -10,91 +10,40 @@ namespace dormouse_engine::math {
 
 namespace detail {
 
-class UncheckedTransform {
-public:
-
-	static UncheckedTransform orthographicProjection(
-		Handedness handedness,
-		float left,
-		float right,
-		float top,
-		float bottom,
-		float near,
-		float far,
-		float ndcNear
+Matrix4x4 orthographicProjection(
+	Handedness handedness,
+	float left,
+	float right,
+	float top,
+	float bottom,
+	float near,
+	float far,
+	float ndcNear
 	) noexcept;
 
-	static UncheckedTransform perspectiveProjection(
-		Handedness handedness,
-		float focalLength,
-		float aspectRatio,
-		float near,
-		float far,
-		float ndcNear
+Matrix4x4 perspectiveProjection(
+	Handedness handedness,
+	float focalLength,
+	float aspectRatio,
+	float near,
+	float far,
+	float ndcNear
 	) noexcept;
 
-	static UncheckedTransform perspectiveProjection(
-		Handedness handedness,
-		Angle horizontalFOV,
-		float aspectRatio,
-		float near,
-		float far,
-		float ndcNear
+Matrix4x4 perspectiveProjection(
+	Handedness handedness,
+	Angle horizontalFOV,
+	float aspectRatio,
+	float near,
+	float far,
+	float ndcNear
 	) noexcept;
 
-	static UncheckedTransform translation(const Vec3& vector) noexcept;
+Matrix4x4 translation(const Vec3& vector) noexcept;
 
-	static UncheckedTransform scale(const Vec3& by) noexcept;
+Matrix4x4 scale(const Vec3& by) noexcept;
 
-	static UncheckedTransform rotation(Vec3 around, Angle by) noexcept;
-
-	UncheckedTransform() noexcept = default;
-
-	UncheckedTransform(Matrix4x4 transformationMatrix) noexcept :
-	matrix_(std::move(transformationMatrix))
-	{
-	}
-
-	//HomogeneousCoordinates apply(const HomogeneousCoordinates& coords) const noexcept {
-	//	return Vec4(
-	//		matrix_.row(0).dot(coords),
-	//		matrix_.row(1).dot(coords),
-	//		matrix_.row(2).dot(coords),
-	//		matrix_.row(3).dot(coords)
-	//	);
-	//}
-
-	UncheckedTransform& append(const UncheckedTransform& next) noexcept {
-		matrix_ = next.matrix_ * matrix_;
-		return *this;
-	}
-
-	UncheckedTransform& append(const Matrix4x4& next) noexcept {
-		matrix_ = next * matrix_;
-		return *this;
-	}
-
-	UncheckedTransform then(const UncheckedTransform& next) const noexcept {
-		return UncheckedTransform(*this).append(next);
-	}
-
-	UncheckedTransform then(const Matrix4x4& next) const noexcept {
-		return UncheckedTransform(*this).append(next);
-	}
-
-	const Matrix4x4& matrix() const {
-		return matrix_;
-	}
-
-private:
-
-	Matrix4x4 matrix_ = Matrix4x4::IDENTITY;
-
-};
-
-inline UncheckedTransform operator<<(const UncheckedTransform& first, const UncheckedTransform& second) {
-	return first.then(second);
-}
+Matrix4x4 rotation(Vec3 around, Angle by) noexcept;
 
 } // namespace detail
 
@@ -109,7 +58,7 @@ struct TransformTargetBasis {
 };
 
 template <class SourceBasisT>
-struct TransformTargetBasis<SourceBasisT, basis::Same> {
+struct TransformTargetBasis<SourceBasisT, basis::Same<>> {
 	using Type = SourceBasisT;
 };
 
@@ -126,7 +75,7 @@ struct DecayIfSameBasis {
 
 template <class SourceBasisT>
 struct DecayIfSameBasis<SourceBasisT, SourceBasisT> {
-	using Type = basis::Same;
+	using Type = basis::Same<>;
 };
 
 template <class SourceBasisT, class TargetBasisT>
@@ -142,7 +91,7 @@ struct JointTransformSourceBasis {
 };
 
 template <class RhsSourceBasisT, class RhsTargetBasisT>
-struct JointTransformSourceBasis<basis::Any, basis::Any, RhsSourceBasisT, RhsTargetBasisT> {
+struct JointTransformSourceBasis<basis::Any<>, basis::Any<>, RhsSourceBasisT, RhsTargetBasisT> {
 	using Type = RhsSourceBasisT;
 };
 
@@ -160,7 +109,7 @@ struct JointTransformTargetBasis {
 };
 
 template <class LhsSourceBasisT, class LhsTargetBasisT>
-struct JointTransformTargetBasis<LhsSourceBasisT, LhsTargetBasisT, basis::Any, basis::Any> {
+struct JointTransformTargetBasis<LhsSourceBasisT, LhsTargetBasisT, basis::Any<>, basis::Any<>> {
 	using Type = LhsTargetBasisT;
 };
 
@@ -177,23 +126,26 @@ struct MatchingBasis {
 };
 
 template <class LhsBasisT>
-struct MatchingBasis<LhsBasisT, basis::Any> {
+struct MatchingBasis<LhsBasisT, basis::Any<>> {
 	static constexpr auto value = true;
 };
 
 template <class LhsBasisT, class RhsBasisT>
 constexpr auto MatchingBasis_v = MatchingBasis<LhsBasisT, RhsBasisT>::value;
 
-template <class SourceBasisT, class TargetBasisT>
-class Transform : SourceBasisT, TargetBasisT {
+template <template<class> class SourceBasisT, template<class> class TargetBasisT>
+class Transform : SourceBasisT<TargetBasisT<essentials::Null>>{
 public:
 
-	static_assert(!std::is_same_v<SourceBasisT, basis::Same>);
-	static_assert(!std::is_same_v<TargetBasisT, basis::Any>);
-	static_assert(!std::is_same_v<SourceBasisT, basis::Any> || std::is_same_v<TargetBasisT, basis::Same>);
+	static_assert(!std::is_same_v<SourceBasisT<essentials::Null>, basis::Same<>>);
+	static_assert(!std::is_same_v<TargetBasisT<essentials::Null>, basis::Any<>>);
+	static_assert(
+		!std::is_same_v<SourceBasisT<essentials::Null>, basis::Any<>> ||
+		std::is_same_v<TargetBasisT<essentials::Null>, basis::Same<>>
+		);
 
-	using SourceBasis = SourceBasisT;
-	using TargetBasis = TransformTargetBasis_t<SourceBasis, TargetBasisT>;
+	using SourceBasis = SourceBasisT<essentials::Null>;
+	using TargetBasis = TransformTargetBasis_t<SourceBasis, TargetBasisT<essentials::Null>>;
 
 	/**
 	 * Creates a perspective projection transformation. Positions within the view frustum are mapped into
@@ -210,7 +162,7 @@ public:
 		float ndcNear
 		) noexcept
 	{
-		return detail::Transform::orthographicProjection(handedness, left, right, top, bottom, near, far, ndcNear);
+		return detail::orthographicProjection(handedness, left, right, top, bottom, near, far, ndcNear);
 	}
 
 	/**
@@ -233,7 +185,7 @@ public:
 		float ndcNear
 		) noexcept
 	{
-		return detail::Transform::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, ndcNear);
+		return detail::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, ndcNear);
 	}
 
 	/**
@@ -256,29 +208,29 @@ public:
 		float ndcNear
 		) noexcept
 	{
-		return detail::UncheckedTransform::perspectiveProjection(handedness, horizontalFOV, aspectRatio, near, far, ndcNear);
+		return detail::perspectiveProjection(handedness, horizontalFOV, aspectRatio, near, far, ndcNear);
 	}
 
 	static Transform translation(const Vec3& vector) noexcept {
-		return detail::UncheckedTransform::translation(vector);
+		return detail::translation(vector);
 	}
 
 	static Transform scale(const Vec3& by) noexcept {
-		return detail::UncheckedTransform::scale(by);
+		return detail::scale(by);
 	}
 
 	static Transform rotation(Vec3 around, Angle by) noexcept {
-		return detail::UncheckedTransform::rotation(around, by);
+		return detail::rotation(around, by);
 	}
 
 	Transform() = default;
 
 	Transform(Matrix4x4 transformationMatrix) noexcept :
-		unchecked_(std::move(transformationMatrix))
+		matrix_(std::move(transformationMatrix))
 	{
 	}
 
-	template <class CoordsBasis>
+	template <template<class> class CoordsBasis>
 	auto apply(const HomogeneousCoordinates<CoordsBasis>& coords) const noexcept {
 		static_assert(
 			MatchingBasis_v<SourceBasis, CoordsBasis>,
@@ -294,8 +246,8 @@ public:
 			);
 	}
 
-	template <class NextSourceBasis, class NextTargetBasis>
-	Transform& append(const Transform<NextSourceBasis, NextTargetBasis>& next) noexcept {
+	template <template<class> class NextSourceBasisT, template<class> class NextTargetBasisT>
+	Transform& append(const Transform<NextSourceBasisT, NextTargetBasisT>& next) noexcept {
 		static_assert(
 			MatchingBasis_v<TargetBasis, decltype(next)::SourceBasis>,
 			"Attempted to append a transform with a source-type not matching the current target type."
@@ -304,11 +256,11 @@ public:
 			MatchingBasis_v<TargetBasis, decltype(next)::TargetBasis>,
 			"Attempted to append a transform with a target-type not equal to the current target type."
 			);
-		unchecked_.append(next.matrix());
+		matrix_ = next.matrix() * matrix_;
 		return *this;
 	}
 
-	template <class NextSourceBasisT, class NextTargetBasisT>
+	template <template<class> class NextSourceBasisT, template<class> class NextTargetBasisT>
 	auto then(const Transform<NextSourceBasisT, NextTargetBasisT>& next) const noexcept {
 		using NextType = std::decay_t<decltype(next)>;
 		using NextSourceBasis = NextType::SourceBasis;
@@ -323,27 +275,27 @@ public:
 		using ResultTargetBasis = JointTransformTargetBasis_t<SourceBasis, TargetBasis, NextSourceBasis, NextTargetBasis>;
 		return Transform<
 			ResultSourceBasis, DecayIfSameBasis_t<ResultSourceBasis, ResultTargetBasis>
-			>(next.matrix() * matrix());
+			>(next.matrix() * matrix_);
 	}
 
 	const Matrix4x4& matrix() const {
-		return unchecked_.matrix();
+		return matrix_;
 	}
 
 private:
 
-	detail::UncheckedTransform unchecked_;
-
-	Transform(detail::UncheckedTransform unchecked) noexcept :
-		unchecked_(std::move(unchecked))
-	{
-	}
+	Matrix4x4 matrix_ = Matrix4x4::IDENTITY;
 
 };
 
-//static_assert(sizeof(Transform<basis::Any, basis::Same>) == sizeof(Matrix4x4));
+static_assert(sizeof(Transform<basis::Any, basis::Same>) == sizeof(Matrix4x4));
 
-template <class LhsSourceBasis, class LhsTargetBasis, class RhsSourceBasis, class RhsTargetBasis>
+template <
+	template<class> class LhsSourceBasis,
+	template<class> class LhsTargetBasis,
+	template<class> class RhsSourceBasis,
+	template<class> class RhsTargetBasis
+	>
 inline auto operator<<(
 	const Transform<LhsSourceBasis, LhsTargetBasis>& first,
 	const Transform<RhsSourceBasis, RhsTargetBasis>& second

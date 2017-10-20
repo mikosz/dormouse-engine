@@ -1,16 +1,17 @@
 #ifndef _DORMOUSEENGINE_MATH_HOMOGENEOUS_HPP_
 #define _DORMOUSEENGINE_MATH_HOMOGENEOUS_HPP_
 
+#include "dormouse-engine/essentials/Null.hpp"
 #include "Vector.hpp"
 #include "ScalarEqual.hpp"
 
 namespace dormouse_engine::math {
 
-template <class BasisT>
+template <template<class> class BasisT>
 class HomogeneousCoordinates {
 public:
 
-	using Basis = BasisT;
+	using Basis = BasisT<essentials::Null>;
 
 	constexpr HomogeneousCoordinates(Vec4 vector) noexcept :
 		vector_(std::move(vector))
@@ -47,7 +48,7 @@ private:
 
 };
 
-template <class BasisT>
+template <template<class> class BasisT>
 class HomogeneousPoint : public HomogeneousCoordinates<BasisT> {
 public:
 
@@ -68,7 +69,7 @@ public:
 
 };
 
-template <class BasisT>
+template <template<class> class BasisT>
 class HomogeneousVector : public HomogeneousCoordinates<BasisT> {
 public:
 

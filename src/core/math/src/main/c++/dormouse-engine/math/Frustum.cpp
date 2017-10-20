@@ -11,7 +11,7 @@ using namespace dormouse_engine::math;
 
 Frustum::Frustum(Handedness handedness, float focalLength, float aspectRatio, float near, float far) noexcept
 // TODO: temp workaround
-	: Frustum(detail::UncheckedTransform::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, -1.0f).matrix())
+	: Frustum(detail::perspectiveProjection(handedness, focalLength, aspectRatio, near, far, -1.0f))
 {
 }
 

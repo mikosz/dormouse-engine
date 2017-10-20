@@ -125,16 +125,16 @@ BOOST_AUTO_TEST_CASE(AppliesChainOfTransforms) {
 	const auto scale = Transform<basis::Any, basis::Same>::scale({ 2.0f, 1.0f, 0.5f }); // -> <4.0f, 1.5f, 0.0f>
 	const auto rotation = Transform<basis::Local, basis::Camera>::rotation({ 0.0f, 0.0f, 1.0f }, degrees(90.0f)); // -> <-1.5f, 4.0f, 0.0f>
 
-	static_assert(std::is_same_v<decltype(translation)::SourceBasis, basis::Local>);
-	static_assert(std::is_same_v<decltype(translation)::TargetBasis, basis::Local>);
-	static_assert(std::is_same_v<decltype(scale)::SourceBasis, basis::Any>);
-	static_assert(std::is_same_v<decltype(scale)::TargetBasis, basis::Any>);
-	static_assert(std::is_same_v<decltype(rotation)::SourceBasis, basis::Local>);
-	static_assert(std::is_same_v<decltype(rotation)::TargetBasis, basis::Camera>);
+	static_assert(std::is_same_v<decltype(translation)::SourceBasis, basis::Local<>>);
+	static_assert(std::is_same_v<decltype(translation)::TargetBasis, basis::Local<>>);
+	static_assert(std::is_same_v<decltype(scale)::SourceBasis, basis::Any<>>);
+	static_assert(std::is_same_v<decltype(scale)::TargetBasis, basis::Any<>>);
+	static_assert(std::is_same_v<decltype(rotation)::SourceBasis, basis::Local<>>);
+	static_assert(std::is_same_v<decltype(rotation)::TargetBasis, basis::Camera<>>);
 
 	const auto combined = (translation << scale << rotation);
-	static_assert(std::is_same_v<decltype(combined)::SourceBasis, basis::Local>);
-	static_assert(std::is_same_v<decltype(combined)::TargetBasis, basis::Camera>);
+	static_assert(std::is_same_v<decltype(combined)::SourceBasis, basis::Local<>>);
+	static_assert(std::is_same_v<decltype(combined)::TargetBasis, basis::Camera<>>);
 
 	const auto end = combined.apply(start);
 
