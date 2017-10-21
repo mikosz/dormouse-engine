@@ -41,7 +41,7 @@ system::windows::COMWrapper<ID3D11BlendState> createBlendState(
 	std::memset(&blendDesc, 0, sizeof(blendDesc));
 
 	// TODO: read config!!!
-	blendDesc.AlphaToCoverageEnable = true;
+	blendDesc.AlphaToCoverageEnable = false;// true;
 	blendDesc.RenderTarget[0].BlendEnable = configuration.blendingEnabled;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;

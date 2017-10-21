@@ -57,6 +57,37 @@ const auto IMGUI_TECHNIQUE_CODE = R"(
 	}
 	)"s;
 
+graphics::InputLayout::Elements createInputLayoutElements() {
+	auto elements = graphics::InputLayout::Elements();
+	elements.reserve(3);
+
+	elements.emplace_back(
+		"POSITION",
+		0,
+		graphics::FORMAT_R32G32_FLOAT,
+		graphics::InputLayout::SlotType::PER_VERTEX_DATA,
+		0
+		);
+
+	elements.emplace_back(
+		"TEXCOORD",
+		0,
+		graphics::FORMAT_R32G32_FLOAT,
+		graphics::InputLayout::SlotType::PER_VERTEX_DATA,
+		0
+		);
+
+	elements.emplace_back(
+		"COLOR",
+		0,
+		graphics::FORMAT_R8G8B8A8_UNORM,
+		graphics::InputLayout::SlotType::PER_VERTEX_DATA,
+		0
+		);
+
+	return elements;
+}
+
 std::tuple<graphics::Buffer, size_t> createImguiVertexBuffer(graphics::Device& graphicsDevice, size_t vertexCount) {
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
@@ -124,7 +155,7 @@ renderer::shader::Technique createImguiTechnique(graphics::Device& graphicsDevic
 		technique.setShader(
 			renderer::shader::VertexShader(graphicsDevice, essentials::viewBuffer(compiledVertexShader)));
 
-		auto inputLayout = renderer::shader::InputLayout(graphicsDevice, essentials::viewBuffer(compiledVertexShader));
+		auto inputLayout = renderer::shader::InputLayout(graphicsDevice, createInputLayoutElements());
 		technique.setInputLayout(std::move(inputLayout));
 	}
 
@@ -220,8 +251,6 @@ void ImGuiHost::update() {
 	auto& imguiIO = ImGui::GetIO();
 	imguiIO.DeltaTime = timer_.lastFrameDuration();
 	ImGui::NewFrame();
-
-	ImGui::Text("Hejo Okruch!");
 }
 
 void ImGuiHost::render(
