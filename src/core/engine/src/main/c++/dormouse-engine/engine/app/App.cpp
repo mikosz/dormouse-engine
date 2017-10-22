@@ -45,13 +45,15 @@ void App::update() {
 	wmApp_.update();
 	imguiHost_.update();
 
+	onUpdateBroadcaster_.notify();
+
 	graphicsDevice_.beginScene();
 
-	{
-		imguiHost_.render(graphicsDevice_, rendererCommandBuffer_);
+	onRenderBroadcaster_.notify();
 
-		rendererCommandBuffer_.submit(graphicsDevice_.getImmediateCommandList());
-	}
+	imguiHost_.render(graphicsDevice_, rendererCommandBuffer_);
+
+	rendererCommandBuffer_.submit(graphicsDevice_.getImmediateCommandList());
 
 	graphicsDevice_.endScene();
 }

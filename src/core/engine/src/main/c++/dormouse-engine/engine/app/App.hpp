@@ -1,6 +1,7 @@
 #ifndef _DORMOUSEENGINE_ENGINE_APP_APP_HPP_
 #define _DORMOUSEENGINE_ENGINE_APP_APP_HPP_
 
+#include "dormouse-engine/essentials/event.hpp"
 #include "dormouse-engine/wm/App.hpp"
 #include "dormouse-engine/wm/Window.hpp"
 #include "dormouse-engine/graphics/Device.hpp"
@@ -16,6 +17,14 @@ namespace dormouse_engine::engine::app {
 class App final {
 public:
 
+	using OnUpdateListener = EventListener<>;
+
+	using OnUpdateRegistrar = EventBroadcaster<>::ListenerRegistrar;
+
+	using OnRenderListener = EventListener<>;
+
+	using OnRenderRegistrar = EventBroadcaster<>::ListenerRegistrar;
+
 	App(const wm::MainArguments& mainArguments, const wm::Window::Configuration& mainWindowConfiguration);
 
 	void run();
@@ -26,7 +35,19 @@ public:
 		return wmApp_.closeRequested();
 	}
 
+	OnUpdateRegistrar subscribeToOnUpdate(OnUpdateListener listener) {
+		onUpdateBroadcaster_.subscribe(std::move(listener));
+	}
+
+	OnRenderRegistrar subscribeToOnRender(OnRenderListener listener) {
+		onRenderBroadcaster_.subscribe(std::move(listener));
+	}
+
 private:
+
+	using OnUpdateBroadcaster = EventBroadcaster<>;
+
+	using OnRenderBroadcaster = EventBroadcaster<>;
 
 	wm::App wmApp_;
 
@@ -39,6 +60,10 @@ private:
 	renderer::command::CommandBuffer rendererCommandBuffer_;
 
 	ImGuiHost imguiHost_;
+
+	OnUpdateBroadcaster onUpdateBroadcaster_;
+
+	OnRenderBroadcaster onRenderBroadcaster_;
 
 };
 

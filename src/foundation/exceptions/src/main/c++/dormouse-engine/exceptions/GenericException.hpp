@@ -9,7 +9,9 @@
 
 #if defined(DE_COMPILER_VISUAL_CXX)
 #	include <intrin.h>
-#	define DE_DEBUG_BREAK() __debugbreak()
+#	include <Windows.h>
+#	include "dormouse-engine/system/windows/cleanup-macros.hpp"
+#	define DE_DEBUG_BREAK() if (IsDebuggerPresent()) { __debugbreak(); }
 #endif
 
 #include "Backtrace.hpp"

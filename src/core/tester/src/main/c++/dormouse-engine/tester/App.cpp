@@ -1,40 +1,30 @@
-#ifndef _DORMOUSEENGINE_TESTER_MAIN_HPP_
-#define _DORMOUSEENGINE_TESTER_MAIN_HPP_
-
-#define BOOST_TEST_NO_MAIN
-
-#ifdef DE_TEST_MODULE
-#	define BOOST_TEST_MODULE DE_TEST_MODULE
-#else
-#	error "DE_TEST_MODULE not defined""
-#endif /* DE_TEST_MODULE */
+#include "App.hpp"
 
 #include <iostream>
+#include <memory>
+
+#define BOOST_TEST_NO_MAIN
+#define BOOST_TEST_MODULE "dormouse_engine::tester"
+#include <boost/test/included/unit_test.hpp>
 
 #include "dormouse-engine/system/platform.hpp"
 #include "dormouse-engine/logger/Logger.hpp"
 #include "dormouse-engine/logger/LoggerStringbuf.hpp"
 #include "dormouse-engine/logger/appender/DebugWindowAppender.hpp"
 #include "dormouse-engine/logger/layout/EmptyLayout.hpp"
-#include "dormouse-engine/engine/app/App.hpp"
 
-#include <boost/test/included/unit_test.hpp>
+using namespace dormouse_engine;
+using namespace dormouse_engine::tester;
 
-namespace /* anonymous */
-{
+namespace /* anonymous */ {
 
-boost::unit_test::test_suite* initUnitTest(int, char**) {
-	return nullptr;
-}
-
-// TODO: temp
-inline dormouse_engine::wm::Window::Configuration windowConfiguration() {
+dormouse_engine::wm::Window::Configuration windowConfiguration() {
 	using namespace dormouse_engine;
-	
+
 	auto result = wm::Window::Configuration();
 
-	result.className = "RenderingFixtureWindow";
-	result.title = "Rendering fixture window";
+	result.className = "DormouseEngineTesterWindow";
+	result.title = "dormouse_engine::tester";
 	result.fullscreen = false;
 	result.width = 800u;
 	result.height = 600u;
@@ -42,15 +32,7 @@ inline dormouse_engine::wm::Window::Configuration windowConfiguration() {
 	return result;
 }
 
-} // anonymous namespace
-
-DE_APP_MAIN()
-	using namespace dormouse_engine;
-
-	auto app = engine::app::App(*wm::GlobalMainArguments::instance(), windowConfiguration());
-
-	app.run();
-
+void redirectCErrToLogger() {
 #if defined(DE_COMPILER_VISUAL_CXX)
 	auto boostTestLogger = std::make_shared<logger::Logger>(logger::Level::INFO);
 	auto boostTestLayout = std::make_shared<logger::layout::EmptyLayout>();
@@ -70,8 +52,29 @@ DE_APP_MAIN()
 	std::wcerr.rdbuf(&wLoggerStringbuf);
 	std::wclog.rdbuf(&wLoggerStringbuf);
 #endif /* DE_COMPILER_VISUAL_CXX */
-
-	return boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
 }
 
-#endif /* _DORMOUSEENGINE_TESTER_MAIN_HPP_ */
+boost::unit_test::test_suite* initUnitTest(int, char**) {
+	return nullptr;
+}
+
+} // anonymous namespace
+
+App::App() :
+	engineApp_(*wm::GlobalMainArguments::instance(), windowConfiguration())
+{
+}
+
+void App::run() {
+	for (;;) {
+		engineApp_.update();
+	}
+}
+
+DE_APP_MAIN()
+	redirectCErrToLogger();
+
+	App().run();
+
+	// return boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
+}

@@ -66,7 +66,7 @@ private:
 void declareClass() {
 	ponder::Class::declare<Class>(Class::CLASS_NAME)
 		.tag(ClassTag::SERIALISABLE)
-		.property("s", &Class::s).tag(PropertyTag::SHADER_PARAMETER)
+		.property("s", &Class::s).tag(PropertyTag::TRANSIENT)
 		.property("i", &Class::i)
 		.property("ni", &Class::ni)
 		;
@@ -181,10 +181,10 @@ void behaviour(Object o, const void* expectedObjectPtr = nullptr) {
 
 		if (property.name() == "s") {
 			// Behaviour may be driven by property tags
-			BOOST_CHECK(property.hasTag(PropertyTag::SHADER_PARAMETER));
+			BOOST_CHECK(property.hasTag(PropertyTag::TRANSIENT));
 			BOOST_CHECK_EQUAL(property.kind(), ponder::ValueKind::String);
 		} else {
-			BOOST_CHECK(!property.hasTag(PropertyTag::SHADER_PARAMETER));
+			BOOST_CHECK(!property.hasTag(PropertyTag::TRANSIENT));
 		}
 	}
 

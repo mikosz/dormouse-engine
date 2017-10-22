@@ -4,3 +4,7 @@ structure.library_project("essentials", function()
 		links { "exceptions" }
 	end
 	)
+
+project "essentials-unit-test"
+	add_gmock_files()
+	

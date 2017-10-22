@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(CallsInitialiseWithArguments) {
 	BOOST_CHECK_EQUAL(initialised->s(), "some text");
 }
 
-BOOST_AUTO_TEST_CASE(CantInitialisedAnInitialisedObject) {
+BOOST_AUTO_TEST_CASE(CantInitialiseAnInitialisedObject) {
 	auto initialiser = MockInitialisable::Initialiser::createInitialisable<MockInitialisable>();
 	initialiser.initialise();
 	
