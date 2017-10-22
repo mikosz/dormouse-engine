@@ -9,6 +9,7 @@
 #include "../Resource.hpp"
 #include "../Texture.hpp"
 #include "../Viewport.hpp"
+#include "../ScissorRect.hpp"
 #include "../InputLayout.hpp"
 #include "../Sampler.hpp"
 #include "../RenderState.hpp"
@@ -48,12 +49,20 @@ struct Internals {
 		return *rtv.renderTargetView_;
 	}
 
-	static ID3D11DepthStencilView& dxDepthStencilView(const DepthStencilView& rtv) {
-		return *rtv.depthStencilView_;
+	static ID3D11DepthStencilView* dxDepthStencilView(const DepthStencilView& rtv) {
+		return rtv.depthStencilView_.get();
 	}
 
 	static const D3D11_VIEWPORT& dxViewport(const Viewport& viewport) {
 		return viewport.viewport_;
+	}
+
+	static const D3D11_RECT* dxScissorRect(const ScissorRect& scissorRect) {
+		if (scissorRect.enabled_) {
+			return &scissorRect.scissorRect_;
+		} else {
+			return nullptr;
+		}
 	}
 
 	static ID3D11InputLayout* dxInputLayoutPtr(const InputLayout& inputLayout) {

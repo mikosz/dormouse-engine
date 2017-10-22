@@ -21,8 +21,7 @@ graphics::PixelFormat::DataType elementDataType(
 	return graphics::PixelFormat::DataType::UNKNOWN;
 }
 
-graphics::InputLayout createInputLayout(
-	graphics::Device& graphicsDevice,
+graphics::InputLayout::Elements deduceInputLayoutElements(
 	essentials::ConstBufferView compiledVertexShaderObjectData
 	)
 {
@@ -64,7 +63,7 @@ graphics::InputLayout createInputLayout(
 			);
 	}
 
-	return graphics::InputLayout(graphicsDevice, std::move(elements));
+	return elements;
 }
 
 } // anonymous namespace
@@ -73,6 +72,14 @@ InputLayout::InputLayout(
 	graphics::Device& graphicsDevice,
 	essentials::ConstBufferView compiledVertexShaderObjectData
 	) :
-	inputLayout_(createInputLayout(graphicsDevice, compiledVertexShaderObjectData))
+	inputLayout_(graphicsDevice, deduceInputLayoutElements(compiledVertexShaderObjectData))
+{
+}
+
+InputLayout::InputLayout(
+	graphics::Device& graphicsDevice,
+	const graphics::InputLayout::Elements& elements
+	) :
+	inputLayout_(graphicsDevice, elements)
 {
 }

@@ -2,9 +2,14 @@
 #include <boost/test/auto_unit_test.hpp>
 
 #include "dormouse-engine/graphics/Image.hpp"
+#include "dormouse-engine/graphics/RenderState.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/tester/RenderingFixture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
+#include "dormouse-engine/renderer/command/CommandKey.hpp"
+#include "dormouse-engine/renderer/command/CommandBuffer.hpp"
+#include "dormouse-engine/renderer/control/Control.hpp"
+#include "dormouse-engine/renderer/control/RenderState.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -31,15 +36,16 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 
 	auto renderStateConfiguration = graphics::RenderState::Configuration();
 
-	auto commandKey = command::CommandKey();
-	commandKey.attributes.fullscreenLayerId = command::FullscreenLayerId::HUD;
-	commandKey.attributes.viewportId = command::ViewportId::FULLSCREEN;
-	commandKey.attributes.viewportLayer = command::ViewportLayer::HUD;
-	commandKey.attributes.translucencyType = command::TranslucencyType::OPAQUE;
-	commandKey.attributes.depth = 0u;
-	commandKey.attributes.materialId = 0u;
+	auto commandKey = command::CommandKey(
+		command::FullscreenLayerId::HUD,
+		command::ViewportId::FULLSCREEN,
+		command::ViewportLayer::HUD,
+		command::TranslucencyType::OPAQUE,
+		0,
+		0
+		);
 
-	const auto renderControl = Control(
+	const auto renderControl = control::Control(
 		commandKey,
 		graphicsDevice().depthStencil(),
 		graphicsDevice().backBuffer(),

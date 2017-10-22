@@ -28,7 +28,7 @@ wm::Window::Configuration windowConfiguration() {
 } // anonymous namespace
 
 WindowedFixture::WindowedFixture() :
-	app_(std::make_shared<wm::App>(mainArguments())),
-	window_(windowConfiguration(), app_)
+	app_(mainArguments()),
+	window_(windowConfiguration(), essentials::make_observer(&app_))
 {
 }

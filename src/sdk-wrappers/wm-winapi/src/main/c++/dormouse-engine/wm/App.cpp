@@ -19,7 +19,5 @@ void App::update() {
 		if (message.message == WM_QUIT) {
 			closeRequested_ = true;
 		}
-
-		continue;
 	}
 }

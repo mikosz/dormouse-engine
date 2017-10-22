@@ -32,8 +32,6 @@ public:
 
 		size_t size;
 
-		size_t stride;
-
 		bool allowModifications;
 
 		bool allowCPURead;

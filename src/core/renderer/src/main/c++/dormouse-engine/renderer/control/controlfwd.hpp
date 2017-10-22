@@ -10,6 +10,7 @@ class RenderTargetView;
 class ResourceView;
 class Sampler;
 class Viewport;
+class Control;
 
 } // namespace dormouse_engine::renderer::control
 

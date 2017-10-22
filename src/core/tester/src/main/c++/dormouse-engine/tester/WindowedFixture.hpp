@@ -12,7 +12,7 @@ public:
 	WindowedFixture();
 
 	wm::App& app() {
-		return *app_;
+		return app_;
 	}
 
 	wm::Window& window() {
@@ -25,7 +25,7 @@ public:
 
 private:
 
-	std::shared_ptr<wm::App> app_;
+	wm::App app_;
 
 	wm::Window window_;
 

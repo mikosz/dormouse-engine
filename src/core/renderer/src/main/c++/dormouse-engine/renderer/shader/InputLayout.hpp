@@ -18,6 +18,11 @@ public:
 		essentials::ConstBufferView compiledVertexShaderObjectData
 		);
 
+	InputLayout(
+		graphics::Device& graphicsDevice,
+		const graphics::InputLayout::Elements& elements
+		);
+
 	void bind(graphics::CommandList& commandList) const {
 		commandList.setInputLayout(inputLayout_);
 	}

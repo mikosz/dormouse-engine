@@ -86,12 +86,16 @@ void CommandList::copy(const Resource& source, const Resource& target) {
 
 void CommandList::setRenderTarget(const RenderTargetView& renderTarget, const DepthStencilView& depthStencil) {
 	auto* dxRTV = &detail::Internals::dxRenderTargetView(renderTarget);
-	auto& dxDSV = detail::Internals::dxDepthStencilView(depthStencil);
-	deviceContext_->OMSetRenderTargets(1, &dxRTV, &dxDSV);
+	auto* dxDSV = detail::Internals::dxDepthStencilView(depthStencil);
+	deviceContext_->OMSetRenderTargets(1, &dxRTV, dxDSV);
 }
 
 void CommandList::setViewport(const Viewport& viewport) {
 	deviceContext_->RSSetViewports(1, &detail::Internals::dxViewport(viewport));
+}
+
+void CommandList::setScissorRect(const ScissorRect& scissorRect) {
+	deviceContext_->RSSetScissorRects(1, detail::Internals::dxScissorRect(scissorRect));
 }
 
 void CommandList::setInputLayout(const InputLayout& inputLayout) noexcept {
@@ -142,23 +146,17 @@ void CommandList::setConstantBuffer(const Buffer& buffer, ShaderType stage, size
 	}
 }
 
-void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset) {
+void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset, size_t stride) {
 	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
 	auto format = DXGI_FORMAT();
 	
-	if (buf != nullptr) {
-		auto desc = D3D11_BUFFER_DESC();
-		buf->GetDesc(&desc);
+	assert(stride == 2 || stride == 4);
 
-		if (desc.StructureByteStride == 2) {
-			format = DXGI_FORMAT_R16_UINT;
-		} else if (desc.StructureByteStride == 4) {
-			format = DXGI_FORMAT_R32_UINT;
-		} else {
-			throw dormouse_engine::exceptions::LogicError(
-				"Unexpected byte stride for index buffer: " + std::to_string(desc.StructureByteStride));
-		}
+	if (stride == 2) {
+		format = DXGI_FORMAT_R16_UINT;
+	} else if (stride == 4) {
+		format = DXGI_FORMAT_R32_UINT;
 	}
 
 	deviceContext_->IASetIndexBuffer(buf, format, static_cast<UINT>(offset));

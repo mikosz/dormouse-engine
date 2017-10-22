@@ -89,6 +89,7 @@ std::string formatHLSLType(const PixelFormat& format) {
 
 	switch (channelType) {
 	case PixelFormat::DataType::FLOAT:
+	case PixelFormat::DataType::UNORM:
 		result = "float";
 		break;
 	default:

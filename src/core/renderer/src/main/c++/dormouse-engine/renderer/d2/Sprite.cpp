@@ -14,9 +14,11 @@
 #include "dormouse-engine/essentials/debug.hpp"
 #include "dormouse-engine/essentials/observer_ptr.hpp"
 #include "dormouse-engine/math/Vector.hpp"
+#include "../command/CommandBuffer.hpp"
+#include "../command/DrawCommand.hpp"
+#include "../control/Control.hpp"
 #include "../control/Sampler.hpp"
 #include "../control/RenderState.hpp"
-#include "../command/DrawCommand.hpp"
 #include "../shader/Technique.hpp"
 #include "../shader/MergedProperty.hpp"
 #include "../shader/NamedProperty.hpp"
@@ -93,7 +95,6 @@ private:
 		configuration.allowModifications = false;
 		configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
 		configuration.size = initialData.size() * sizeof(initialData.front());
-		configuration.stride = sizeof(initialData.front());
 
 		return graphics::Buffer(graphicsDevice, std::move(configuration), essentials::viewBuffer(initialData));
 	}
@@ -145,8 +146,9 @@ void Sprite::render(
 	const Control& renderControl
 	) const
 {
-	SpriteCommon::instance()->render(cmd_, *this, properties, renderControl);
-	commandBuffer.add(essentials::make_observer(&cmd_));
+	// TODO: 0 will not work if render called multiple times per frame
+	auto& cmd = commandBuffer.create(command::CommandBuffer::CommandId{ this, 0 });
+	SpriteCommon::instance()->render(cmd, *this, properties, renderControl);
 }
 
 control::Sampler Sprite::sampler() const noexcept {

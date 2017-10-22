@@ -25,9 +25,9 @@ public:
 
 	constexpr static auto NDC_NEAR = -1.0f;
 
-	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = true;
+	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = false;
 
-	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = false;
+	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = !VECTOR_IS_SINGLE_ROW_MATRIX;
 
 	using DeviceDestroyedHandler = std::function<void()>;
 
@@ -73,6 +73,7 @@ public:
 
 	void submit(CommandList& commandList);
 
+	// TODO: duplicated with CommandList::lock, remove
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
 	Texture backBuffer() const {

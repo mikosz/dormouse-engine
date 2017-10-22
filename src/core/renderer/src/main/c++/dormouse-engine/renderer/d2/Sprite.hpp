@@ -9,9 +9,9 @@
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/math/Transform.hpp"
-#include "../control/Control.hpp"
-#include "../command/CommandBuffer.hpp"
-#include "../command/DrawCommand.hpp"
+#include "../control/ResourceView.hpp"
+#include "../control/controlfwd.hpp"
+#include "../command/commandfwd.hpp"
 #include "../shader/Property.hpp"
 #include "Layout.hpp"
 
@@ -31,7 +31,7 @@ public:
 	void render(
 		command::CommandBuffer& commandBuffer,
 		const shader::Property& properties,
-		const Control& renderControl
+		const control::Control& renderControl
 		) const;
 
 	control::ResourceView texture() const noexcept {
@@ -49,8 +49,6 @@ public:
 	}
 
 private:
-
-	mutable command::DrawCommand cmd_;
 
 	control::ResourceView textureView_;
 

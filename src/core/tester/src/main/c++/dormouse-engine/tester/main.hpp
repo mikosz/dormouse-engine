@@ -16,10 +16,9 @@
 #include "dormouse-engine/logger/LoggerStringbuf.hpp"
 #include "dormouse-engine/logger/appender/DebugWindowAppender.hpp"
 #include "dormouse-engine/logger/layout/EmptyLayout.hpp"
+#include "dormouse-engine/engine/app/App.hpp"
 
 #include <boost/test/included/unit_test.hpp>
-
-#include "dormouse-engine/wm/App.hpp"
 
 namespace /* anonymous */
 {
@@ -28,10 +27,29 @@ boost::unit_test::test_suite* initUnitTest(int, char**) {
 	return nullptr;
 }
 
+// TODO: temp
+inline dormouse_engine::wm::Window::Configuration windowConfiguration() {
+	using namespace dormouse_engine;
+	
+	auto result = wm::Window::Configuration();
+
+	result.className = "RenderingFixtureWindow";
+	result.title = "Rendering fixture window";
+	result.fullscreen = false;
+	result.width = 800u;
+	result.height = 600u;
+
+	return result;
+}
+
 } // anonymous namespace
 
 DE_APP_MAIN()
 	using namespace dormouse_engine;
+
+	auto app = engine::app::App(*wm::GlobalMainArguments::instance(), windowConfiguration());
+
+	app.run();
 
 #if defined(DE_COMPILER_VISUAL_CXX)
 	auto boostTestLogger = std::make_shared<logger::Logger>(logger::Level::INFO);

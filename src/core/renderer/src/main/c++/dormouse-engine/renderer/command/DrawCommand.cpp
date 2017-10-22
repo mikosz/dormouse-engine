@@ -67,7 +67,7 @@ void DrawCommand::submit(graphics::CommandList& commandList, const Command* prev
 	technique_->bind(commandList);
 
 	commandList.setVertexBuffer(vertexBuffer_, 0u, vertexStride_);
-	commandList.setIndexBuffer(indexBuffer_, 0u);
+	commandList.setIndexBuffer(indexBuffer_, 0u, indexStride_);
 
 	if (indexCount_ > 0u) {
 		commandList.drawIndexed(0u, indexCount_, primitiveTopology_);

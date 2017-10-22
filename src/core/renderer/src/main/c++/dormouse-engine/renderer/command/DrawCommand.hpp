@@ -50,9 +50,10 @@ public:
 		vertexStride_ = vertexStride;
 	}
 
-	void setIndexBuffer(graphics::Buffer indexBuffer, size_t indexCount) {
+	void setIndexBuffer(graphics::Buffer indexBuffer, size_t indexCount, size_t indexStride) {
 		indexBuffer_ = std::move(indexBuffer);
 		indexCount_ = indexCount;
+		indexStride_ = indexStride;
 	}
 
 	void setPrimitiveTopology(graphics::PrimitiveTopology primitiveTopology) {
@@ -113,6 +114,8 @@ private:
 	size_t vertexStride_ = 0u;
 
 	graphics::Buffer indexBuffer_;
+	
+	size_t indexStride_ = 0u;
 
 	size_t indexCount_ = 0u;
 
