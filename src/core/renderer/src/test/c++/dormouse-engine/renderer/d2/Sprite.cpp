@@ -4,7 +4,7 @@
 #include "dormouse-engine/graphics/Image.hpp"
 #include "dormouse-engine/graphics/RenderState.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
-#include "dormouse-engine/tester/RenderingFixture.hpp"
+#include "dormouse-engine/tester/EngineTesterFixture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
 #include "dormouse-engine/renderer/command/CommandKey.hpp"
 #include "dormouse-engine/renderer/command/CommandBuffer.hpp"

@@ -65,16 +65,12 @@ App::App() :
 {
 }
 
-void App::run() {
-	for (;;) {
-		engineApp_.update();
-	}
+void App::update() {
+	engineApp_.update();
 }
 
 DE_APP_MAIN()
 	redirectCErrToLogger();
 
-	App().run();
-
-	// return boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
+	return boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
 }

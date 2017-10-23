@@ -2,7 +2,7 @@
 #include <boost/test/auto_unit_test.hpp>
 
 #include "dormouse-engine/renderer/control/ResourceView.hpp"
-#include "dormouse-engine/tester/RenderingFixture.hpp"
+#include "dormouse-engine/tester/EngineTesterFixture.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;

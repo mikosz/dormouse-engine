@@ -1,4 +1,4 @@
-#include "RenderingFixture.hpp"
+#include "EngineTesterFixture.hpp"
 
 #define BOOST_TEST_NO_LIB
 #include <boost/test/auto_unit_test.hpp>
@@ -46,7 +46,7 @@ renderer::control::Viewport createViewport(const wm::Window& window) {
 
 } // anonymous namespace
 
-RenderingFixture::RenderingFixture() :
+EngineTesterFixture::EngineTesterFixture() :
 	graphicsDevice_(window().handle(), graphicsDeviceConfiguration()),
 	fullscreenViewport_(createViewport(window()))
 {
@@ -62,7 +62,7 @@ RenderingFixture::RenderingFixture() :
 	renderer::control::DepthStencilView::initialiseSystem(graphicsDevice_);
 }
 
-void RenderingFixture::compareWithReferenceScreen(size_t index) {
+void EngineTesterFixture::compareWithReferenceScreen(size_t index) {
 	auto& commandList = graphicsDevice_.getImmediateCommandList();
 
 	auto screenshotPixels = essentials::ByteVector();

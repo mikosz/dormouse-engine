@@ -1,16 +1,14 @@
 #ifndef _DORMOUSEENGINE_TESTER_RENDERINGFIXTURE_HPP_
 #define _DORMOUSEENGINE_TESTER_RENDERINGFIXTURE_HPP_
 
-#include "dormouse-engine/graphics/Device.hpp"
-#include "dormouse-engine/renderer/control/Viewport.hpp"
-#include "WindowedFixture.hpp"
+#include "App.hpp"
 
 namespace dormouse_engine::tester {
 
-class RenderingFixture : public WindowedFixture {
+class EngineTesterFixture : public WindowedFixture {
 public:
 
-	RenderingFixture();
+	EngineTesterFixture();
 
 	graphics::Device& graphicsDevice() {
 		return graphicsDevice_;
@@ -22,11 +20,7 @@ public:
 
 	void compareWithReferenceScreen(size_t index);
 
-private:
-
-	graphics::Device graphicsDevice_;
-
-	renderer::control::Viewport fullscreenViewport_;
+	App& testerApp();
 
 };
 

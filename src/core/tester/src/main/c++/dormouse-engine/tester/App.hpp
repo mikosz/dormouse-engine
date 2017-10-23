@@ -10,7 +10,7 @@ public:
 
 	App();
 
-	void run();
+	void update();
 
 private:
 
