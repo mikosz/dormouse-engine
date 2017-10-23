@@ -25,6 +25,10 @@ struct Camera : Parent {};
 template <class Parent = essentials::Null>
 struct Screen : Parent {};
 
+struct LocalWithID {
+	int id_;
+};
+
 } // namespace basis
 
 } // namespace dormouse_engine::math
