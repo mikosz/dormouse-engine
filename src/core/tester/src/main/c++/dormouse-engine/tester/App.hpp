@@ -24,6 +24,10 @@ public:
 		return engineApp_.graphicsDevice();
 	}
 
+	renderer::control::Viewport fullscreenViewport() const noexcept {
+		return fullscreenViewport_;
+	}
+
 private:
 
 	engine::App engineApp_;

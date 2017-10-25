@@ -49,7 +49,7 @@ void App::frame() {
 
 	graphicsDevice_.beginScene();
 
-	onRenderBroadcaster_.notify();
+	onRenderBroadcaster_.notify(rendererCommandBuffer_);
 
 	imguiHost_.render(graphicsDevice_, rendererCommandBuffer_);
 

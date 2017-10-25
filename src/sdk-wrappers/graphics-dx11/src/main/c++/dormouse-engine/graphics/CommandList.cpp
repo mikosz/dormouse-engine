@@ -151,12 +151,14 @@ void CommandList::setIndexBuffer(const Buffer& buffer, size_t offset, size_t str
 
 	auto format = DXGI_FORMAT();
 	
-	assert(stride == 2 || stride == 4);
+	if (buf != nullptr) {
+		assert(stride == 2 || stride == 4);
 
-	if (stride == 2) {
-		format = DXGI_FORMAT_R16_UINT;
-	} else if (stride == 4) {
-		format = DXGI_FORMAT_R32_UINT;
+		if (stride == 2) {
+			format = DXGI_FORMAT_R16_UINT;
+		} else if (stride == 4) {
+			format = DXGI_FORMAT_R32_UINT;
+		}
 	}
 
 	deviceContext_->IASetIndexBuffer(buf, format, static_cast<UINT>(offset));

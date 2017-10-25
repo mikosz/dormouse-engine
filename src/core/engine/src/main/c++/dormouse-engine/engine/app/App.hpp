@@ -21,9 +21,9 @@ public:
 
 	using OnUpdateRegistrar = EventBroadcaster<>::ListenerRegistrar;
 
-	using OnRenderListener = EventListener<>;
+	using OnRenderListener = EventListener<renderer::command::CommandBuffer&>;
 
-	using OnRenderRegistrar = EventBroadcaster<>::ListenerRegistrar;
+	using OnRenderRegistrar = EventBroadcaster<renderer::command::CommandBuffer&>::ListenerRegistrar;
 
 	App(const wm::MainArguments& mainArguments, const wm::Window::Configuration& mainWindowConfiguration);
 
@@ -36,11 +36,11 @@ public:
 	}
 
 	OnUpdateRegistrar subscribeToOnUpdate(OnUpdateListener listener) {
-		onUpdateBroadcaster_.subscribe(std::move(listener));
+		return onUpdateBroadcaster_.subscribe(std::move(listener));
 	}
 
 	OnRenderRegistrar subscribeToOnRender(OnRenderListener listener) {
-		onRenderBroadcaster_.subscribe(std::move(listener));
+		return onRenderBroadcaster_.subscribe(std::move(listener));
 	}
 
 	wm::Window& mainWindow() noexcept {
@@ -55,7 +55,7 @@ private:
 
 	using OnUpdateBroadcaster = EventBroadcaster<>;
 
-	using OnRenderBroadcaster = EventBroadcaster<>;
+	using OnRenderBroadcaster = EventBroadcaster<renderer::command::CommandBuffer&>;
 
 	wm::App wmApp_;
 

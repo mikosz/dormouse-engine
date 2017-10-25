@@ -16,7 +16,7 @@
 #include "dormouse-engine/logger/Logger.hpp"
 #include "dormouse-engine/logger/LoggerStringbuf.hpp"
 #include "dormouse-engine/logger/appender/DebugWindowAppender.hpp"
-#include "dormouse-engine/logger/layout/EmptyLayout.hpp"
+#include "dormouse-engine/logger/layout/BasicLayout.hpp"
 #include "dormouse-engine/graphics/Image.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
@@ -60,22 +60,13 @@ renderer::control::Viewport createViewport(const wm::Window& window) {
 void redirectCErrToLogger() {
 #if defined(DE_COMPILER_VISUAL_CXX)
 	auto boostTestLogger = std::make_shared<logger::Logger>(logger::Level::INFO);
-	auto boostTestLayout = std::make_shared<logger::layout::EmptyLayout>();
+	auto boostTestLayout = std::make_shared<logger::layout::BasicLayout>();
 	auto boostTestAppender = std::make_shared<logger::appender::DebugWindowAppender>(
 		logger::Level::INFO, std::move(boostTestLayout));
 
 	boostTestLogger->addAppender(std::move(boostTestAppender));
 
-	auto loggerStringbuf = logger::LoggerStringbuf<char>(std::move(boostTestLogger));
-	std::cout.rdbuf(&loggerStringbuf);
-	std::cerr.rdbuf(&loggerStringbuf);
-	std::clog.rdbuf(&loggerStringbuf);
-
-	// TODO: this probably won't work
-	auto wLoggerStringbuf = logger::LoggerStringbuf<wchar_t>(std::move(boostTestLogger));
-	std::wcout.rdbuf(&wLoggerStringbuf);
-	std::wcerr.rdbuf(&wLoggerStringbuf);
-	std::wclog.rdbuf(&wLoggerStringbuf);
+	//boost::unit_test::unit_test_log.set_stream();
 #endif /* DE_COMPILER_VISUAL_CXX */
 }
 

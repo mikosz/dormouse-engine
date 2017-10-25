@@ -22,10 +22,12 @@ namespace /* anonymous */ {
 BOOST_AUTO_TEST_SUITE(RendererSpriteTestSuite);
 
 BOOST_AUTO_TEST_CASE(RendersSprites) {
+	auto& app = *tester::GlobalApp::instance();
+
 	auto texturePath = "test/renderer/sprite-texture.png"s;
 	auto textureData = essentials::test_utils::readBinaryFile(texturePath);
 	auto textureImage = graphics::Image::load(essentials::viewBuffer(textureData), texturePath);
-	auto texture = graphics::Texture(graphicsDevice(), textureImage);
+	auto texture = graphics::Texture(app.graphicsDevice(), textureImage);
 	auto sprite = Sprite(texture);
 
 	sprite.layout().size().x() = Ndc(0.5f);
@@ -47,25 +49,27 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 
 	const auto renderControl = control::Control(
 		commandKey,
-		graphicsDevice().depthStencil(),
-		graphicsDevice().backBuffer(),
-		fullscreenViewport(),
-		control::RenderState(graphicsDevice(), control::RenderState::OPAQUE)
+		app.graphicsDevice().depthStencil(),
+		app.graphicsDevice().backBuffer(),
+		app.fullscreenViewport(),
+		control::RenderState(app.graphicsDevice(), control::RenderState::OPAQUE)
 		);
 
 	auto& testerApp = *tester::GlobalApp::instance();
 
-	testerApp.engineApp().subscribeToOnRender(
-		[]() {
-			sprite.render(
-				commandBuffer,
-				shader::Property(),
-				renderControl
-				);			
-		}
-		);
+	{
+		auto onRenderRegistrar = testerApp.engineApp().subscribeToOnRender(
+			engine::App::OnRenderListener([&sprite, &renderControl](auto& commandBuffer) {
+				sprite.render(
+					commandBuffer,
+					shader::Property(),
+					renderControl
+					);			
+			})
+			);
 
-	testerApp.frame();
+		testerApp.frame();
+	}
 
 	testerApp.compareWithReferenceScreen(0);
 }
