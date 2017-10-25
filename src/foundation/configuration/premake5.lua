@@ -6,4 +6,6 @@ structure.library_project(
 	)
 
 project "configuration-unit-test"
+	includedirs(ponder_include_dir())
+	link_ponder_libs()
 	add_gmock_files()

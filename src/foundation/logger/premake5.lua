@@ -6,6 +6,7 @@ structure.library_project(
 	)
 
 project "logger-unit-test"
+	includedirs(ponder_include_dir())
+	link_ponder_libs()
 	add_gmock_files()
-project "*"
 	

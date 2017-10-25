@@ -7,6 +7,8 @@
 #define BOOST_TEST_MODULE "dormouse_engine::tester"
 #include <boost/test/included/unit_test.hpp>
 
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/categories.hpp>
 #include <boost/filesystem.hpp>
 
 #include "dormouse-engine/essentials/Range.hpp"
@@ -56,19 +58,28 @@ renderer::control::Viewport createViewport(const wm::Window& window) {
 	return renderer::control::Viewport(configuration);
 }
 
-// TODO: just change reporter in boost test
-void redirectCErrToLogger() {
-#if defined(DE_COMPILER_VISUAL_CXX)
-	auto boostTestLogger = std::make_shared<logger::Logger>(logger::Level::INFO);
-	auto boostTestLayout = std::make_shared<logger::layout::BasicLayout>();
-	auto boostTestAppender = std::make_shared<logger::appender::DebugWindowAppender>(
-		logger::Level::INFO, std::move(boostTestLayout));
+class LoggerSink : public boost::iostreams::sink {
+public:
 
-	boostTestLogger->addAppender(std::move(boostTestAppender));
+	LoggerSink() {
+		logger_ = std::make_shared<logger::Logger>(logger::Level::INFO);
+		auto layout_ = std::make_shared<logger::layout::BasicLayout>();
+		auto appender_ = std::make_shared<logger::appender::DebugWindowAppender>(
+			logger::Level::INFO, std::move(layout_));
 
-	//boost::unit_test::unit_test_log.set_stream();
-#endif /* DE_COMPILER_VISUAL_CXX */
-}
+		logger_->addAppender(std::move(appender_));
+	}
+
+	std::streamsize write(const char* str, std::streamsize n) {
+		logger_->log(logger::Level::INFO) << str;
+		return n;
+	}
+
+private:
+
+	std::shared_ptr<logger::Logger> logger_;
+
+};
 
 boost::unit_test::test_suite* initUnitTest(int, char**) {
 	return nullptr;
@@ -127,7 +138,7 @@ void App::compareWithReferenceScreen(size_t index) {
 			lockedScreenshotData.pixels.get(),
 			lockedScreenshotData.pixels.get() + screenshotPixels.size(),
 			screenshotPixels.data()
-		);
+			);
 	}
 
 	const auto currentTestCaseName = boost::unit_test::framework::current_test_case().p_name.get();
@@ -177,7 +188,7 @@ void App::compareWithReferenceScreen(size_t index) {
 				1u,
 				1u,
 				pixelFormat
-			);
+				);
 
 			const auto candidatePath = referencePath.string() + ".bad";
 
@@ -190,7 +201,7 @@ void App::compareWithReferenceScreen(size_t index) {
 				referencePath.string() +
 				" different. Bad screenshot stored at " +
 				candidatePath
-			);
+				);
 		}
 	} else {
 		auto screenshotImage = graphics::Image(
@@ -199,7 +210,7 @@ void App::compareWithReferenceScreen(size_t index) {
 			1u,
 			1u,
 			pixelFormat
-		);
+			);
 
 		const auto candidatePath = referencePath.string() + ".candidate";
 
@@ -212,14 +223,20 @@ void App::compareWithReferenceScreen(size_t index) {
 			referencePath.string() +
 			" not found. Candidate stored at " +
 			candidatePath
-		);
+			);
 	}
 }
 
 // --- main
 
 DE_APP_MAIN()
-	redirectCErrToLogger();
+	auto loggerSink = LoggerSink();
+	boost::iostreams::stream<LoggerSink> loggerStream{loggerSink, 0};
+	boost::unit_test::unit_test_log.set_stream(loggerStream);
 
-	return boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
+	loggerStream << "w00t\n";
+
+	auto result = boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
+
+	return result;
 }
