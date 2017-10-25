@@ -29,7 +29,7 @@ public:
 
 	void run();
 
-	void update();
+	void frame();
 
 	bool closeRequested() {
 		return wmApp_.closeRequested();
@@ -41,6 +41,14 @@ public:
 
 	OnRenderRegistrar subscribeToOnRender(OnRenderListener listener) {
 		onRenderBroadcaster_.subscribe(std::move(listener));
+	}
+
+	wm::Window& mainWindow() noexcept {
+		return mainWindow_;
+	}
+
+	graphics::Device& graphicsDevice() noexcept {
+		return graphicsDevice_;
 	}
 
 private:
@@ -68,5 +76,11 @@ private:
 };
 
 } // namespace dormouse_engine::engine::app
+
+namespace dormouse_engine::engine {
+
+using app::App;
+
+} // namespace dormouse_engine::engine
 
 #endif /* _DORMOUSEENGINE_ENGINE_APP_APP_HPP_ */

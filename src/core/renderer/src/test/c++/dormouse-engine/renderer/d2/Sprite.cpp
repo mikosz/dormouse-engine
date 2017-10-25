@@ -4,12 +4,12 @@
 #include "dormouse-engine/graphics/Image.hpp"
 #include "dormouse-engine/graphics/RenderState.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
-#include "dormouse-engine/tester/EngineTesterFixture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
 #include "dormouse-engine/renderer/command/CommandKey.hpp"
 #include "dormouse-engine/renderer/command/CommandBuffer.hpp"
 #include "dormouse-engine/renderer/control/Control.hpp"
 #include "dormouse-engine/renderer/control/RenderState.hpp"
+#include "dormouse-engine/tester/App.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::renderer;
@@ -19,7 +19,7 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
-BOOST_FIXTURE_TEST_SUITE(RendererSpriteTestSuite, tester::RenderingFixture);
+BOOST_AUTO_TEST_SUITE(RendererSpriteTestSuite);
 
 BOOST_AUTO_TEST_CASE(RendersSprites) {
 	auto texturePath = "test/renderer/sprite-texture.png"s;
@@ -53,20 +53,21 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 		control::RenderState(graphicsDevice(), control::RenderState::OPAQUE)
 		);
 
-	graphicsDevice().beginScene();
+	auto& testerApp = *tester::GlobalApp::instance();
 
-	auto commandBuffer = command::CommandBuffer();
-	sprite.render(
-		commandBuffer,
-		shader::Property(),
-		renderControl
+	testerApp.engineApp().subscribeToOnRender(
+		[]() {
+			sprite.render(
+				commandBuffer,
+				shader::Property(),
+				renderControl
+				);			
+		}
 		);
 
-	commandBuffer.submit(graphicsDevice().getImmediateCommandList());
+	testerApp.frame();
 
-	graphicsDevice().endScene();
-
-	compareWithReferenceScreen(0);
+	testerApp.compareWithReferenceScreen(0);
 }
 
 BOOST_AUTO_TEST_SUITE_END(/* RendererSpriteTestSuite */);

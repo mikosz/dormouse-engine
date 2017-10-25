@@ -36,11 +36,11 @@ App::App(const wm::MainArguments& mainArguments, const wm::Window::Configuration
 
 void App::run() {
 	while (!wmApp_.closeRequested()) {
-		update();
+		frame();
 	}
 }
 
-void App::update() {
+void App::frame() {
 	clock_.tick();
 	wmApp_.update();
 	imguiHost_.update();
