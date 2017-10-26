@@ -19,7 +19,7 @@ PIn vs(VIn vin) {
 	PIn pin;
 	
 	float4 pos = float4(vin.posL, 0.0f, 1.0f);
-	pin.posH = mul(pos, layout_toNDC);
+	pin.posH = mul(layout_toNDC, pos);
 	pin.tex = vin.tex;
 	
 	return pin;
