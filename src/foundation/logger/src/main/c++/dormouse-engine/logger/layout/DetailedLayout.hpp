@@ -24,7 +24,7 @@ public:
 
 	/**
 	 * Formats the logged string, e.g.:
-	 *   "21.02.2015-08:31:12.125631 @ DetailedLayout.hpp:75 [WARNING] - logger-category"
+	 *   "DetailedLayout.hpp:75 @ 21.02.2015-08:31:12.125631 [WARNING] - logger-category"
 	 *   "some warning message"
 	 */
 	std::string format(Level level, const Context& context, const std::string& message) override;

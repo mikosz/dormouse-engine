@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #define BOOST_TEST_NO_MAIN
 #define BOOST_TEST_MODULE "dormouse_engine::tester"
@@ -15,10 +16,7 @@
 #include "dormouse-engine/essentials/memory.hpp"
 #include "dormouse-engine/essentials/test-utils/test-utils.hpp"
 #include "dormouse-engine/system/platform.hpp"
-#include "dormouse-engine/logger/Logger.hpp"
-#include "dormouse-engine/logger/LoggerStringbuf.hpp"
-#include "dormouse-engine/logger/appender/DebugWindowAppender.hpp"
-#include "dormouse-engine/logger/layout/BasicLayout.hpp"
+#include "dormouse-engine/logger/macros.hpp"
 #include "dormouse-engine/graphics/Image.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/renderer/d2/Sprite.hpp"
@@ -30,6 +28,8 @@
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::tester;
+
+DE_LOGGER_CATEGORY("DORMOUSE_ENGINE.TESTER.APP");
 
 namespace /* anonymous */ {
 
@@ -61,17 +61,17 @@ renderer::control::Viewport createViewport(const wm::Window& window) {
 class LoggerSink : public boost::iostreams::sink {
 public:
 
-	LoggerSink() {
-		logger_ = std::make_shared<logger::Logger>(logger::Level::INFO);
-		auto layout_ = std::make_shared<logger::layout::BasicLayout>();
-		auto appender_ = std::make_shared<logger::appender::DebugWindowAppender>(
-			logger::Level::INFO, std::move(layout_));
-
-		logger_->addAppender(std::move(appender_));
-	}
-
 	std::streamsize write(const char* str, std::streamsize n) {
-		logger_->log(logger::Level::INFO) << str;
+		buffer_ += std::string_view(str, n);
+		for (;;) {
+			const auto newlinePos = buffer_.find('\n');
+			if (newlinePos != std::string::npos) {
+				DE_LOG_INFO << buffer_.substr(0u, newlinePos);
+				buffer_.erase(0u, newlinePos + 1);
+			} else {
+				break;
+			}
+		}
 		return n;
 	}
 
@@ -79,9 +79,45 @@ private:
 
 	std::shared_ptr<logger::Logger> logger_;
 
+	std::string buffer_;
+
 };
 
+class GlobalTestLoggerStream :
+	public essentials::Singleton<
+		GlobalTestLoggerStream,
+		essentials::policy::creation::New<GlobalTestLoggerStream>
+		>
+{
+public:
+
+	GlobalTestLoggerStream() noexcept :
+		stream_(sink_)
+	{
+	}
+
+	~GlobalTestLoggerStream() {
+		stream_.flush();
+		boost::unit_test::unit_test_log.set_stream(std::cout);
+	}
+
+	void bindLogger() noexcept {
+		boost::unit_test::unit_test_log.set_stream(stream_);
+		boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_successful_tests);
+		boost::unit_test::unit_test_log.set_format(boost::unit_test::OF_CLF);
+	}
+
+private:
+
+	LoggerSink sink_;
+
+	boost::iostreams::stream<LoggerSink> stream_;
+
+};
+
+
 boost::unit_test::test_suite* initUnitTest(int, char**) {
+	GlobalTestLoggerStream::instance()->bindLogger();
 	return nullptr;
 }
 
@@ -230,13 +266,10 @@ void App::compareWithReferenceScreen(size_t index) {
 // --- main
 
 DE_APP_MAIN()
-	auto loggerSink = LoggerSink();
-	boost::iostreams::stream<LoggerSink> loggerStream{loggerSink, 0};
-	boost::unit_test::unit_test_log.set_stream(loggerStream);
-
-	loggerStream << "w00t\n";
-
-	auto result = boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
-
-	return result;
+	try {
+		int result = boost::unit_test::unit_test_main(&initUnitTest, __argc, __argv);
+		return result;
+	} catch (...) {
+		return 1;
+	}
 }
