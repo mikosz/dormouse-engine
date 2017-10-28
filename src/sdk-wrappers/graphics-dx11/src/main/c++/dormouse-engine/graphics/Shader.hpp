@@ -42,6 +42,7 @@ using GeometryShader = detail::Shader<ID3D11GeometryShader>;
 using HullShader = detail::Shader<ID3D11HullShader>;
 using DomainShader = detail::Shader<ID3D11DomainShader>;
 using PixelShader = detail::Shader<ID3D11PixelShader>;
+using ComputeShader = detail::Shader<ID3D11ComputeShader>;
 
 } // namespace dormouse_engine::graphics
 

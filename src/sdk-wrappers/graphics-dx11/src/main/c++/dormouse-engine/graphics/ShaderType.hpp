@@ -21,6 +21,7 @@ DE_ENUM(ShaderType,
 	(HULL)
 	(DOMAIN)
 	(PIXEL)
+	(COMPUTE)
 	);
 
 template <class Shader>
@@ -49,6 +50,11 @@ constexpr ShaderType shaderTypeFromShader<ID3D11DomainShader>() {
 template <>
 constexpr ShaderType shaderTypeFromShader<ID3D11PixelShader>() {
 	return ShaderType::PIXEL;
+}
+
+template <>
+constexpr ShaderType shaderTypeFromShader<ID3D11ComputeShader>() {
+	return ShaderType::COMPUTE;
 }
 
 namespace detail { void declareShaderType(); }

@@ -9,12 +9,13 @@ namespace /* anonymous */ {
 
 } // anonymous namespace
 
-TextureComparator::TextureComparator(
-	graphics::Device& graphicsDevice,
+TextureComparator::TextureComparator(graphics::Device& graphicsDevice)
+{
+}
+
+void TextureComparator::compare(
 	renderer::control::ResourceView reference,
 	renderer::control::ResourceView actual
-	) :
-	reference_(std::move(reference)),
-	actual_(std::move(actual))
+	) const
 {
 }
