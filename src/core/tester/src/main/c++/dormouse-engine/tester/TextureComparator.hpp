@@ -13,6 +13,7 @@ public:
 	TextureComparator(graphics::Device& graphicsDevice);
 
 	void compare(
+		graphics::Device& graphicsDevice,
 		renderer::control::ResourceView reference,
 		renderer::control::ResourceView actual
 		) const;

@@ -12,13 +12,13 @@ public:
 
 	COMWrapper() = default;
 
-	COMWrapper(T* comObject) :
+	COMWrapper(T* comObject) noexcept :
 		comObject_(comObject)
 	{
 	}
 
 	template <class CompatibleT>
-	COMWrapper(const COMWrapper<CompatibleT>& other) :
+	COMWrapper(const COMWrapper<CompatibleT>& other) noexcept :
 		comObject_(other.get())
 	{
 		if (comObject_) {
@@ -26,7 +26,7 @@ public:
 		}
 	}
 
-	COMWrapper(const COMWrapper& other) :
+	COMWrapper(const COMWrapper& other) noexcept :
 		comObject_(other.comObject_)
 	{
 		if (comObject_) {
@@ -34,60 +34,60 @@ public:
 		}
 	}
 
-	COMWrapper(COMWrapper&& other) :
+	COMWrapper(COMWrapper&& other) noexcept :
 		COMWrapper()
 	{
 		swap(other);
 	}
 
-	~COMWrapper() {
+	~COMWrapper() noexcept {
 		reset();
 	}
 
-	explicit operator bool() const {
+	explicit operator bool() const noexcept {
 		return comObject_ != nullptr;
 	}
 
-	COMWrapper& operator=(COMWrapper other) {
+	COMWrapper& operator=(COMWrapper other) noexcept {
 		swap(other);
 		return *this;
 	}
 
-	T* operator->() const {
+	T* operator->() const noexcept {
 		assert(comObject_ != nullptr);
 		return comObject_;
 	}
 
-	T& operator*() const {
+	T& operator*() const noexcept {
 		assert(comObject_ != nullptr);
 		return *comObject_;
 	}
 
-	operator T*() const {
+	operator T*() const noexcept {
 		return get();
 	}
 
-	void reset() {
+	void reset() noexcept {
 		if (comObject_) {
 			comObject_->Release();
 			comObject_ = 0;
 		}
 	}
 
-	void reset(T* comObject) {
+	void reset(T* comObject) noexcept {
 		reset();
 		comObject_ = comObject;
 	}
 
-	void swap(COMWrapper& other) {
+	void swap(COMWrapper& other) noexcept {
 		std::swap(comObject_, other.comObject_);
 	}
 
-	T*& get() { // TODO: WTF? Texture2D::initialise crashes when doing &get()
+	T*& get() noexcept { // TODO: WTF? Texture2D::initialise crashes when doing &get()
 		return comObject_;
 	}
 
-	T* get() const {
+	T* get() const noexcept {
 		return comObject_;
 	}
 

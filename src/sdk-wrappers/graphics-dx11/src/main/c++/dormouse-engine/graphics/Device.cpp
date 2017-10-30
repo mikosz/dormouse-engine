@@ -272,12 +272,3 @@ Device::LockedData Device::lock(Resource& data, LockPurpose lockPurpose) {
 		}
 		);
 }
-
-void Device::submit(CommandList& /*commandList*/) {
-	/*system::windows::COMWrapper<ID3D11CommandList> d3dCommandList;
-	checkDirectXCall(
-		commandList.internalDeviceContext().FinishCommandList(false, &d3dCommandList.get()),
-		"Failed to finish a command list"
-		); // TODO: false?
-	detail::Internals::dxDeviceContext(immediateCommandList_).ExecuteCommandList(d3dCommandList, false);*/ // TODO: false?
-}

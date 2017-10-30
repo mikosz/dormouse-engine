@@ -101,6 +101,10 @@ struct Internals {
 		return pixelShader.shader_.get();
 	}
 
+	static ID3D11ComputeShader* dxComputeShaderPtr(const ComputeShader& computeShader) {
+		return computeShader.shader_.get();
+	}
+
 };
 
 } // namespace dormouse_engine::graphics::detail

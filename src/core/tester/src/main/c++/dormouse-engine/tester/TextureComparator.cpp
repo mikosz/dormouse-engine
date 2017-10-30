@@ -14,8 +14,11 @@ TextureComparator::TextureComparator(graphics::Device& graphicsDevice)
 }
 
 void TextureComparator::compare(
+	graphics::Device& graphicsDevice,
 	renderer::control::ResourceView reference,
 	renderer::control::ResourceView actual
 	) const
 {
+	auto& commandList = graphicsDevice.getImmediateCommandList();
+	
 }

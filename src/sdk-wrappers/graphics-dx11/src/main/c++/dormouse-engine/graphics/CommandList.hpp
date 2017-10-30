@@ -50,16 +50,18 @@ public:
 
 	CommandList() = default;
 
-	CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
+	CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept;
 
-	void initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext);
+	void initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept;
 
-	void draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology);
+	void draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) noexcept;
 
-	void drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology);
+	void drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology) noexcept;
 
 	void drawIndexedInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t startingIndex,
-		PrimitiveTopology primitiveTopology);
+		PrimitiveTopology primitiveTopology) noexcept;
+
+	void dispatch(size_t threadsX, size_t threadsY, size_t threadsZ) noexcept;
 
 	LockedData lock(const Resource& data, LockPurpose lockPurpose);
 
@@ -83,11 +85,15 @@ public:
 
 	void setShader(const PixelShader& pixelShader) noexcept;
 
+	void setShader(const ComputeShader& computeShader) noexcept;
+
 	void setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot);
 
 	void setIndexBuffer(const Buffer& buffer, size_t offset, size_t stride);
 
 	void setVertexBuffer(const Buffer& buffer, size_t slot, size_t stride);
+
+	void setUnorderedAccessView();
 
 	void setResource(const ResourceView& resource, ShaderType stage, size_t slot);
 

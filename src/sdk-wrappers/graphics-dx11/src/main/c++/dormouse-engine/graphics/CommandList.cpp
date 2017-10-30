@@ -20,27 +20,27 @@
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
-CommandList::CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) :
+CommandList::CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept :
 	deviceContext_(std::move(internalDeviceContext))
 {
 }
 
-void CommandList::initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) {
+void CommandList::initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept {
 	deviceContext_ = internalDeviceContext;
 }
 
-void CommandList::draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) {
+void CommandList::draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) noexcept {
 	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	deviceContext_->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startingIndex));
 }
 
-void CommandList::drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology) {
+void CommandList::drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology) noexcept {
 	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	deviceContext_->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startingIndex), 0);
 }
 
 void CommandList::drawIndexedInstanced(size_t vertexCountPerInstance, size_t instanceCount,
-	size_t startingIndex, PrimitiveTopology primitiveTopology)
+	size_t startingIndex, PrimitiveTopology primitiveTopology) noexcept
 {
 	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	deviceContext_->DrawIndexedInstanced(
@@ -49,6 +49,14 @@ void CommandList::drawIndexedInstanced(size_t vertexCountPerInstance, size_t ins
 		static_cast<UINT>(startingIndex),
 		0,
 		0u
+		);
+}
+
+void CommandList::dispatch(size_t threadGroupsX, size_t threadGroupsY, size_t threadGroupsZ) noexcept {
+	deviceContext_->Dispatch(
+		static_cast<UINT>(threadGroupsX),
+		static_cast<UINT>(threadGroupsY),
+		static_cast<UINT>(threadGroupsZ)
 		);
 }
 
@@ -122,6 +130,10 @@ void CommandList::setShader(const PixelShader& pixelShader) noexcept {
 	deviceContext_->PSSetShader(detail::Internals::dxPixelShaderPtr(pixelShader), nullptr, 0);
 }
 
+void CommandList::setShader(const ComputeShader& computeShader) noexcept {
+	deviceContext_->CSSetShader(detail::Internals::dxComputeShaderPtr(computeShader), nullptr, 0);
+}
+
 void CommandList::setConstantBuffer(const Buffer& buffer, ShaderType stage, size_t slot) {
 	auto* buf = static_cast<ID3D11Buffer*>(detail::Internals::dxResourcePtr(buffer));
 
@@ -171,6 +183,10 @@ void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot, size_t stri
 	auto offsetParam = 0u;
 
 	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);
+}
+
+void CommandList::setUnorderedAccessView() noexcept {
+	deviceContext_->CSSetUnorderedAccessViews(slot, )
 }
 
 void CommandList::setResource(const ResourceView& resourceView, ShaderType stage, size_t slot) {
