@@ -185,8 +185,8 @@ void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot, size_t stri
 	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);
 }
 
-void CommandList::setUnorderedAccessView() noexcept {
-	deviceContext_->CSSetUnorderedAccessViews(slot, )
+void CommandList::setUnorderedAccessView(const UnorderedAccessView& unorderedAccessView, size_t slot) noexcept {
+	deviceContext_->CSSetUnorderedAccessViews(slot, 1, &unorderedAccessView, 1);
 }
 
 void CommandList::setResource(const ResourceView& resourceView, ShaderType stage, size_t slot) {

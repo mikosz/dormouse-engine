@@ -61,6 +61,19 @@ private:
 
 };
 
+class UnorderedAccessView {
+public:
+
+	UnorderedAccessView(const Resource& resource);
+
+private:
+
+	system::windows::COMWrapper<ID3D11UnorderedAccessView> uav_;
+
+	friend struct detail::Internals;
+
+};
+
 } // namespace dormouse_engine::graphics
 
 #endif /* _DORMOUSEENGINE_GRAPHICS_RESOURCE_HPP_ */

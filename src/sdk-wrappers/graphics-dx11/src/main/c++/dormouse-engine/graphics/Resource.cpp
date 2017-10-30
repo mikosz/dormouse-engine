@@ -43,3 +43,18 @@ Resource::Id ResourceView::resourceId() const {
 	resourceView_->GetResource(&dxResource);
 	return reinterpret_cast<std::uintptr_t>(dxResource);
 }
+
+UnorderedAccessView::UnorderedAccessView(const Resource& resource) {
+	auto& device = detail::Internals::dxDevice(resource);
+	auto* dxResource = detail::Internals::dxResourcePtr(resource);
+
+	auto desc = D3D11_UNORDERED_ACCESS_VIEW_DESC();
+	std::memset(&desc, 0, sizeof(desc));
+
+	desc.
+
+	checkDirectXCall(
+		device.CreateUnorderedAccessView(dxResource, desc, &uav_.get()),
+		"Failed to create an unordered access view of resource"
+		);
+}
