@@ -45,6 +45,10 @@ struct Internals {
 		return resourceView.resourceView_.get();
 	}
 
+	static ID3D11UnorderedAccessView* dxUnorderedAccessViewPtr(const UnorderedAccessView& unorderedAccessView) {
+		return unorderedAccessView.uav_.get();
+	}
+
 	static ID3D11RenderTargetView& dxRenderTargetView(const RenderTargetView& rtv) {
 		return *rtv.renderTargetView_;
 	}

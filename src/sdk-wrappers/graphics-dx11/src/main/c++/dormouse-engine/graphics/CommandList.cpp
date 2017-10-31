@@ -185,10 +185,6 @@ void CommandList::setVertexBuffer(const Buffer& buffer, size_t slot, size_t stri
 	deviceContext_->IASetVertexBuffers(static_cast<UINT>(slot), 1, &buf, &strideParam, &offsetParam);
 }
 
-void CommandList::setUnorderedAccessView(const UnorderedAccessView& unorderedAccessView, size_t slot) noexcept {
-	deviceContext_->CSSetUnorderedAccessViews(slot, 1, &unorderedAccessView, 1);
-}
-
 void CommandList::setResource(const ResourceView& resourceView, ShaderType stage, size_t slot) {
 	auto* srv = detail::Internals::dxResourceViewPtr(resourceView);
 
@@ -211,6 +207,11 @@ void CommandList::setResource(const ResourceView& resourceView, ShaderType stage
 	default:
 		throw dormouse_engine::exceptions::LogicError("Unknown shader type: " + toString(stage));
 	}
+}
+
+void CommandList::setUnorderedAccessView(const UnorderedAccessView& unorderedAccessView, size_t slot) noexcept {
+	auto* uav = detail::Internals::dxUnorderedAccessViewPtr(unorderedAccessView);
+	deviceContext_->CSSetUnorderedAccessViews(static_cast<UINT>(slot), 1, &uav, nullptr);
 }
 
 void CommandList::setSampler(const Sampler& sampler, ShaderType stage, size_t slot) {

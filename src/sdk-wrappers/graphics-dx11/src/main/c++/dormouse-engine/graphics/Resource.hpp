@@ -64,7 +64,14 @@ private:
 class UnorderedAccessView {
 public:
 
-	UnorderedAccessView(const Resource& resource);
+	UnorderedAccessView() = default;
+
+	UnorderedAccessView(
+		const Buffer& buffer,
+		PixelFormat elementFormat,
+		size_t firstElementIdx,
+		size_t elementCount
+		);
 
 private:
 

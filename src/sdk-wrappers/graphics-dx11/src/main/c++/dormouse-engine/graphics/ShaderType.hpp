@@ -12,6 +12,7 @@ struct ID3D11GeometryShader;
 struct ID3D11HullShader;
 struct ID3D11DomainShader;
 struct ID3D11PixelShader;
+struct ID3D11ComputeShader;
 
 namespace dormouse_engine::graphics {
 

@@ -30,6 +30,7 @@ class PixelFormat;
 class RenderTargetView;
 class DepthStencilView;
 class ResourceView;
+class UnorderedAccessView;
 
 class CommandList {
 public:
@@ -93,9 +94,9 @@ public:
 
 	void setVertexBuffer(const Buffer& buffer, size_t slot, size_t stride);
 
-	void setUnorderedAccessView();
-
 	void setResource(const ResourceView& resource, ShaderType stage, size_t slot);
+
+	void setUnorderedAccessView(const UnorderedAccessView& unorderedAccessView, size_t slot) noexcept;
 
 	void setSampler(const Sampler& sampler, ShaderType stage, size_t slot);
 
