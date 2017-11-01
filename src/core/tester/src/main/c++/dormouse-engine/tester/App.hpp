@@ -4,6 +4,7 @@
 #include "dormouse-engine/essentials/policy/creation/New.hpp"
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/engine/app/App.hpp"
+#include "TextureComparator.hpp"
 
 namespace dormouse_engine::tester {
 
@@ -33,6 +34,8 @@ private:
 	engine::App engineApp_;
 
 	renderer::control::Viewport fullscreenViewport_; // TODO: this needs to be easily accessible from somewhere else
+
+	TextureComparator textureComparator_;
 
 };
 

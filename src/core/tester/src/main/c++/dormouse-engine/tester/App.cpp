@@ -125,7 +125,8 @@ boost::unit_test::test_suite* initUnitTest(int, char**) {
 
 App::App() :
 	engineApp_(*wm::GlobalMainArguments::instance(), windowConfiguration()),
-	fullscreenViewport_(createViewport(engineApp_.mainWindow()))
+	fullscreenViewport_(createViewport(engineApp_.mainWindow())),
+	textureComparator_(graphicsDevice())
 {
 	renderer::d2::Sprite::initialiseSystem(
 		graphicsDevice(),
@@ -146,36 +147,23 @@ void App::frame() {
 void App::compareWithReferenceScreen(size_t index) {
 	auto& commandList = graphicsDevice().getImmediateCommandList();
 
-	auto screenshotPixels = essentials::ByteVector();
 	auto screenshotRowPitch = size_t();
 
 	const auto pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM; // TODO
 	const auto width = engineApp_.mainWindow().clientWidth();
 	const auto height = engineApp_.mainWindow().clientHeight();
 
-	{
-		auto configuration = graphics::Texture::Configuration2d();
-		configuration.allowCPURead = true;
-		configuration.allowGPUWrite = true;
-		configuration.allowModifications = true;
-		configuration.width = width;
-		configuration.height = height;
-		configuration.pixelFormat = pixelFormat;
+	auto screenshotTextureConfiguration = graphics::Texture::Configuration2d();
+	screenshotTextureConfiguration.allowCPURead = true;
+	screenshotTextureConfiguration.allowGPUWrite = true;
+	screenshotTextureConfiguration.allowModifications = true;
+	screenshotTextureConfiguration.width = width;
+	screenshotTextureConfiguration.height = height;
+	screenshotTextureConfiguration.pixelFormat = pixelFormat;
 
-		auto screenshot = graphics::Texture(graphicsDevice(), configuration);
+	auto screenshot = graphics::Texture(graphicsDevice(), screenshotTextureConfiguration);
 
-		commandList.copy(graphicsDevice().backBuffer(), screenshot);
-
-		auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
-		screenshotRowPitch = lockedScreenshotData.rowPitch;
-
-		screenshotPixels.resize(configuration.height * screenshotRowPitch);
-		std::copy(
-			lockedScreenshotData.pixels.get(),
-			lockedScreenshotData.pixels.get() + screenshotPixels.size(),
-			screenshotPixels.data()
-			);
-	}
+	commandList.copy(graphicsDevice().backBuffer(), screenshot);
 
 	const auto currentTestCaseName = boost::unit_test::framework::current_test_case().p_name.get();
 
@@ -185,39 +173,32 @@ void App::compareWithReferenceScreen(size_t index) {
 		;
 
 	if (boost::filesystem::exists(referencePath)) {
-		// TODO: do this on the GPU, will be wayyy faster and wayyyyyyy cooler, also would avoid all
-		// this hacking with row pitches etc
 		const auto referenceImageData = essentials::test_utils::readBinaryFile(referencePath);
 		const auto referenceImage = graphics::Image::load(
 			essentials::viewBuffer(referenceImageData), referencePath);
+		const auto referenceTexture = graphics::Texture(graphicsDevice(), referenceImage);
 
-		const auto referencePixels = referenceImage.pixels();
+		const auto same = textureComparator_.compare(
+			graphicsDevice(),
+			referenceTexture,
+			screenshot,
+			width,
+			height
+			);
 
-		const auto minBufferSize = (height - 1) * pixelFormat.rowPitch(width) + width;
-		BOOST_REQUIRE(screenshotPixels.size() >= minBufferSize);
-		BOOST_REQUIRE(referencePixels.size() >= minBufferSize);
+		if (!same) {
+			auto screenshotPixels = essentials::ByteVector();
 
-		auto different = false;
+			auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+			screenshotRowPitch = lockedScreenshotData.rowPitch;
 
-		for (const auto rowIdx : essentials::IndexRange(0u, height)) {
-			const auto referenceRowOffset = rowIdx * pixelFormat.rowPitch(width);
-			const auto screenshotRowOffset = rowIdx * screenshotRowPitch;
+			screenshotPixels.resize(height * screenshotRowPitch);
+			std::copy(
+				lockedScreenshotData.pixels.get(),
+				lockedScreenshotData.pixels.get() + screenshotPixels.size(),
+				screenshotPixels.data()
+				);
 
-			for (const auto byteIdx : essentials::IndexRange(0u, width * pixelFormat.pixelSize())) {
-				const auto referenceByteOffset = referenceRowOffset + byteIdx;
-				const auto screenshotByteOffset = screenshotRowOffset + byteIdx;
-				if (referencePixels.data()[referenceByteOffset] != screenshotPixels[screenshotByteOffset]) {
-					different = true;
-					break;
-				}
-			}
-
-			if (different) {
-				break;
-			}
-		}
-
-		if (different) {
 			auto screenshotImage = graphics::Image(
 				std::move(screenshotPixels),
 				std::make_pair(width, height),
@@ -240,6 +221,19 @@ void App::compareWithReferenceScreen(size_t index) {
 				);
 		}
 	} else {
+		// TODO: duplicated
+		auto screenshotPixels = essentials::ByteVector();
+
+		auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+		screenshotRowPitch = lockedScreenshotData.rowPitch;
+
+		screenshotPixels.resize(height * screenshotRowPitch);
+		std::copy(
+			lockedScreenshotData.pixels.get(),
+			lockedScreenshotData.pixels.get() + screenshotPixels.size(),
+			screenshotPixels.data()
+			);
+
 		auto screenshotImage = graphics::Image(
 			std::move(screenshotPixels),
 			std::make_pair(width, height),

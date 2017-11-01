@@ -3,7 +3,8 @@
 
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Shader.hpp"
-#include "dormouse-engine/renderer/control/ResourceView.hpp"
+#include "dormouse-engine/graphics/Resource.hpp"
+#include "dormouse-engine/graphics/Buffer.hpp"
 
 namespace dormouse_engine::tester {
 
@@ -12,15 +13,23 @@ public:
 
 	TextureComparator(graphics::Device& graphicsDevice);
 
-	void compare(
+	bool compare(
 		graphics::Device& graphicsDevice,
-		renderer::control::ResourceView reference,
-		renderer::control::ResourceView actual
+		const graphics::ResourceView& reference,
+		const graphics::ResourceView& actual,
+		size_t width,
+		size_t height
 		) const;
 
 private:
 
 	graphics::ComputeShader shader_;
+
+	graphics::Buffer resultGPU_;
+
+	graphics::Buffer resultCPU_;
+
+	graphics::UnorderedAccessView resultUAV_;
 
 };
 

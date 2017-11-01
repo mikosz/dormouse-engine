@@ -16,12 +16,16 @@ namespace dormouse_engine::graphics {
 
 DE_ENUM_VALUES(
 	PixelFormatId,
+	(UNKNOWN)(DXGI_FORMAT_UNKNOWN)
+
 	(R32_FLOAT)(DXGI_FORMAT_R32_FLOAT)
 	(R32G32_FLOAT)(DXGI_FORMAT_R32G32_FLOAT)
 	(R32G32B32_FLOAT)(DXGI_FORMAT_R32G32B32_FLOAT)
 	(R32G32B32A32_FLOAT)(DXGI_FORMAT_R32G32B32A32_FLOAT)
 
 	(R32_UINT)(DXGI_FORMAT_R32_UINT)
+
+	(R8_UINT)(DXGI_FORMAT_R8_UINT)
 
 	(R8G8B8A8_UNORM)(DXGI_FORMAT_R8G8B8A8_UNORM)
 	(B8G8R8A8_UNORM)(DXGI_FORMAT_B8G8R8A8_UNORM)
@@ -182,6 +186,8 @@ constexpr PixelFormat operator<<(PixelFormat lhs, PixelFormat::Channel rhs) {
 
 // --- channels
 
+constexpr auto X_UNKNOWN = PixelFormat::Channel(PixelFormat::ChannelType::RESERVED, PixelFormat::DataType::UNKNOWN, 0u);
+
 constexpr auto R32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::RED, PixelFormat::DataType::FLOAT, 32u);
 constexpr auto G32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::GREEN, PixelFormat::DataType::FLOAT, 32u);
 constexpr auto B32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::BLUE, PixelFormat::DataType::FLOAT, 32u);
@@ -191,6 +197,8 @@ constexpr auto X32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::X, Pix
 constexpr auto Y32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::Y, PixelFormat::DataType::FLOAT, 32u);
 constexpr auto Z32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::Z, PixelFormat::DataType::FLOAT, 32u);
 constexpr auto W32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::W, PixelFormat::DataType::FLOAT, 32u);
+
+constexpr auto R8_UINT = PixelFormat::Channel(PixelFormat::ChannelType::RED, PixelFormat::DataType::UINT, 8u);
 
 constexpr auto R32_UINT = PixelFormat::Channel(PixelFormat::ChannelType::RED, PixelFormat::DataType::UINT, 32u);
 
@@ -213,6 +221,8 @@ constexpr auto D32_FLOAT = PixelFormat::Channel(PixelFormat::ChannelType::DEPTH,
 
 // --- formats
 
+constexpr auto FORMAT_UNKNOWN = PixelFormat() << X_UNKNOWN;
+
 constexpr auto FORMAT_R32_FLOAT = PixelFormat() << R32_FLOAT;
 constexpr auto FORMAT_R32G32_FLOAT = PixelFormat() << R32_FLOAT << G32_FLOAT;
 constexpr auto FORMAT_R32G32B32_FLOAT = PixelFormat() << R32_FLOAT << G32_FLOAT << B32_FLOAT;
@@ -222,6 +232,8 @@ constexpr auto FORMAT_X32_FLOAT = PixelFormat() << X32_FLOAT;
 constexpr auto FORMAT_X32Y32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT;
 constexpr auto FORMAT_X32Y32Z32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT << Z32_FLOAT;
 constexpr auto FORMAT_X32Y32Z32W32_FLOAT = PixelFormat() << X32_FLOAT << Y32_FLOAT << Z32_FLOAT << W32_FLOAT;
+
+constexpr auto FORMAT_R8_UINT = PixelFormat() << R8_UINT;
 
 constexpr auto FORMAT_R32_UINT = PixelFormat() << R32_UINT;
 
@@ -242,6 +254,8 @@ constexpr auto FORMAT_D32_FLOAT = PixelFormat() << D32_FLOAT;
 namespace detail {
 
 constexpr const auto FORMAT_BY_ID = essentials::makeArray(
+	std::make_pair(PixelFormatId::UNKNOWN, FORMAT_UNKNOWN),
+
 	std::make_pair(PixelFormatId::R32_FLOAT, FORMAT_R32_FLOAT),
 	std::make_pair(PixelFormatId::R32G32_FLOAT, FORMAT_R32G32_FLOAT),
 	std::make_pair(PixelFormatId::R32G32B32_FLOAT, FORMAT_R32G32B32_FLOAT),
@@ -251,6 +265,8 @@ constexpr const auto FORMAT_BY_ID = essentials::makeArray(
 	std::make_pair(PixelFormatId::R32G32_FLOAT, FORMAT_X32Y32_FLOAT),
 	std::make_pair(PixelFormatId::R32G32B32_FLOAT, FORMAT_X32Y32Z32_FLOAT),
 	std::make_pair(PixelFormatId::R32G32B32A32_FLOAT, FORMAT_X32Y32Z32W32_FLOAT),
+
+	std::make_pair(PixelFormatId::R8_UINT, FORMAT_R8_UINT),
 
 	std::make_pair(PixelFormatId::R32_UINT, FORMAT_R32_UINT),
 
