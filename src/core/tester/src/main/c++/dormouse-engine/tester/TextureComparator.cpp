@@ -13,6 +13,8 @@ using namespace std::string_literals;
 
 namespace /* anonymous */ {
 
+using ShaderBoolType = std::uint32_t; // #TODO_temp: move to an appropriate place (Shader?)
+
 graphics::ComputeShader createComparatorShader(graphics::Device& graphicsDevice) {
 	const auto shaderCode = essentials::test_utils::readBinaryFile("tester/texture-comparator.hlsl");
 
@@ -37,9 +39,9 @@ graphics::Buffer createGPUResultBuffer(graphics::Device& graphicsDevice) {
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = true;
-	configuration.allowModifications = false;
-	configuration.purpose = graphics::Buffer::CreationPurpose::UNORDERED_ACCESS;
-	configuration.size = sizeof(bool);
+	configuration.allowCPUWrite = false;
+	configuration.purpose = graphics::Buffer::Purpose::UNORDERED_ACCESS;
+	configuration.size = sizeof(std::uint32_t);
 
 	return graphics::Buffer(graphicsDevice, configuration);
 }
@@ -48,8 +50,8 @@ graphics::Buffer createCPUResultBuffer(graphics::Device& graphicsDevice) {
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = true;
 	configuration.allowGPUWrite = true;
-	configuration.allowModifications = true;
-	configuration.size = sizeof(bool);
+	configuration.allowCPUWrite = true;
+	configuration.size = sizeof(std::uint32_t);
 
 	return graphics::Buffer(graphicsDevice, configuration);
 }
@@ -60,7 +62,7 @@ TextureComparator::TextureComparator(graphics::Device& graphicsDevice) :
 	shader_(createComparatorShader(graphicsDevice)),
 	resultGPU_(createGPUResultBuffer(graphicsDevice)),
 	resultCPU_(createCPUResultBuffer(graphicsDevice)),
-	resultUAV_(resultGPU_, graphics::FORMAT_R8_UINT, 0, 1)
+	resultUAV_(resultGPU_, graphics::FORMAT_R32_UINT, 0, 1)
 {
 }
 
@@ -75,13 +77,16 @@ bool TextureComparator::compare(
 	auto& commandList = graphicsDevice.getImmediateCommandList();
 	
 	{
-		const auto lockedResult = commandList.lock(resultGPU_, graphics::CommandList::LockPurpose::WRITE_DISCARD);
-		*lockedResult.pixels = true;
+		const auto lockedResult = commandList.lock(resultCPU_, graphics::CommandList::LockPurpose::WRITE);
+		reinterpret_cast<ShaderBoolType&>(*lockedResult.pixels) = true;
 	}
+
+	commandList.copy(resultCPU_, resultGPU_);
 
 	commandList.setResource(reference, graphics::ShaderType::COMPUTE, 0);
 	commandList.setResource(actual, graphics::ShaderType::COMPUTE, 1);
 	commandList.setUnorderedAccessView(resultUAV_, 0);
+	commandList.setShader(shader_);
 
 	commandList.dispatch((width + 15) / 16, (height + 15) / 16, 1);
 
@@ -89,6 +94,6 @@ bool TextureComparator::compare(
 
 	{
 		const auto lockedResult = commandList.lock(resultCPU_, graphics::CommandList::LockPurpose::READ);
-		return *lockedResult.pixels;
+		return reinterpret_cast<ShaderBoolType&>(*lockedResult.pixels);
 	}
 }

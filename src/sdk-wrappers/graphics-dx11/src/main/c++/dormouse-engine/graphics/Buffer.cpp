@@ -27,7 +27,7 @@ system::windows::COMWrapper<ID3D11Resource> createBufferResource(
 	desc.ByteWidth = static_cast<UINT>(configuration.size);
 	desc.BindFlags = static_cast<UINT>(configuration.purpose);
 
-	if (configuration.allowModifications) {
+	if (configuration.allowCPUWrite) {
 		if (configuration.allowCPURead) {
 			desc.Usage = D3D11_USAGE_STAGING;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;

@@ -3,6 +3,7 @@
 
 #include "dormouse-engine/essentials/policy/creation/New.hpp"
 #include "dormouse-engine/essentials/Singleton.hpp"
+#include "dormouse-engine/graphics/Texture.hpp"
 #include "dormouse-engine/engine/app/App.hpp"
 #include "TextureComparator.hpp"
 
@@ -36,6 +37,10 @@ private:
 	renderer::control::Viewport fullscreenViewport_; // TODO: this needs to be easily accessible from somewhere else
 
 	TextureComparator textureComparator_;
+
+	graphics::Texture screenshotGPU_;
+
+	graphics::Texture screenshotCPU_;
 
 };
 

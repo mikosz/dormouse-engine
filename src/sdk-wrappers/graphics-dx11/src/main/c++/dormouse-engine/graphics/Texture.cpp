@@ -22,7 +22,7 @@ void setupDescCommon(DescType& desc, const Texture::Configuration1d& configurati
 	desc.BindFlags = configuration.purposeFlags.integralValue();
 	desc.MiscFlags = (configuration.arraySize == 6) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u;
 
-	if (configuration.allowModifications) {
+	if (configuration.allowCPUWrite) {
 		if (configuration.allowCPURead) {
 			desc.Usage = D3D11_USAGE_STAGING;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
@@ -140,13 +140,13 @@ system::windows::COMWrapper<ID3D11Resource> createImageResource(Device& device, 
 	auto configuration = Texture::Configuration2d();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = false;
-	configuration.allowModifications = false;
+	configuration.allowCPUWrite = false;
 	configuration.arraySize = image.arraySize();
 	configuration.width = image.size().first;
 	configuration.height = image.size().second;
 	configuration.mipLevels = image.mipLevels();
 	configuration.pixelFormat = image.pixelFormat();
-	configuration.purposeFlags = Texture::CreationPurpose::SHADER_RESOURCE;
+	configuration.purposeFlags = Texture::Purpose::SHADER_RESOURCE;
 	
 	return createTexture2dResource(device, configuration, image.pixels());
 }

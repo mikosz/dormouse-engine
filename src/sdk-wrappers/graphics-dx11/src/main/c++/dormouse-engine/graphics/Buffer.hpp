@@ -21,7 +21,7 @@ const auto CONSTANT_BUFFER_SLOT_COUNT_PER_SHADER = D3D11_COMMONSHADER_CONSTANT_B
 class Buffer : public Resource {
 public:
 
-	enum class CreationPurpose {
+	enum class Purpose {
 		VERTEX_BUFFER = D3D11_BIND_VERTEX_BUFFER,
 		INDEX_BUFFER = D3D11_BIND_INDEX_BUFFER,
 		CONSTANT_BUFFER = D3D11_BIND_CONSTANT_BUFFER,
@@ -33,13 +33,13 @@ public:
 
 		size_t size;
 
-		bool allowModifications;
+		bool allowCPUWrite;
 
 		bool allowCPURead;
 
 		bool allowGPUWrite;
 
-		CreationPurpose purpose;
+		Purpose purpose;
 
 	};
 

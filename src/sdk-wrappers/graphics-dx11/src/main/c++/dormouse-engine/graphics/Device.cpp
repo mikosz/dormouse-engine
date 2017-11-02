@@ -201,11 +201,11 @@ Device::Device(system::windows::WindowHandle windowHandle, const Configuration& 
 	depthStencilConfig.height = screenHeight;
 	depthStencilConfig.allowGPUWrite = true;
 	depthStencilConfig.allowCPURead = false;
-	depthStencilConfig.allowModifications = false;
+	depthStencilConfig.allowCPUWrite = false;
 	depthStencilConfig.mipLevels = 1;
 	depthStencilConfig.arraySize = 1;
 	depthStencilConfig.pixelFormat = FORMAT_D32_FLOAT;
-	depthStencilConfig.purposeFlags = Texture::CreationPurpose::DEPTH_STENCIL;
+	depthStencilConfig.purposeFlags = Texture::Purpose::DEPTH_STENCIL;
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	checkDirectXCall(swapChain_->GetDesc(&swapChainDesc), "Failed to retrieve the swap chain description");

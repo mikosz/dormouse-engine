@@ -22,7 +22,7 @@ class Texture : public Resource {
 public:
 
 	DE_MEMBER_FLAG_VALUES(
-		CreationPurpose,
+		Purpose,
 		(SHADER_RESOURCE)(D3D11_BIND_SHADER_RESOURCE)
 		(RENDER_TARGET)(D3D11_BIND_RENDER_TARGET)
 		(DEPTH_STENCIL)(D3D11_BIND_DEPTH_STENCIL)
@@ -38,13 +38,13 @@ public:
 
 		PixelFormat pixelFormat;
 
-		bool allowModifications;
+		bool allowCPUWrite;
 
 		bool allowCPURead;
 
 		bool allowGPUWrite;
 
-		dormouse_engine::Mask<CreationPurpose> purposeFlags;
+		dormouse_engine::Mask<Purpose> purposeFlags;
 
 	};
 

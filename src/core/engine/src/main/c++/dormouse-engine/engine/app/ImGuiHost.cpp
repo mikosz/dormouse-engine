@@ -92,8 +92,8 @@ std::tuple<graphics::Buffer, size_t> createImguiVertexBuffer(graphics::Device& g
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = false;
-	configuration.allowModifications = true;
-	configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
+	configuration.allowCPUWrite = true;
+	configuration.purpose = graphics::Buffer::Purpose::VERTEX_BUFFER;
 	configuration.size = vertexCount * sizeof(ImDrawVert);
 
 	return { graphics::Buffer(graphicsDevice, configuration), vertexCount };
@@ -103,8 +103,8 @@ std::tuple<graphics::Buffer, size_t> createImguiIndexBuffer(graphics::Device& gr
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = false;
-	configuration.allowModifications = true;
-	configuration.purpose = graphics::Buffer::CreationPurpose::INDEX_BUFFER;
+	configuration.allowCPUWrite = true;
+	configuration.purpose = graphics::Buffer::Purpose::INDEX_BUFFER;
 	configuration.size = indexCount * sizeof(ImDrawIdx);
 
 	return { graphics::Buffer(graphicsDevice, configuration), indexCount };
@@ -114,8 +114,8 @@ graphics::Buffer createImguiConstantBuffer(graphics::Device& graphicsDevice, siz
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = false;
-	configuration.allowModifications = false;
-	configuration.purpose = graphics::Buffer::CreationPurpose::CONSTANT_BUFFER;
+	configuration.allowCPUWrite = false;
+	configuration.purpose = graphics::Buffer::Purpose::CONSTANT_BUFFER;
 	configuration.size = sizeof(math::Matrix4x4);
 
 	const auto transform = math::Transform::orthographicProjection(
@@ -228,13 +228,13 @@ ImGuiHost::ImGuiHost(time::Timer timer, graphics::Device& graphicsDevice, size_t
 	const auto pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM;
 
 	auto imguiFontAtlasConfiguration = graphics::Texture::Configuration2d();
+	imguiFontAtlasConfiguration.allowCPUWrite = false;
 	imguiFontAtlasConfiguration.allowCPURead = false;
 	imguiFontAtlasConfiguration.allowGPUWrite = false;
-	imguiFontAtlasConfiguration.allowModifications = false;
 	imguiFontAtlasConfiguration.width = imguiFontAtlasWidth;
 	imguiFontAtlasConfiguration.height = imguiFontAtlasHeight;
 	imguiFontAtlasConfiguration.pixelFormat = pixelFormat;
-	imguiFontAtlasConfiguration.purposeFlags = graphics::Texture::CreationPurpose::SHADER_RESOURCE;
+	imguiFontAtlasConfiguration.purposeFlags = graphics::Texture::Purpose::SHADER_RESOURCE;
 
 	auto imguiFontAtlasTexture = graphics::Texture(
 		graphicsDevice,

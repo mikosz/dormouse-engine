@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(RendersSprites) {
 					shader::Property(),
 					renderControl
 					);
-			})
+				})
 			);
 
 		testerApp.frame();

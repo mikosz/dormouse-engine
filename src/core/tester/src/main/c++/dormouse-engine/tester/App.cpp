@@ -115,10 +115,34 @@ private:
 
 };
 
-
 boost::unit_test::test_suite* initUnitTest(int, char**) {
 	GlobalTestLoggerStream::instance()->bindLogger();
 	return nullptr;
+}
+
+graphics::Texture createScreenshotGPUTexture(graphics::Device& graphicsDevice, size_t width, size_t height) {
+	auto configuration = graphics::Texture::Configuration2d();
+	configuration.allowCPUWrite = false;
+	configuration.allowCPURead = false;
+	configuration.allowGPUWrite = true;
+	configuration.width = width;
+	configuration.height = height;
+	configuration.purposeFlags = graphics::Texture::Purpose::SHADER_RESOURCE;
+	configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM; // TODO
+
+	return graphics::Texture(graphicsDevice, configuration);
+}
+
+graphics::Texture createScreenshotCPUTexture(graphics::Device& graphicsDevice, size_t width, size_t height) {
+	auto configuration = graphics::Texture::Configuration2d();
+	configuration.allowCPUWrite = false;
+	configuration.allowCPURead = true;
+	configuration.allowGPUWrite = true;
+	configuration.width = width;
+	configuration.height = height;
+	configuration.pixelFormat = graphics::FORMAT_R8G8B8A8_UNORM; // TODO
+
+	return graphics::Texture(graphicsDevice, configuration);
 }
 
 } // anonymous namespace
@@ -126,7 +150,17 @@ boost::unit_test::test_suite* initUnitTest(int, char**) {
 App::App() :
 	engineApp_(*wm::GlobalMainArguments::instance(), windowConfiguration()),
 	fullscreenViewport_(createViewport(engineApp_.mainWindow())),
-	textureComparator_(graphicsDevice())
+	textureComparator_(graphicsDevice()),
+	screenshotGPU_(
+		createScreenshotGPUTexture(
+			graphicsDevice(), engineApp_.mainWindow().clientWidth(), engineApp_.mainWindow().clientHeight()
+			)
+		),
+	screenshotCPU_(
+		createScreenshotCPUTexture(
+			graphicsDevice(), engineApp_.mainWindow().clientWidth(), engineApp_.mainWindow().clientHeight()
+			)
+		)
 {
 	renderer::d2::Sprite::initialiseSystem(
 		graphicsDevice(),
@@ -153,17 +187,7 @@ void App::compareWithReferenceScreen(size_t index) {
 	const auto width = engineApp_.mainWindow().clientWidth();
 	const auto height = engineApp_.mainWindow().clientHeight();
 
-	auto screenshotTextureConfiguration = graphics::Texture::Configuration2d();
-	screenshotTextureConfiguration.allowCPURead = true;
-	screenshotTextureConfiguration.allowGPUWrite = true;
-	screenshotTextureConfiguration.allowModifications = true;
-	screenshotTextureConfiguration.width = width;
-	screenshotTextureConfiguration.height = height;
-	screenshotTextureConfiguration.pixelFormat = pixelFormat;
-
-	auto screenshot = graphics::Texture(graphicsDevice(), screenshotTextureConfiguration);
-
-	commandList.copy(graphicsDevice().backBuffer(), screenshot);
+	commandList.copy(graphicsDevice().backBuffer(), screenshotGPU_);
 
 	const auto currentTestCaseName = boost::unit_test::framework::current_test_case().p_name.get();
 
@@ -178,18 +202,22 @@ void App::compareWithReferenceScreen(size_t index) {
 			essentials::viewBuffer(referenceImageData), referencePath);
 		const auto referenceTexture = graphics::Texture(graphicsDevice(), referenceImage);
 
-		const auto same = textureComparator_.compare(
+		auto same = textureComparator_.compare(
 			graphicsDevice(),
 			referenceTexture,
-			screenshot,
+			screenshotGPU_,
 			width,
 			height
 			);
 
+		BOOST_CHECK(same);
+
 		if (!same) {
 			auto screenshotPixels = essentials::ByteVector();
 
-			auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+			commandList.copy(screenshotGPU_, screenshotCPU_);
+
+			auto lockedScreenshotData = commandList.lock(screenshotCPU_, graphics::CommandList::LockPurpose::READ);
 			screenshotRowPitch = lockedScreenshotData.rowPitch;
 
 			screenshotPixels.resize(height * screenshotRowPitch);
@@ -211,7 +239,8 @@ void App::compareWithReferenceScreen(size_t index) {
 
 			screenshotImage.save(candidatePath, screenshotRowPitch);
 
-			BOOST_FAIL(
+			BOOST_CHECK_MESSAGE(
+				false,
 				"Reference image for test " +
 				currentTestCaseName +
 				" (" +
@@ -224,7 +253,9 @@ void App::compareWithReferenceScreen(size_t index) {
 		// TODO: duplicated
 		auto screenshotPixels = essentials::ByteVector();
 
-		auto lockedScreenshotData = commandList.lock(screenshot, graphics::CommandList::LockPurpose::READ);
+		commandList.copy(screenshotGPU_, screenshotCPU_);
+
+		auto lockedScreenshotData = commandList.lock(screenshotCPU_, graphics::CommandList::LockPurpose::READ);
 		screenshotRowPitch = lockedScreenshotData.rowPitch;
 
 		screenshotPixels.resize(height * screenshotRowPitch);
@@ -246,7 +277,8 @@ void App::compareWithReferenceScreen(size_t index) {
 
 		screenshotImage.save(candidatePath, screenshotRowPitch);
 
-		BOOST_FAIL(
+		BOOST_CHECK_MESSAGE(
+			false,
 			"Reference image for test " +
 			currentTestCaseName +
 			" (" +

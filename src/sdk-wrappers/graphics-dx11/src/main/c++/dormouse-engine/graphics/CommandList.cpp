@@ -153,6 +153,9 @@ void CommandList::setConstantBuffer(const Buffer& buffer, ShaderType stage, size
 	case ShaderType::PIXEL:
 		deviceContext_->PSSetConstantBuffers(static_cast<UINT>(slot), 1, &buf);
 		break;
+	case ShaderType::COMPUTE:
+		deviceContext_->CSSetConstantBuffers(static_cast<UINT>(slot), 1, &buf);
+		break;
 	default:
 		throw dormouse_engine::exceptions::LogicError("Unknown shader type: " + toString(stage));
 	}
@@ -204,6 +207,9 @@ void CommandList::setResource(const ResourceView& resourceView, ShaderType stage
 	case ShaderType::PIXEL:
 		deviceContext_->PSSetShaderResources(static_cast<UINT>(slot), 1, &srv);
 		break;
+	case ShaderType::COMPUTE:
+		deviceContext_->CSSetShaderResources(static_cast<UINT>(slot), 1, &srv);
+		break;
 	default:
 		throw dormouse_engine::exceptions::LogicError("Unknown shader type: " + toString(stage));
 	}
@@ -232,6 +238,9 @@ void CommandList::setSampler(const Sampler& sampler, ShaderType stage, size_t sl
 		break;
 	case ShaderType::PIXEL:
 		deviceContext_->PSSetSamplers(static_cast<UINT>(slot), 1, &ss);
+		break;
+	case ShaderType::COMPUTE:
+		deviceContext_->CSSetSamplers(static_cast<UINT>(slot), 1, &ss);
 		break;
 	default:
 		throw dormouse_engine::exceptions::LogicError("Unknown shader type: " + toString(stage));

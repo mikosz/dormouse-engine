@@ -92,8 +92,8 @@ private:
 
 		configuration.allowCPURead = false;
 		configuration.allowGPUWrite = false;
-		configuration.allowModifications = false;
-		configuration.purpose = graphics::Buffer::CreationPurpose::VERTEX_BUFFER;
+		configuration.allowCPUWrite = false;
+		configuration.purpose = graphics::Buffer::Purpose::VERTEX_BUFFER;
 		configuration.size = initialData.size() * sizeof(initialData.front());
 
 		return graphics::Buffer(graphicsDevice, std::move(configuration), essentials::viewBuffer(initialData));

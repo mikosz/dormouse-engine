@@ -12,8 +12,8 @@ graphics::Buffer createConstantBuffer(graphics::Device& graphicsDevice, size_t s
 	auto configuration = graphics::Buffer::Configuration();
 	configuration.allowCPURead = false;
 	configuration.allowGPUWrite = false;
-	configuration.allowModifications = true;
-	configuration.purpose = graphics::Buffer::CreationPurpose::CONSTANT_BUFFER;
+	configuration.allowCPUWrite = true;
+	configuration.purpose = graphics::Buffer::Purpose::CONSTANT_BUFFER;
 	configuration.size = size;
 	return graphics::Buffer(graphicsDevice, configuration);
 }
