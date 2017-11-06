@@ -24,10 +24,7 @@ system::windows::COMWrapper<IDXGIFactory> createDXGIFactory() {
 
 void queryAdapterAndRefreshRate(
 	IDXGIFactory& dxgiFactory,
-	system::windows::COMWrapper<IDXGIAdapter>* adapter,
-	DXGI_RATIONAL* refreshRate,
-	size_t screenWidth,
-	size_t screenHeight
+	system::windows::COMWrapper<IDXGIAdapter>* adapter
 	) {
 	checkDirectXCall(dxgiFactory.EnumAdapters(0, &adapter->get()), "Failed to enumerate video cards");
 
@@ -50,17 +47,6 @@ void queryAdapterAndRefreshRate(
 				DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &modeCount, &displayModes.front()),
 			"Failed to get display modes"
 		);
-	}
-
-	assert(modeCount == displayModes.size());
-
-	refreshRate->Numerator = 0;
-	refreshRate->Denominator = 0;
-
-	for (const auto& displayMode : displayModes) {
-		if (displayMode.Width == screenWidth && displayMode.Height == screenHeight) {
-			*refreshRate = displayMode.RefreshRate;
-		}
 	}
 }
 
@@ -87,78 +73,18 @@ void createD3DDevice(
 
 	checkDirectXCall(
 		D3D11CreateDevice(
-			0,
+			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
-			0,
+			nullptr,
 			creationFlags,
-			0,
+			nullptr,
 			0,
 			D3D11_SDK_VERSION,
 			&device->get(),
-			0,
+			nullptr,
 			&deviceContext->get()
 			),
 		"Failed to create a directx device"
-		);
-
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-
-	swapChainDesc.BufferCount = 1;
-
-	auto screenWidth = size_t();
-	auto screenHeight = size_t();
-	std::tie(screenWidth, screenHeight) = windowDimensions(windowHandle);
-
-	swapChainDesc.BufferDesc.Width = static_cast<UINT>(screenWidth);
-	swapChainDesc.BufferDesc.Height = static_cast<UINT>(screenHeight);
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // TODO: read from config or parameter
-	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-
-	if (configuration.vsync) {
-		swapChainDesc.BufferDesc.RefreshRate = refreshRate;
-	} else {
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	}
-
-	UINT sampleCount = std::min<UINT>(D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT, configuration.sampleCount);
-	UINT sampleQuality;
-
-	for (;;) {
-		if (sampleCount == 1) {
-			sampleQuality = 0;
-			break;
-		}
-
-		UINT maxSampleQuality;
-		checkDirectXCall(
-			(*device)->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &maxSampleQuality),
-			"Failed to retrieve the multisampling quality level"
-			);
-		if (maxSampleQuality == 0) {
-			sampleCount /= 2;
-		} else {
-			sampleQuality = std::min<UINT>(configuration.sampleQuality, maxSampleQuality - 1);
-			break;
-		}
-	}
-
-	swapChainDesc.SampleDesc.Count = sampleCount;
-	swapChainDesc.SampleDesc.Quality = sampleQuality;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.OutputWindow = windowHandle;
-	swapChainDesc.Windowed = !configuration.fullscreen;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-
-	checkDirectXCall(
-		dxgiFactory.CreateSwapChain(
-			*device,
-			&swapChainDesc,
-			&swapChain->get()
-			),
-		"Failed to create a directx swap chain"
 		);
 }
 
@@ -232,26 +158,6 @@ CommandList Device::createDeferredCommandList() {
 		"Failed to create a deferred context"
 		);
 	return CommandList(deferredContext);
-}
-
-void Device::beginScene() {
-	// TODO: move to pulp or disperse
-	float colour[] = { 1.0f, 0.0f, 1.0f, 1.0f };
-
-	auto& dxDeviceContext = detail::Internals::dxDeviceContext(immediateCommandList_);
-
-	dxDeviceContext.ClearRenderTargetView(
-		&detail::Internals::dxRenderTargetView(backBuffer_), colour);
-	dxDeviceContext.ClearDepthStencilView(
-		detail::Internals::dxDepthStencilView(depthStencil_),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		static_cast<UINT8>(0)
-		);
-}
-
-void Device::endScene() {
-	swapChain_->Present(configuration_.vsync, 0);
 }
 
 Device::LockedData Device::lock(Resource& data, LockPurpose lockPurpose) {

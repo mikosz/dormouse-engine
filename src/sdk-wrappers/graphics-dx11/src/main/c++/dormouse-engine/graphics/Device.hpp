@@ -67,10 +67,6 @@ public:
 
 	CommandList createDeferredCommandList();
 
-	void beginScene();
-
-	void endScene();
-
 	// TODO: duplicated with CommandList::lock, remove
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
@@ -93,8 +89,6 @@ private:
 	std::vector<DeviceDestroyedHandler> deviceDestroyedHandlers_;
 
 	CommandList immediateCommandList_;
-
-	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
 	Texture backBuffer_;
 
