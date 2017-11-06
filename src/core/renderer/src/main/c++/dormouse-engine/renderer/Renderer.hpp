@@ -3,6 +3,7 @@
 
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/Texture.hpp"
+#include "dormouse-engine/graphics/SwapChain.hpp"
 
 namespace dormouse_engine::renderer {
 
@@ -10,8 +11,9 @@ class Renderer {
 public:
 
 	Renderer(graphics::Device& graphicsDevice) :
-		renderTarget_(graphicsDevice.backBuffer()),
-		depthStencil_(graphicsDevice.depthStencil())
+		backBuffer_(graphicsDevice.backBuffer()),
+		depthBuffer_(graphicsDevice.depthStencil()),
+		swapChain_(graphicsDevice)
 	{
 	}
 
@@ -21,9 +23,11 @@ public:
 
 private:
 
-	graphics::RenderTargetView renderTarget_;
+	graphics::RenderTargetView backBuffer_;
 
-	graphics::DepthStencilView depthStencil_;
+	graphics::DepthStencilView depthBuffer_;
+
+	graphics::SwapChain swapChain_;
 
 };
 

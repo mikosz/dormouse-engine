@@ -25,10 +25,6 @@ CommandList::CommandList(system::windows::COMWrapper<ID3D11DeviceContext> intern
 {
 }
 
-void CommandList::initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept {
-	deviceContext_ = internalDeviceContext;
-}
-
 void CommandList::draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) noexcept {
 	deviceContext_->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	deviceContext_->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startingIndex));

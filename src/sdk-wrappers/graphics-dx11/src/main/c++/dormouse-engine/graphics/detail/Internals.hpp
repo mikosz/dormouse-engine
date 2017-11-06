@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "../Adapter.hpp"
 #include "../Device.hpp"
 #include "../CommandList.hpp"
 #include "../Resource.hpp"
@@ -21,6 +22,10 @@ struct Internals {
 
 	static Texture createTextureFromDX11Texture(system::windows::COMWrapper<ID3D11Texture2D> texture) {
 		return Texture(std::move(texture));
+	}
+
+	static IDXGIAdapter& dxAdapter(const Adapter& adapter) {
+		return *adapter.adapter_;
 	}
 
 	static ID3D11Device& dxDevice(const Device& device) {

@@ -54,8 +54,6 @@ public:
 
 	CommandList(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept;
 
-	void initialise(system::windows::COMWrapper<ID3D11DeviceContext> internalDeviceContext) noexcept;
-
 	void draw(size_t startingIndex, size_t vertexCount, PrimitiveTopology primitiveTopology) noexcept;
 
 	void drawIndexed(size_t startingIndex, size_t indexCount, PrimitiveTopology primitiveTopology) noexcept;

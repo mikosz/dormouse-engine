@@ -15,10 +15,11 @@
 #include "CommandList.hpp"
 #include "PrimitiveTopology.hpp"
 
-#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 
 namespace dormouse_engine::graphics {
+
+class Adapter;
 
 class Device {
 public:
@@ -55,7 +56,7 @@ public:
 
 	};
 
-	Device(system::windows::WindowHandle windowHandle, const Configuration& configuration);
+	Device(const Adapter& adapter, bool debug);
 
 	~Device();
 
@@ -70,29 +71,13 @@ public:
 	// TODO: duplicated with CommandList::lock, remove
 	LockedData lock(Resource& data, LockPurpose lockPurpose);
 
-	Texture backBuffer() const {
-		return backBuffer_;
-	}
-
-	Texture depthStencil() const {
-		return depthStencil_;
-	}
-
 private:
-
-	Configuration configuration_;
-
-	system::windows::COMWrapper<IDXGIAdapter> adapter_;
 
 	system::windows::COMWrapper<ID3D11Device> d3dDevice_;
 
 	std::vector<DeviceDestroyedHandler> deviceDestroyedHandlers_;
 
 	CommandList immediateCommandList_;
-
-	Texture backBuffer_;
-
-	Texture depthStencil_;
 
 	friend struct detail::Internals;
 
