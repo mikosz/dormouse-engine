@@ -62,8 +62,8 @@ system::windows::COMWrapper<ID3D11BlendState> createBlendState(
 
 } // anonymous namespace
 
-RenderState::RenderState(Device& renderer, const Configuration& configuration) :
-	rasteriserState_(createRasteriserState(renderer, configuration)),
-	blendState_(createBlendState(renderer, configuration))
+RenderState::RenderState(Device& device, const Configuration& configuration) :
+	rasteriserState_(createRasteriserState(device, configuration)),
+	blendState_(createBlendState(device, configuration))
 {
 }

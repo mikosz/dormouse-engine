@@ -42,7 +42,7 @@ public:
 
 	RenderState() = default;
 
-	RenderState(Device& renderer, const Configuration& configuration);
+	RenderState(Device& device, const Configuration& configuration);
 
 private:
 

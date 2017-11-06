@@ -53,7 +53,7 @@ public:
 	InputLayout() = default;
 
 	InputLayout(
-		Device& renderer,
+		Device& device,
 		const Elements& elements
 		);
 

@@ -48,7 +48,7 @@ public:
 	Sampler() {
 	}
 
-	Sampler(Device& renderer, const Configuration& configuration);
+	Sampler(Device& device, const Configuration& configuration);
 
 private:
 
