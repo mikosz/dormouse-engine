@@ -21,6 +21,10 @@ template <class InternalShaderType>
 class Shader {
 public:
 
+	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = false;
+
+	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = !VECTOR_IS_SINGLE_ROW_MATRIX;
+
 	static const auto SHADER_TYPE = shaderTypeFromShader<InternalShaderType>();
 
 	Shader() = default;

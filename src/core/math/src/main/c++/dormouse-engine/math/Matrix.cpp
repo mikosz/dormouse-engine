@@ -6,7 +6,7 @@
 
 #include "dormouse-engine/reflection/Object.hpp"
 #include "dormouse-engine/exceptions/RuntimeError.hpp"
-#include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/graphics/Shader.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::math;
@@ -26,7 +26,7 @@ void Matrix4x4::writeShaderData(essentials::BufferView buffer, graphics::ShaderD
 		throw exceptions::RuntimeError("Matrices are not writeable to class " + toString(dataType.klass));
 	}
 
-	if constexpr (math::Matrix4x4::VECTOR_IS_SINGLE_ROW_MATRIX != graphics::Device::VECTOR_IS_SINGLE_ROW_MATRIX) {
+	if constexpr (math::Matrix4x4::VECTOR_IS_SINGLE_ROW_MATRIX != graphics::VertexShader::VECTOR_IS_SINGLE_ROW_MATRIX) {
 		needsTranspose = !needsTranspose;
 	}
 

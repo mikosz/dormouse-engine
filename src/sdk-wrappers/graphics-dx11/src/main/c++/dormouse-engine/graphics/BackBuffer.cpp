@@ -15,8 +15,8 @@ namespace /* anonymous */ {
 void queryAdapterAndRefreshRate(
 	IDXGIFactory& dxgiFactory,
 	system::windows::COMWrapper<IDXGIAdapter>* adapter
-) {
-
+	)
+{
 	system::windows::COMWrapper<IDXGIOutput> output;
 	checkDirectXCall((*adapter)->EnumOutputs(0, &output.get()), "Failed to enumerate outputs");
 
@@ -57,7 +57,7 @@ Texture extractBackBuffer(IDXGISwapChain* swapChain) {
 	return detail::Internals::createTextureFromDX11Texture(std::move(texture));
 }
 
-system::windows::COMWrapper<IDXGISwapChain> createSwapChain() {
+system::windows::COMWrapper<IDXGISwapChain> createSwapChain(Device& device) {
 	assert(modeCount == displayModes.size());
 
 	refreshRate->Numerator = 0;
@@ -136,11 +136,9 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain() {
 
 } // anonymous namespace
 
-SwapChain::SwapChain(Device& device) :
+BackBuffer::BackBuffer(Device& device) :
 	swapChain_(createSwapChain(device))
 {
-	auto dxgiFactory = createDXGIFactory();
-
 	auto screenWidth = size_t();
 	auto screenHeight = size_t();
 	std::tie(screenWidth, screenHeight) = windowDimensions(windowHandle);

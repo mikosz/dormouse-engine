@@ -26,10 +26,6 @@ public:
 
 	constexpr static auto NDC_NEAR = -1.0f;
 
-	constexpr static auto VECTOR_IS_SINGLE_ROW_MATRIX = false;
-
-	constexpr static auto VECTOR_IS_SINGLE_COLUMN_MATRIX = !VECTOR_IS_SINGLE_ROW_MATRIX;
-
 	using DeviceDestroyedHandler = std::function<void()>;
 
 	using LockedData = std::unique_ptr<void, std::function<void(void*)>>;
