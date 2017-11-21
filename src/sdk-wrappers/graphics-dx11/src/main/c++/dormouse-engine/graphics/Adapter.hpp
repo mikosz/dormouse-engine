@@ -8,11 +8,39 @@
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "detail/detailfwd.hpp"
+#include "PixelFormat.hpp"
 
 #pragma comment(lib, "dxgi.lib")
 
 namespace dormouse_engine {
 namespace graphics {
+
+struct DisplayMode {
+	size_t width;
+	size_t height;
+	size_t refreshRateNumerator;
+	size_t refreshRateDenominator;
+};
+
+class Output {
+public:
+
+	Output() = default;
+
+	std::vector<DisplayMode> displayModes(PixelFormat pixelFormat) const;
+
+private:
+
+	Output(system::windows::COMWrapper<IDXGIOutput> output) :
+		output_(output)
+	{
+	}
+
+	system::windows::COMWrapper<IDXGIOutput> output_;
+
+	friend class Adapter;
+
+};
 
 class Adapter {
 public:
@@ -20,6 +48,8 @@ public:
 	static std::vector<Adapter> create();
 
 	Adapter() = default;
+
+	std::vector<Output> outputs() const;
 
 private:
 

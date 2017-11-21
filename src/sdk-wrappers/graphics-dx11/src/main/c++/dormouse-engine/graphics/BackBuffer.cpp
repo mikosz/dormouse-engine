@@ -12,33 +12,6 @@ using namespace dormouse_engine::graphics;
 
 namespace /* anonymous */ {
 
-void queryAdapterAndRefreshRate(
-	IDXGIFactory& dxgiFactory,
-	system::windows::COMWrapper<IDXGIAdapter>* adapter
-	)
-{
-	system::windows::COMWrapper<IDXGIOutput> output;
-	checkDirectXCall((*adapter)->EnumOutputs(0, &output.get()), "Failed to enumerate outputs");
-
-	auto displayModes = std::vector<DXGI_MODE_DESC>();
-	auto modeCount = UINT();
-	auto displayModeListResult = HRESULT();
-	displayModeListResult = output->GetDisplayModeList(
-		DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &modeCount, nullptr);
-	if (displayModeListResult == DXGI_ERROR_NOT_CURRENTLY_AVAILABLE) {
-		modeCount = 0;
-	} else {
-		checkDirectXCall(displayModeListResult, "Failed to get display mode count");
-
-		displayModes.resize(modeCount);
-		checkDirectXCall(
-			output->GetDisplayModeList(
-				DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &modeCount, &displayModes.front()),
-			"Failed to get display modes"
-		);
-	}
-}
-
 std::tuple<size_t, size_t> windowDimensions(system::windows::WindowHandle windowHandle) {
 	auto clientRect = RECT();
 	GetClientRect(windowHandle, &clientRect);
@@ -142,9 +115,6 @@ BackBuffer::BackBuffer(Device& device) :
 	auto screenWidth = size_t();
 	auto screenHeight = size_t();
 	std::tie(screenWidth, screenHeight) = windowDimensions(windowHandle);
-
-	DXGI_RATIONAL refreshRate;
-	queryAdapterAndRefreshRate(*dxgiFactory, &adapter_, &refreshRate, screenWidth, screenHeight);
 
 	backBuffer_ = extractBackBuffer(swapChain_);
 
