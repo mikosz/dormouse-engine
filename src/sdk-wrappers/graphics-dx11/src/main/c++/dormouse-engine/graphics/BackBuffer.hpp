@@ -4,7 +4,6 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
-#include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "Texture.hpp"
 
 namespace dormouse_engine {
@@ -15,15 +14,19 @@ class Device;
 class BackBuffer {
 public:
 
-	BackBuffer(Device& device);
+	BackBuffer() = default;
+
+	BackBuffer(Texture colourBuffer, Texture depthBuffer) :
+		colourBuffer_(std::move(colourBuffer)),
+		depthBuffer_(std::move(depthBuffer))
+	{
+	}
 
 private:
 
 	Texture colourBuffer_;
 
 	Texture depthBuffer_;
-
-	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
 };
 

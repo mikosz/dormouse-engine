@@ -16,10 +16,11 @@ namespace dormouse_engine {
 namespace graphics {
 
 struct DisplayMode {
-	size_t width;
-	size_t height;
-	size_t refreshRateNumerator;
-	size_t refreshRateDenominator;
+	size_t width = 0;
+	size_t height = 0;
+	size_t refreshRateNumerator = 0;
+	size_t refreshRateDenominator = 0;
+	PixelFormat pixelFormat;
 };
 
 class Output {

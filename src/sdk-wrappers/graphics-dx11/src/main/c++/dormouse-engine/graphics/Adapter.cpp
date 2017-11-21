@@ -49,6 +49,7 @@ std::vector<DisplayMode> Output::displayModes(PixelFormat pixelFormat) const {
 			displayMode.height = dxgiDisplayMode.Height;
 			displayMode.refreshRateNumerator = dxgiDisplayMode.RefreshRate.Numerator;
 			displayMode.refreshRateDenominator = dxgiDisplayMode.RefreshRate.Denominator;
+			displayMode.pixelFormat = pixelFormat;
 		}
 	}
 
