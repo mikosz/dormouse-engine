@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
+#include "../DirectXError.hpp"
 #include "../Adapter.hpp"
 #include "../Device.hpp"
 #include "../CommandList.hpp"
@@ -19,6 +20,16 @@
 namespace dormouse_engine::graphics::detail {
 
 struct Internals {
+
+	static system::windows::COMWrapper<IDXGIFactory> createDXGIFactory() {
+		system::windows::COMWrapper<IDXGIFactory> factory;
+		checkDirectXCall(
+			CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory.get())),
+			"Failed to create a DXGIFactory"
+			);
+
+		return factory;
+	}
 
 	static Texture createTextureFromDX11Texture(system::windows::COMWrapper<ID3D11Texture2D> texture) {
 		return Texture(std::move(texture));

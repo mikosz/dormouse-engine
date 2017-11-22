@@ -5,6 +5,7 @@
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
+#include "dormouse-engine/wm/Window.hpp"
 #include "BackBuffer.hpp"
 #include "Adapter.hpp"
 
@@ -24,7 +25,7 @@ public:
 
 	SwapChain() = default;
 
-	SwapChain(Device& device, const Configuration& configuration);
+	SwapChain(Device& device, const wm::Window& window, const Configuration& configuration);
 
 private:
 

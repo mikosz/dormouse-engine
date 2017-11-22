@@ -2,24 +2,11 @@
 
 #include "Adapter.hpp"
 
+#include "detail/Internals.hpp"
 #include "DirectXError.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
-
-namespace /* anonymous */ {
-
-system::windows::COMWrapper<IDXGIFactory> createDXGIFactory() {
-	system::windows::COMWrapper<IDXGIFactory> factory;
-	checkDirectXCall(
-		CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory.get())),
-		"Failed to create a DXGIFactory"
-	);
-
-	return factory;
-}
-
-} // anonymous namespace
 
 std::vector<DisplayMode> Output::displayModes(PixelFormat pixelFormat) const {
 	const auto dxgiFormat = static_cast<DXGI_FORMAT>(pixelFormat.id());
@@ -59,7 +46,7 @@ std::vector<DisplayMode> Output::displayModes(PixelFormat pixelFormat) const {
 std::vector<Adapter> Adapter::create() {
 	auto adapters = std::vector<Adapter>();
 
-	auto dxgiFactory = createDXGIFactory();
+	auto dxgiFactory = detail::Internals::createDXGIFactory();
 
 	auto adapterIdx = UINT(0);
 	for (;;) {

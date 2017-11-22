@@ -9,7 +9,9 @@ using namespace dormouse_engine::graphics;
 namespace /* anonymous */
 {
 
-system::windows::COMWrapper<IDXGISwapChain> createSwapChain(Device& device, const SwapChain::Configuration& configuration) {
+system::windows::COMWrapper<IDXGISwapChain> createSwapChain(
+	Device& device, wm::Window& window, const SwapChain::Configuration& configuration)
+{
 	auto swapChain = system::windows::COMWrapper<IDXGISwapChain>();
 
 	auto refreshRate = DXGI_RATIONAL();
@@ -37,6 +39,8 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain(Device& device, cons
 	UINT sampleCount = std::min<UINT>(D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT, configuration.sampleCount);
 	UINT sampleQuality;
 
+	auto& dxDevice = detail::Internals::dxDevice(device);
+
 	for (;;) {
 		if (sampleCount == 1) {
 			sampleQuality = 0;
@@ -45,7 +49,7 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain(Device& device, cons
 
 		UINT maxSampleQuality;
 		checkDirectXCall(
-			(*device)->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &maxSampleQuality),
+			dxDevice.CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &maxSampleQuality),
 			"Failed to retrieve the multisampling quality level"
 			);
 		if (maxSampleQuality == 0) {
@@ -59,15 +63,15 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain(Device& device, cons
 	swapChainDesc.SampleDesc.Count = sampleCount;
 	swapChainDesc.SampleDesc.Quality = sampleQuality;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.OutputWindow = windowHandle;
+	swapChainDesc.OutputWindow = window.handle();
 	swapChainDesc.Windowed = !configuration.fullscreen;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 	checkDirectXCall(
-		dxgiFactory.CreateSwapChain(
-			*device,
+		detail::Internals::createDXGIFactory()->CreateSwapChain(
+			&dxDevice,
 			&swapChainDesc,
-			&swapChain->get()
+			&swapChain.get()
 			),
 		"Failed to create a directx swap chain"
 		);
@@ -88,8 +92,8 @@ Texture extractBackBuffer(IDXGISwapChain& swapChain) {
 
 } // anonymous namespace
 
-SwapChain::SwapChain(Device& device, const SwapChain::Configuration& configuration) :
-	swapChain_(createSwapChain(device, configuration)),
+SwapChain::SwapChain(Device& device, const wm::Window& window, const SwapChain::Configuration& configuration) :
+	swapChain_(createSwapChain(device, window, configuration)),
 	backBuffer_(extractBackBuffer(*swapChain_))
 {
 }
