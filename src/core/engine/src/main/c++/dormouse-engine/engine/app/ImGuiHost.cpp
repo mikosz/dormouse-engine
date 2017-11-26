@@ -169,7 +169,9 @@ renderer::shader::Technique createImguiTechnique(graphics::Device& graphicsDevic
 	return technique;
 }
 
-renderer::control::Control createRenderControl(graphics::Device& graphicsDevice, size_t width, size_t height) {
+renderer::control::Control createRenderControl(
+	graphics::Device& graphicsDevice, graphics::Texture renderTarget, size_t width, size_t height)
+{
 	auto commandKey = renderer::command::CommandKey(
 		renderer::command::FullscreenLayerId::DEBUG,
 		renderer::command::ViewportId::FULLSCREEN,
@@ -179,7 +181,7 @@ renderer::control::Control createRenderControl(graphics::Device& graphicsDevice,
 		0
 		);
 
-	auto renderTarget = renderer::control::RenderTargetView(graphicsDevice.backBuffer());
+	auto renderTargetView = renderer::control::RenderTargetView(renderTarget);
 
 	auto viewportConfiguration = graphics::Viewport::Configuration(); // TODO: preset!
 	viewportConfiguration.width = static_cast<float>(width);
@@ -200,7 +202,7 @@ renderer::control::Control createRenderControl(graphics::Device& graphicsDevice,
 	return renderer::control::Control(
 		commandKey,
 		renderer::control::DepthStencilView(),
-		renderTarget,
+		renderTargetView,
 		viewport,
 		renderState
 		);
@@ -208,11 +210,17 @@ renderer::control::Control createRenderControl(graphics::Device& graphicsDevice,
 
 } // anonymous namespace
 
-ImGuiHost::ImGuiHost(time::Timer timer, graphics::Device& graphicsDevice, size_t width, size_t height) :
+ImGuiHost::ImGuiHost(
+	time::Timer timer,
+	graphics::Device& graphicsDevice,
+	graphics::Texture renderTarget,
+	size_t width,
+	size_t height
+	) :
 	timer_(std::move(timer)),
 	constantBuffer_(createImguiConstantBuffer(graphicsDevice, width, height)),
 	technique_(createImguiTechnique(graphicsDevice)),
-	renderControl_(createRenderControl(graphicsDevice, width, height))
+	renderControl_(createRenderControl(graphicsDevice, renderTarget, width, height))
 {
 	auto& imguiIO = ImGui::GetIO();
 	imguiIO.DisplaySize.x = static_cast<float>(width);

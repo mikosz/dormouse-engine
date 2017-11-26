@@ -9,7 +9,9 @@ using namespace dormouse_engine;
 using namespace dormouse_engine::graphics;
 
 std::vector<DisplayMode> Output::displayModes(PixelFormat pixelFormat) const {
-	const auto dxgiFormat = static_cast<DXGI_FORMAT>(pixelFormat.id());
+	// #TODO: pixelFormat.id() crashes the compiler :(
+	const auto dxgiFormat = static_cast<DXGI_FORMAT>(PixelFormatId::R8G8B8A8_UNORM);
+		// static_cast<DXGI_FORMAT>(pixelFormat.id());
 
 	auto displayModes = std::vector<DisplayMode>();
 	auto modeCount = UINT();

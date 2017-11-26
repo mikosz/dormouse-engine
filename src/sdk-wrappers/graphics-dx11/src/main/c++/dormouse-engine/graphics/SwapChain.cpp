@@ -1,3 +1,5 @@
+#include "graphics.pch.hpp"
+
 #include "SwapChain.hpp"
 
 #include "detail/Internals.hpp"
@@ -15,8 +17,8 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain(
 	auto swapChain = system::windows::COMWrapper<IDXGISwapChain>();
 
 	auto refreshRate = DXGI_RATIONAL();
-	refreshRate.Numerator = configuration.displayMode.refreshRateNumerator;
-	refreshRate.Denominator = configuration.displayMode.refreshRateDenominator;
+	refreshRate.Numerator = static_cast<UINT>(configuration.displayMode.refreshRateNumerator);
+	refreshRate.Denominator = static_cast<UINT>(configuration.displayMode.refreshRateDenominator);
 
 	auto swapChainDesc = DXGI_SWAP_CHAIN_DESC();
 	std::memset(&swapChainDesc, 0, sizeof(swapChainDesc));
@@ -36,32 +38,33 @@ system::windows::COMWrapper<IDXGISwapChain> createSwapChain(
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	}
 
-	UINT sampleCount = std::min<UINT>(D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT, configuration.sampleCount);
-	UINT sampleQuality;
+	auto msaaSampleCount =
+		std::min<UINT>(D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT, static_cast<UINT>(configuration.msaaSampleCount));
+	auto msaaSampleQuality = UINT();
 
 	auto& dxDevice = detail::Internals::dxDevice(device);
 
 	for (;;) {
-		if (sampleCount == 1) {
-			sampleQuality = 0;
+		if (msaaSampleCount == 1) {
+			msaaSampleQuality = 0;
 			break;
 		}
 
-		UINT maxSampleQuality;
+		auto maxSampleQuality = UINT();
 		checkDirectXCall(
-			dxDevice.CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &maxSampleQuality),
+			dxDevice.CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, msaaSampleCount, &maxSampleQuality),
 			"Failed to retrieve the multisampling quality level"
 			);
 		if (maxSampleQuality == 0) {
-			sampleCount /= 2;
+			msaaSampleCount /= 2;
 		} else {
-			sampleQuality = std::min<UINT>(configuration.sampleQuality, maxSampleQuality - 1);
+			msaaSampleQuality = std::min(static_cast<UINT>(configuration.msaaSampleQuality), maxSampleQuality - 1);
 			break;
 		}
 	}
 
-	swapChainDesc.SampleDesc.Count = sampleCount;
-	swapChainDesc.SampleDesc.Quality = sampleQuality;
+	swapChainDesc.SampleDesc.Count = msaaSampleCount;
+	swapChainDesc.SampleDesc.Quality = msaaSampleQuality;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = window.handle();
 	swapChainDesc.Windowed = !configuration.fullscreen;
@@ -92,8 +95,34 @@ Texture extractBackBuffer(IDXGISwapChain& swapChain) {
 
 } // anonymous namespace
 
-SwapChain::SwapChain(Device& device, const wm::Window& window, const SwapChain::Configuration& configuration) :
+SwapChain::SwapChain(Device& device, wm::Window& window, const Configuration& configuration) :
 	swapChain_(createSwapChain(device, window, configuration)),
-	backBuffer_(extractBackBuffer(*swapChain_))
+	backBuffer_(extractBackBuffer(*swapChain_)),
+	backBufferRTV_(backBuffer_)
 {
+}
+
+SwapChain::SwapChain(Texture backBufferTexture) :
+	backBuffer_(std::move(backBufferTexture)),
+	backBufferRTV_(backBuffer_)
+{
+}
+
+void SwapChain::clear() {
+	auto& device = detail::Internals::dxDevice(backBuffer_);
+	auto deviceContext = system::windows::COMWrapper<ID3D11DeviceContext>();
+	device.GetImmediateContext(&deviceContext.get());
+
+	float clearColour[] = { 1.0f, 0.0f, 1.0f, 1.0f };
+
+	deviceContext->ClearRenderTargetView(&detail::Internals::dxRenderTargetView(backBufferRTV_), clearColour);
+}
+
+void SwapChain::present() const {
+	if (swapChain_) {
+		checkDirectXCall(
+			swapChain_->Present(vsync_ ? 1u : 0u, 0u),
+			"Swap chain present failed"
+			);
+	}
 }

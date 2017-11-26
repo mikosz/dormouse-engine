@@ -17,7 +17,13 @@ namespace dormouse_engine::engine::app {
 class ImGuiHost final {
 public:
 
-	ImGuiHost(time::Timer timer, graphics::Device& graphicsDevice, size_t width, size_t height);
+	ImGuiHost(
+		time::Timer timer,
+		graphics::Device& graphicsDevice,
+		graphics::Texture renderTarget,
+		size_t width,
+		size_t height
+		);
 
 	void update();
 

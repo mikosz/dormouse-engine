@@ -6,8 +6,8 @@
 
 #include "dormouse-engine/system/windows/COMWrapper.hpp"
 #include "dormouse-engine/wm/Window.hpp"
-#include "BackBuffer.hpp"
 #include "Adapter.hpp"
+#include "Texture.hpp"
 
 namespace dormouse_engine {
 namespace graphics {
@@ -21,17 +21,33 @@ public:
 		DisplayMode displayMode;
 		bool fullscreen;
 		bool vsync;
+		size_t msaaSampleCount = 1;
+		size_t msaaSampleQuality = 0;
 	};
 
 	SwapChain() = default;
 
-	SwapChain(Device& device, const wm::Window& window, const Configuration& configuration);
+	SwapChain(Device& device, wm::Window& window, const Configuration& configuration);
+
+	SwapChain(Texture backBufferTexture);
+
+	void clear();
+
+	void present() const;
+
+	Texture backBuffer() const noexcept {
+		return backBuffer_;
+	}
 
 private:
 
 	system::windows::COMWrapper<IDXGISwapChain> swapChain_;
 
-	BackBuffer backBuffer_;
+	Texture backBuffer_;
+
+	RenderTargetView backBufferRTV_;
+
+	bool vsync_;
 
 };
 

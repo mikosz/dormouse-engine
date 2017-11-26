@@ -5,6 +5,7 @@
 #include "dormouse-engine/wm/App.hpp"
 #include "dormouse-engine/wm/Window.hpp"
 #include "dormouse-engine/graphics/Device.hpp"
+#include "dormouse-engine/graphics/SwapChain.hpp"
 #include "dormouse-engine/renderer/command/CommandBuffer.hpp"
 #include "dormouse-engine/renderer/control/ResourceView.hpp"
 #include "../time/WallClock.hpp"
@@ -64,6 +65,8 @@ private:
 	time::WallClock clock_;
 
 	graphics::Device graphicsDevice_;
+
+	graphics::SwapChain swapChain_;
 
 	renderer::command::CommandBuffer rendererCommandBuffer_;
 
