@@ -149,7 +149,6 @@ graphics::Texture createScreenshotCPUTexture(graphics::Device& graphicsDevice, s
 
 App::App() :
 	engineApp_(*wm::GlobalMainArguments::instance(), windowConfiguration()),
-	fullscreenViewport_(createViewport(engineApp_.mainWindow())),
 	textureComparator_(graphicsDevice()),
 	screenshotGPU_(
 		createScreenshotGPUTexture(

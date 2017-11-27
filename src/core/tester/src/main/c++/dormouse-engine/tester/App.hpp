@@ -18,23 +18,19 @@ public:
 
 	void compareWithReferenceScreen(size_t index);
 
-	engine::App& engineApp() noexcept {
-		return engineApp_;
+	engine::App& testRunnerApp() noexcept {
+		return testRunnerApp_;
 	}
 
-	graphics::Device& graphicsDevice() noexcept {
-		return engineApp_.graphicsDevice();
-	}
-
-	renderer::control::Viewport fullscreenViewport() const noexcept {
-		return fullscreenViewport_;
+	engine::App& testedApp() noexcept {
+		return testedApp_;
 	}
 
 private:
 
-	engine::App engineApp_;
+	engine::App testRunnerApp_;
 
-	renderer::control::Viewport fullscreenViewport_; // TODO: this needs to be easily accessible from somewhere else
+	engine::App testedApp_;
 
 	TextureComparator textureComparator_;
 
