@@ -45,16 +45,12 @@ struct GlobalMainArguments :
 {
 };
 
-class App {
+class MessagePump {
 public:
 
-	App(const MainArguments& mainArguments);
+	MessagePump(const MainArguments& mainArguments);
 
 	void update();
-
-	bool closeRequested() const {
-		return closeRequested_;
-	}
 
 	HINSTANCE instance() {
 		return instance_;
@@ -71,8 +67,6 @@ private:
 	LPSTR commandLine_;
 
 	int showCommand_;
-
-	bool closeRequested_;
 
 };
 

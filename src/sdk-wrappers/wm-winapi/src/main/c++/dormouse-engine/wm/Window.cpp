@@ -5,12 +5,12 @@
 #include <sstream>
 
 #include "dormouse-engine/system/windows/Error.hpp"
-#include "App.hpp"
+#include "MessagePump.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::wm;
 
-Window::Window(const Configuration& configuration, essentials::observer_ptr<App> app) :
+Window::Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> app) :
 	configuration_(configuration),
 	app_(app),
 	handle_(nullptr)

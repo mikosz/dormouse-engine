@@ -2,7 +2,7 @@
 #define _DORMOUSEENGINE_ENGINE_APP_APP_HPP_
 
 #include "dormouse-engine/essentials/event.hpp"
-#include "dormouse-engine/wm/App.hpp"
+#include "dormouse-engine/wm/MessagePump.hpp"
 #include "dormouse-engine/wm/Window.hpp"
 #include "dormouse-engine/graphics/Device.hpp"
 #include "dormouse-engine/graphics/SwapChain.hpp"

@@ -38,20 +38,6 @@ public:
 		WRITE_NO_OVERWRITE = D3D11_MAP_WRITE_NO_OVERWRITE,
 	};
 
-	struct Configuration {
-
-		bool debugDevice;
-
-		bool fullscreen;
-
-		bool vsync;
-
-		std::uint32_t sampleCount; // TODO: verify that this is a power of 2
-
-		std::uint32_t sampleQuality;
-
-	};
-
 	Device(const Adapter& adapter, bool debug);
 
 	~Device();

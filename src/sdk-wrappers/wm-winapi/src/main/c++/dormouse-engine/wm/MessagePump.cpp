@@ -1,8 +1,8 @@
-#include "App.hpp"
+#include "MessagePump.hpp"
 
 using namespace dormouse_engine::wm;
 
-App::App(const MainArguments& mainArguments) :
+MessagePump::MessagePump(const MainArguments& mainArguments) :
 	instance_(mainArguments.hinstance),
 	commandLine_(mainArguments.commandLine),
 	showCommand_(mainArguments.showCommand),
@@ -10,9 +10,9 @@ App::App(const MainArguments& mainArguments) :
 {
 }
 
-void App::update() {
-	MSG message;
-	while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
+void MessagePump::update() {
+	auto message = MSG();
+	while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 

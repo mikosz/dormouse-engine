@@ -13,7 +13,7 @@
 
 namespace dormouse_engine::wm {
 
-class App;
+class MessagePump;
 
 class Window {
 public:
@@ -32,7 +32,7 @@ public:
 
 	};
 
-	Window(const Configuration& configuration, essentials::observer_ptr<App> app);
+	Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> app);
 
 	~Window();
 
@@ -50,7 +50,7 @@ private:
 
 	Configuration configuration_;
 
-	essentials::observer_ptr<App> app_;
+	essentials::observer_ptr<MessagePump> app_;
 
 	system::windows::WindowHandle handle_;
 
