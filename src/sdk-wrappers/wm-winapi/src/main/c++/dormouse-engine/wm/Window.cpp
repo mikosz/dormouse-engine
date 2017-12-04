@@ -5,14 +5,15 @@
 #include <sstream>
 
 #include "dormouse-engine/system/windows/Error.hpp"
+#include "detail/Internals.hpp"
 #include "MessagePump.hpp"
 
 using namespace dormouse_engine;
 using namespace dormouse_engine::wm;
 
-Window::Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> app) :
+Window::Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> messagePump) :
 	configuration_(configuration),
-	app_(app),
+	messagePump_(messagePump),
 	handle_(nullptr)
 {
 	WNDCLASSEXA wndClassEx;
@@ -20,7 +21,7 @@ Window::Window(const Configuration& configuration, essentials::observer_ptr<Mess
 
 	wndClassEx.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wndClassEx.lpfnWndProc = &messageHandler;
-	wndClassEx.hInstance = app->instance();
+	wndClassEx.hInstance = detail::Internals::winHInstance(*messagePump_);
 	wndClassEx.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wndClassEx.hIconSm = wndClassEx.hIcon;
 	wndClassEx.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -46,7 +47,7 @@ Window::Window(const Configuration& configuration, essentials::observer_ptr<Mess
 		static_cast<int>(configuration_.height),
 		nullptr,
 		nullptr,
-		app_->instance(),
+		detail::Internals::winHInstance(*messagePump_),
 		this
 		);
 
@@ -67,7 +68,7 @@ Window::~Window() {
 		handle_ = nullptr;
 	}
 
-	UnregisterClassA(configuration_.className.c_str(), app_->instance());
+	UnregisterClassA(configuration_.className.c_str(), detail::Internals::winHInstance(*messagePump_));
 }
 
 LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
@@ -75,7 +76,7 @@ LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam
 	case WM_NCCREATE:
 		{
 			LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);
-			Window* instance = reinterpret_cast<Window*>(createStruct->lpCreateParams);
+			auto* instance = reinterpret_cast<Window*>(createStruct->lpCreateParams);
 
 			if (!instance) {
 				throw std::logic_error("Window instance create parameter shall not be null!");
@@ -91,10 +92,10 @@ LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam
 		return FALSE;
 	default:
 		{
-			Window* instance = reinterpret_cast<Window*>(::GetWindowLongPtr(window, GWLP_USERDATA));
+			auto* instance = reinterpret_cast<Window*>(::GetWindowLongPtr(window, GWLP_USERDATA));
 
 			if (instance) {
-				return instance->app_->systemCallback(window, message, wparam, lparam);
+				return detail::Internals::systemCallback(*instance->messagePump_, window, message, wparam, lparam);
 			} else {
 				return FALSE;
 			}

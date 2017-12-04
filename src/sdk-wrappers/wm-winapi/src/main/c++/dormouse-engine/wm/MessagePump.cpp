@@ -5,8 +5,7 @@ using namespace dormouse_engine::wm;
 MessagePump::MessagePump(const MainArguments& mainArguments) :
 	instance_(mainArguments.hinstance),
 	commandLine_(mainArguments.commandLine),
-	showCommand_(mainArguments.showCommand),
-	closeRequested_(false)
+	showCommand_(mainArguments.showCommand)
 {
 }
 

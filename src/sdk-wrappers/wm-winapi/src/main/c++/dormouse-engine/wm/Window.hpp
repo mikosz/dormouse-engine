@@ -32,7 +32,7 @@ public:
 
 	};
 
-	Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> app);
+	Window(const Configuration& configuration, essentials::observer_ptr<MessagePump> messagePump);
 
 	~Window();
 
@@ -50,7 +50,7 @@ private:
 
 	Configuration configuration_;
 
-	essentials::observer_ptr<MessagePump> app_;
+	essentials::observer_ptr<MessagePump> messagePump_;
 
 	system::windows::WindowHandle handle_;
 

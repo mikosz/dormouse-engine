@@ -7,6 +7,7 @@
 
 #include "dormouse-engine/essentials/Singleton.hpp"
 #include "dormouse-engine/essentials/policy/creation/New.hpp"
+#include "detail/detailfwd.hpp"
 #include "Window.hpp"
 
 namespace dormouse_engine::wm {
@@ -52,14 +53,6 @@ public:
 
 	void update();
 
-	HINSTANCE instance() {
-		return instance_;
-	}
-
-	LRESULT systemCallback(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
-		return DefWindowProc(window, message, wparam, lparam);
-	}
-
 private:
 
 	HINSTANCE instance_;
@@ -67,6 +60,12 @@ private:
 	LPSTR commandLine_;
 
 	int showCommand_;
+
+	LRESULT systemCallback_(HWND window, UINT message, WPARAM wparam, LPARAM lparam) const {
+		return DefWindowProc(window, message, wparam, lparam);
+	}
+
+	friend struct detail::Internals;
 
 };
 
