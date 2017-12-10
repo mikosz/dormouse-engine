@@ -6,7 +6,6 @@
 
 #include <string>
 #include <ostream> 
-#include <iterator> 
 
 namespace dormouse_engine::essentials {
 
@@ -15,9 +14,19 @@ template <
 	class CharType = char,
 	class TraitsType = std::char_traits<CharType>
 	>
-class InfixOstreamIterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
+class InfixOstreamIterator
 {
 public:
+
+	using iterator_category = std::output_iterator_tag;
+
+	using value_type = void; // TODO: ?
+
+	using difference_type = void;
+
+	using pointer = void;
+
+	using reference = void;
 
 	using Ostream = std::basic_ostream<CharType, TraitsType>;
 

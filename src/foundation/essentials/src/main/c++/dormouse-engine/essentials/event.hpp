@@ -1,82 +1,86 @@
 #ifndef _DORMOUSEENGINE_ESSENTIALS_EVENT_HPP_
 #define _DORMOUSEENGINE_ESSENTIALS_EVENT_HPP_
 
+#include <variant>
 #include <memory>
 #include <vector>
 #include <functional>
 
 #include "raii-helper.hpp"
+#include "Null.hpp"
 
 namespace dormouse_engine::essentials {
 
-template <class... Args>
-class EventListener final {
-public:
-
-	using Callback = std::function<void (Args&&...)>;
-
-	EventListener() = default;
-
-	EventListener(Callback listener) :
-		callback_(std::move(listener))
-	{
-	}
-
-	void reset() {
-		callback_ = Callback();
-	}
-
-	void notify(Args&&... args) const {
-		if (callback_) {
-			callback_(std::forward<Args>(args)...);
-		}
-	}
-
-private:
-
-	Callback callback_;
-
-};
-
-template <class... ListenerArgs>
+template <class... EventTypes>
 class EventBroadcaster final {
 public:
 
-	using Listener = EventListener<ListenerArgs...>;
+	using ListenerRegistration = RaiiHelper;
 
-	using ListenerRegistrar = RaiiHelper;
-
-	[[nodiscard]] ListenerRegistrar subscribe(Listener listener) {
+	template <class EventType, class CallbackFunctionType>
+	[[nodiscard]] ListenerRegistration subscribe(CallbackFunctionType f) {
 		auto index = size_t();
 
 		if (free_.empty()) {
-			listeners_.emplace_back(std::move(listener));
+			listeners_.emplace_back(CallbackType<EventType>(std::move(f)));
 			index = listeners_.size() - 1;
 		} else {
 			index = free_.back();
-			listeners_[free_.back()] = std::move(listener);
+			listeners_[free_.back()] = CallbackType<EventType>(std::move(f));
 			free_.pop_back();
 		}
 
-		return ListenerRegistrar([this, index]() {
+		return ListenerRegistration([this, index]() {
 				listeners_[index].reset();
 				free_.emplace_back(index);
 			});
 	}
 
-	[[nodiscard]] ListenerRegistrar subscribe(typename Listener::Callback callback) {
-		return subscribe(Listener(std::move(callback)));
-	}
-
-	void notify(ListenerArgs&&... args) const {
+	template <class EventType>
+	void notify(const EventType& event) const {
 		for (const auto& listener : listeners_) {
-			listener.notify(std::forward<ListenerArgs>(args)...);
+			listener.notify(event);
 		}
 	}
 
 private:
 
+	template <class EventType>
+	using CallbackType = std::function<void (const EventType&)>;
+
+	template <class... EventTypes>
+	class EventListener final {
+	public:
+
+		EventListener() = default;
+
+		template <class EventType>
+		EventListener(CallbackType<EventType> callback) :
+			callback_(std::move(callback))
+		{
+		}
+
+		void reset() {
+			callback_ = Null::null;
+		}
+
+		template <class EventType>
+		void notify(const EventType& event) const {
+			const auto* callbackPtr = std::get_if<CallbackType<EventType>>(&callback_);
+			if (callbackPtr != nullptr) {
+				(*callbackPtr)(event);
+			}
+		}
+
+	private:
+
+		std::variant<Null, CallbackType<EventTypes>...> callback_;
+
+	};
+
 	using Free = std::vector<size_t>;
+
+	using Listener = EventListener<EventTypes...>;
 
 	using Listeners = std::vector<Listener>;
 
@@ -90,7 +94,6 @@ private:
 
 namespace dormouse_engine {
 
-using essentials::EventListener;
 using essentials::EventBroadcaster;
 
 } // namespace dormouse_engine

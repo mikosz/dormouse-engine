@@ -59,7 +59,10 @@ workspace "dormouse-engine"
 	filter "action:vs*"
 		defines { "_SCL_SECURE_NO_WARNINGS" }
 		buildoptions { "/std:c++latest" }
-		defines { "_HAS_AUTO_PTR_ETC=1" } -- otherwise boost fails to build with c++latest
+		defines {
+			"_HAS_AUTO_PTR_ETC=1",
+			"_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING=1"
+			} -- otherwise boost fails to build with c++latest
 		defines { "GTEST_LANG_CXX11=1" } -- otherwise gmock fails to compile with c++latest
 	filter {}
 

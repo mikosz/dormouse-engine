@@ -20,11 +20,11 @@ public:
 
 	using OnUpdateListener = EventListener<>;
 
-	using OnUpdateRegistrar = EventBroadcaster<>::ListenerRegistrar;
+	using OnUpdateRegistrar = EventBroadcaster<>::ListenerRegistration;
 
 	using OnRenderListener = EventListener<renderer::command::CommandBuffer&>;
 
-	using OnRenderRegistrar = EventBroadcaster<renderer::command::CommandBuffer&>::ListenerRegistrar;
+	using OnRenderRegistrar = EventBroadcaster<renderer::command::CommandBuffer&>::ListenerRegistration;
 
 	App(const wm::MainArguments& mainArguments, const wm::Window::Configuration& mainWindowConfiguration);
 
