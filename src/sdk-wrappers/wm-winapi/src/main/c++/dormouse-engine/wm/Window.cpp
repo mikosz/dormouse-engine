@@ -72,32 +72,33 @@ Window::~Window() {
 }
 
 LRESULT CALLBACK Window::messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
-	switch (message) {
-	case WM_NCCREATE:
-		{
-			LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);
-			auto* instance = reinterpret_cast<Window*>(createStruct->lpCreateParams);
+	if (message == WM_NCCREATE) {
+		LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);
+		auto* instance = reinterpret_cast<Window*>(createStruct->lpCreateParams);
 
-			if (!instance) {
-				throw std::logic_error("Window instance create parameter shall not be null!");
-			}
-
-			::SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(instance));
-
-			return TRUE;
+		if (!instance) {
+			throw std::logic_error("Window instance create parameter shall not be null!");
 		}
-	case WM_CLOSE:
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return FALSE;
-	default:
-		{
-			auto* instance = reinterpret_cast<Window*>(::GetWindowLongPtr(window, GWLP_USERDATA));
 
-			if (instance) {
-				return detail::Internals::systemCallback(*instance->messagePump_, window, message, wparam, lparam);
-			} else {
-				return FALSE;
+		::SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(instance));
+
+		return TRUE;
+	} else {
+		auto* instance = reinterpret_cast<Window*>(::GetWindowLongPtr(window, GWLP_USERDATA));
+
+		switch (message) {
+		case WM_CLOSE:
+		case WM_DESTROY:
+			instance->eventBroadcaster_.notify(CloseRequestedEvent{});
+			PostQuitMessage(0);
+			return FALSE;
+		default:
+			{
+				if (instance) {
+					return detail::Internals::systemCallback(*instance->messagePump_, window, message, wparam, lparam);
+				} else {
+					return FALSE;
+				}
 			}
 		}
 	}

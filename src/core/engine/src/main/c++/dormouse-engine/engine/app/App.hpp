@@ -18,13 +18,16 @@ namespace dormouse_engine::engine::app {
 class App final {
 public:
 
-	using OnUpdateListener = EventListener<>;
+	struct OnUpdateEvent {
+	};
 
-	using OnUpdateRegistrar = EventBroadcaster<>::ListenerRegistration;
+	struct OnRenderEvent {
+	};
 
-	using OnRenderListener = EventListener<renderer::command::CommandBuffer&>;
-
-	using OnRenderRegistrar = EventBroadcaster<renderer::command::CommandBuffer&>::ListenerRegistration;
+	using EventBroadcaster = essentials::EventBroadcaster<
+		OnUpdateEvent,
+		OnRenderEvent
+		>;
 
 	App(const wm::MainArguments& mainArguments, const wm::Window::Configuration& mainWindowConfiguration);
 
@@ -32,16 +35,8 @@ public:
 
 	void frame();
 
-	bool closeRequested() {
-		return wmApp_.closeRequested();
-	}
-
-	OnUpdateRegistrar subscribeToOnUpdate(OnUpdateListener listener) {
-		return onUpdateBroadcaster_.subscribe(std::move(listener));
-	}
-
-	OnRenderRegistrar subscribeToOnRender(OnRenderListener listener) {
-		return onRenderBroadcaster_.subscribe(std::move(listener));
+	bool closeRequested() const noexcept {
+		return closeRequested_;
 	}
 
 	wm::Window& mainWindow() noexcept {
@@ -52,13 +47,15 @@ public:
 		return graphicsDevice_;
 	}
 
+	EventBroadcaster& eventBroadcaster() noexcept {
+		return eventBroadcaster_;
+	}
+
 private:
 
-	using OnUpdateBroadcaster = EventBroadcaster<>;
+	wm::MessagePump wmMessagePump_;
 
-	using OnRenderBroadcaster = EventBroadcaster<renderer::command::CommandBuffer&>;
-
-	wm::App wmApp_;
+	bool closeRequested_ = false;
 
 	wm::Window mainWindow_;
 
@@ -72,9 +69,7 @@ private:
 
 	ImGuiHost imguiHost_;
 
-	OnUpdateBroadcaster onUpdateBroadcaster_;
-
-	OnRenderBroadcaster onRenderBroadcaster_;
+	EventBroadcaster eventBroadcaster_;
 
 };
 

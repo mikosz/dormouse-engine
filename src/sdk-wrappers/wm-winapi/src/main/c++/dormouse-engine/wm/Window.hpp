@@ -9,6 +9,7 @@
 #include "dormouse-engine/system/windows/cleanup-macros.hpp"
 
 #include "dormouse-engine/essentials/observer_ptr.hpp"
+#include "dormouse-engine/essentials/event.hpp"
 #include "dormouse-engine/system/windows/types.hpp"
 
 namespace dormouse_engine::wm {
@@ -17,6 +18,13 @@ class MessagePump;
 
 class Window {
 public:
+
+	struct CloseRequestedEvent {
+	};
+
+	using EventBroadcaster = essentials::EventBroadcaster<
+		CloseRequestedEvent
+		>;
 
 	struct Configuration {
 
@@ -46,6 +54,10 @@ public:
 		return handle_;
 	}
 
+	EventBroadcaster& eventBroadcaster() {
+		return eventBroadcaster_;
+	}
+
 private:
 
 	Configuration configuration_;
@@ -53,6 +65,8 @@ private:
 	essentials::observer_ptr<MessagePump> messagePump_;
 
 	system::windows::WindowHandle handle_;
+
+	EventBroadcaster eventBroadcaster_;
 
 	static LRESULT CALLBACK messageHandler(HWND window, UINT message, WPARAM wparam, LPARAM lparam);
 

@@ -6,7 +6,6 @@
 #include "dormouse-engine/math/Matrix.hpp"
 
 using namespace dormouse_engine;
-using namespace dormouse_engine;
 using namespace dormouse_engine::math;
 
 namespace /* anonymous */ {

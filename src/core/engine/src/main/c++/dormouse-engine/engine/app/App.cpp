@@ -42,8 +42,8 @@ graphics::SwapChain createSwapChain(graphics::Device& graphicsDevice, wm::Window
 } // anonymous namespace
 
 App::App(const wm::MainArguments& mainArguments, const wm::Window::Configuration& mainWindowConfiguration) :
-	wmApp_(mainArguments),
-	mainWindow_(mainWindowConfiguration, essentials::make_observer(&wmApp_)),
+	wmMessagePump_(mainArguments),
+	mainWindow_(mainWindowConfiguration, essentials::make_observer(&wmMessagePump_)),
 	graphicsDevice_(createGraphicsDevice()),
 	swapChain_(createSwapChain(graphicsDevice_, mainWindow_)),
 	imguiHost_(
@@ -54,24 +54,28 @@ App::App(const wm::MainArguments& mainArguments, const wm::Window::Configuration
 		mainWindow_.clientHeight()
 		)
 {
+	mainWindow_.eventBroadcaster().subscribe<wm::Window::CloseRequestedEvent>(
+		[this](const wm::Window::CloseRequestedEvent&) {
+			closeRequested_ = true;
+		});
 }
 
 void App::run() {
-	while (!wmApp_.closeRequested()) {
+	while (!closeRequested_) {
 		frame();
 	}
 }
 
 void App::frame() {
 	clock_.tick();
-	wmApp_.update();
+	wmMessagePump_.update();
 	imguiHost_.update();
 
-	onUpdateBroadcaster_.notify();
+	eventBroadcaster_.notify(OnUpdateEvent{});
 
 	swapChain_.clear();
 
-	onRenderBroadcaster_.notify(rendererCommandBuffer_);
+	eventBroadcaster_.notify(OnRenderEvent{});
 
 	imguiHost_.render(graphicsDevice_, rendererCommandBuffer_);
 

@@ -14,9 +14,5 @@ void MessagePump::update() {
 	while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&message);
 		DispatchMessage(&message);
-
-		if (message.message == WM_QUIT) {
-			closeRequested_ = true;
-		}
 	}
 }
